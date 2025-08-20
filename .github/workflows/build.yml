@@ -1,0 +1,74 @@
+name: Build bird maps at 12:00 and 21:00 ET
+
+on:
+  schedule:
+    - cron: "0 16 * * *"   # 12:00 ET during DST
+    - cron: "0 17 * * *"   # 12:00 ET during standard time
+    - cron: "0 1 * * *"    # 21:00 ET during DST (next day UTC)
+    - cron: "0 2 * * *"    # 21:00 ET during standard time (next day UTC)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Gate by America/New_York time
+        id: gate
+        run: |
+          now=$(TZ=America/New_York date +'%H:%M')
+          echo "Current New York time: $now"
+          if [ "$now" = "12:00" ] || [ "$now" = "21:00" ]; then
+            echo "ok=true" >> $GITHUB_OUTPUT
+          else
+            echo "ok=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Stop if outside desired time
+        if: steps.gate.outputs.ok != 'true'
+        run: echo "Skipping - not 12:00 or 21:00 New York time." && exit 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate map
+        env:
+          EBIRD_API_KEY: ${{ secrets.EBIRD_API_KEY }}
+          OUTPUT_DIR: ${{ github.workspace }}/docs/maps
+          KEEP_COUNT: "30"
+        run: |
+          mkdir -p "$OUTPUT_DIR"
+          python scripts/build_map.py
+
+      - name: Rebuild archive index
+        run: |
+          files=$(ls -1 docs/maps/ebird_radius_map_*.html 2>/dev/null | sort -r)
+          {
+            echo '<!doctype html><meta charset="utf-8"><title>eBird Notable Maps Archive</title>'
+            echo '<style>body{font-family:sans-serif;margin:2rem;} h1{font-size:1.6rem;} ul{line-height:1.6;} .latest{margin-bottom:1.5rem;font-size:1.1rem;} .note{color:#555}</style>'
+            echo '<h1>eBird Notable Maps</h1>'
+            echo '<div class="latest"><strong><a href="maps/latest.html">Open Latest Map</a></strong></div>'
+            echo '<div class="note">Built at 12:00 and 21:00 New York time</div>'
+            echo '<h2>Archive</h2><ul>'
+            for f in $files; do
+              fname=$(basename "$f")
+              echo "<li><a href=\"maps/$fname\">$fname</a></li>"
+            done
+            echo '</ul>'
+          } > docs/index.html
+
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: "docs"
+          message: "Automated map build"
+          default_author: github_actions
