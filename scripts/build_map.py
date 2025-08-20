@@ -7,7 +7,8 @@ import os
 import sys
 import hashlib
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from collections import defaultdict, OrderedDict
 
 import folium
@@ -44,6 +45,7 @@ BACK_DAYS = 2
 MAX_RESULTS = 200
 ZOOM_START = 11
 SPECIES_LAYER_THRESHOLD = 25  # fallback to single layer if many species
+ARCHIVE_URL = "https://mmcgee.github.io/ebird-notable-maps/"
 
 # ---------- Utilities ----------
 def color_for_species(name: str) -> str:
@@ -67,25 +69,23 @@ def km_to_m(km: float) -> float:
     return float(km) * 1000.0
 
 def fetch_notable(lat: float, lon: float, radius_km: int, back_days: int = BACK_DAYS, max_results: int = MAX_RESULTS):
-    """Fetch recent notable observations from the eBird API."""
+    """Fetch recent notable observations from the eBird API. No key info is ever printed."""
     url = "https://api.ebird.org/v2/data/obs/geo/recent/notable"
     params = {"lat": lat, "lng": lon, "dist": radius_km, "back": back_days, "maxResults": max_results}
     headers = {"X-eBirdApiToken": API_KEY}
     try:
         resp = requests.get(url, headers=headers, params=params, timeout=20)
         if resp.status_code == 403:
-            snippet = API_KEY[:6] + "…" if API_KEY else "(none)"
-            raise RuntimeError(f"403 from eBird. Key looks missing or invalid. Sent key starts with: {snippet}")
+            # Generic error only. Never reveal or echo the key.
+            raise RuntimeError("403 from eBird. API key missing or invalid.")
         resp.raise_for_status()
         return resp.json()
     except Exception as e:
-        try:
-            server_text = resp.text[:300]
-        except Exception:
-            server_text = ""
-        print(f"Error fetching data from eBird API: {e}\n{server_text}")
+        # Keep logs generic. Do not print response text or headers.
+        print(f"Error fetching data from eBird API: {e}")
         return []
 
+# Simple in-session cache keyed by (lat, lon, radius, back)
 _CACHE = {}
 def get_data(lat, lon, radius_km, back_days):
     key = (round(lat, 6), round(lon, 6), int(radius_km), int(back_days))
@@ -129,22 +129,50 @@ def build_legend_html(species_to_color: OrderedDict) -> str:
 
 def add_radius_rings(m, lat, lon, main_radius_km):
     """Add center marker, main radius, plus 1 km and 5 km rings with labels."""
+    # Center point
     folium.CircleMarker([lat, lon], radius=4, color="#2c7fb8", fill=True,
                         fill_opacity=1, tooltip="Center").add_to(m)
-    folium.Circle([lat, lon], radius=km_to_m(main_radius_km), color="#08519c",
-                  fill=False, weight=3, opacity=0.9).add_to(m)
+
+    # Main query radius - solid blue
+    folium.Circle(
+        [lat, lon],
+        radius=km_to_m(main_radius_km),
+        color="#08519c",
+        fill=False,
+        weight=3,
+        opacity=0.9,
+    ).add_to(m)
     folium.Marker([lat, lon + 0.09 * main_radius_km / 10],
                   icon=folium.DivIcon(html=f"<div style='font-size:11px;color:#08519c;'>~{main_radius_km} km</div>")).add_to(m)
-    folium.Circle([lat, lon], radius=km_to_m(1), color="#000000",
-                  fill=False, weight=2, opacity=0.9, dash_array="5,5").add_to(m)
+
+    # 1 km ring - dashed black
+    folium.Circle(
+        [lat, lon],
+        radius=km_to_m(1),
+        color="#000000",
+        fill=False,
+        weight=2,
+        opacity=0.9,
+        dash_array="5,5"
+    ).add_to(m)
     folium.Marker([lat, lon + 0.009],
                   icon=folium.DivIcon(html="<div style='font-size:11px;color:#000;'>1 km</div>")).add_to(m)
-    folium.Circle([lat, lon], radius=km_to_m(5), color="#555555",
-                  fill=False, weight=2, opacity=0.9, dash_array="5,7").add_to(m)
+
+    # 5 km ring - dashed dark gray
+    folium.Circle(
+        [lat, lon],
+        radius=km_to_m(5),
+        color="#555555",
+        fill=False,
+        weight=2,
+        opacity=0.9,
+        dash_array="5,7"
+    ).add_to(m)
     folium.Marker([lat, lon + 0.045],
                   icon=folium.DivIcon(html="<div style='font-size:11px;color:#555;'>5 km</div>")).add_to(m)
 
 def add_notice(m, text: str):
+    """Overlay a centered notice box on the map."""
     html = f"""
     <div style="
       position: fixed;
@@ -162,11 +190,29 @@ def add_notice(m, text: str):
     """
     m.get_root().html.add_child(folium.Element(html))
 
+def build_title_html(radius_km: int, back_days: int, ts_display_et: str) -> str:
+    """Top title bar with human-readable ET timestamp and archive link."""
+    return f"""
+      <div style="
+          position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+          background: rgba(255,255,255,0.95); padding: 8px 12px; border:1px solid #999;
+          border-radius:6px; z-index: 1000; font-size:14px;">
+        <div style="font-weight:600;">
+          eBird Notable • {radius_km} km radius • last {back_days} day(s)
+        </div>
+        <div style="display:flex; gap:12px; justify-content:space-between; align-items:center; margin-top:4px; font-size:12px;">
+          <span>Built: {ts_display_et}</span>
+          <a href="{ARCHIVE_URL}" target="_blank" rel="noopener" style="text-decoration:none;">Archive</a>
+        </div>
+      </div>
+    """
+
 def prune_archive(dirpath: str, keep: int = 30) -> int:
+    """Keep the newest N timestamped maps. Do not touch latest.html."""
     try:
         files = [f for f in os.listdir(dirpath)
                  if f.startswith("ebird_radius_map_") and f.endswith(".html")]
-        files.sort(reverse=True)
+        files.sort(reverse=True)  # timestamped names sort correctly
         to_remove = files[keep:]
         for f in to_remove:
             try:
@@ -178,8 +224,10 @@ def prune_archive(dirpath: str, keep: int = 30) -> int:
         return 0
 
 def save_and_publish(m, outfile: str):
+    """Save HTML, update latest.html, trigger Colab download if applicable, prune archive."""
     m.save(outfile)
     print(f"Map saved as '{outfile}'")
+
     latest_path = os.path.join(output_dir, "latest.html")
     try:
         import shutil
@@ -187,29 +235,33 @@ def save_and_publish(m, outfile: str):
         print(f"Updated '{latest_path}'")
     except Exception:
         pass
+
     if "google.colab" in sys.modules:
         try:
             from google.colab import files
             files.download(outfile)
         except Exception:
             pass
+
     removed = prune_archive(output_dir, KEEP_COUNT)
     print(f"Archive pruning - kept {KEEP_COUNT}, removed {removed}")
 
 def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
              back_days=BACK_DAYS, zoom_start=ZOOM_START):
-    data = get_data(lat, lon, radius_km, back_days)
-    ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    outfile = os.path.join(output_dir, f"ebird_radius_map_{ts}_{radius_km}km.html")
+    # Timestamps: filename uses local system time, display uses America/New_York
+    ts_file = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    ts_display_et = datetime.now(ZoneInfo("America/New_York")).strftime("%b %d, %Y %I:%M %p %Z")
+    outfile = os.path.join(output_dir, f"ebird_radius_map_{ts_file}_{radius_km}km.html")
 
+    data = get_data(lat, lon, radius_km, back_days)
+
+    # Base map shell
     m = folium.Map(location=[lat, lon], zoom_start=zoom_start, control_scale=True)
-    title_html = f"""
-      <div style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-                  background: rgba(255,255,255,0.95); padding: 6px 10px; border:1px solid #999;
-                  border-radius:6px; z-index: 1000; font-size:14px; font-weight:600;">
-        eBird Notable - {radius_km} km radius - last {back_days} day(s)
-      </div>"""
-    m.get_root().html.add_child(folium.Element(title_html))
+
+    # Title bar: includes timestamp and archive link
+    m.get_root().html.add_child(folium.Element(build_title_html(radius_km, back_days, ts_display_et)))
+
+    # Rings and controls
     add_radius_rings(m, lat, lon, radius_km)
     Fullscreen().add_to(m)
     MiniMap(toggle_display=True, position="bottomleft").add_to(m)
@@ -217,6 +269,7 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
     LocateControl(auto_start=False, keepCurrentZoomLevel=False).add_to(m)
     MousePosition(separator=" , ", prefix="Lat, Lon:").add_to(m)
 
+    # If no data, still publish an empty map with a clear message
     if not data:
         add_notice(m, "No current notable birds for the selected window.")
         legend_html = build_legend_html(OrderedDict())
@@ -224,6 +277,7 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
         save_and_publish(m, outfile)
         return m, outfile
 
+    # Build per-location, per-species aggregation
     loc_species = defaultdict(lambda: defaultdict(list))
     species_set = set()
     for s in data:
@@ -244,6 +298,7 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
     species_to_color = OrderedDict(sorted([(sp, color_for_species(sp)) for sp in species_set], key=lambda x: x[0]))
     too_many = len(species_to_color) > SPECIES_LAYER_THRESHOLD
 
+    # Layers and markers
     if not too_many:
         species_groups = {}
         for sp, hexcol in species_to_color.items():
@@ -291,11 +346,42 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
                               popup=folium.Popup(popup_html, max_width=320)).add_to(cluster)
         folium.LayerControl(collapsed=False).add_to(m)
 
+    # Legend and publish
     legend_html = build_legend_html(species_to_color)
     m.get_root().html.add_child(folium.Element(legend_html))
     save_and_publish(m, outfile)
     return m, outfile
 
+def show_interactive():
+    """Optional notebook controls for radius and back days."""
+    if not IN_NOTEBOOK:
+        print("Interactive controls only load in a Jupyter or Colab notebook.")
+        return
+    radius_dd = widgets.Dropdown(options=[2, 5, 10, 15, 20],
+                                 value=DEFAULT_RADIUS_KM,
+                                 description="Radius (km):",
+                                 layout=widgets.Layout(width="250px"))
+    back_dd = widgets.Dropdown(options=[1, 2, 3, 5, 7],
+                               value=BACK_DAYS,
+                               description="Back days:",
+                               layout=widgets.Layout(width="250px"))
+    out = widgets.Output()
+
+    def _update(*args):
+        with out:
+            out.clear_output()
+            m, outfile = make_map(CENTER_LAT, CENTER_LON,
+                                  radius_dd.value, back_dd.value)
+            if m:
+                display(m)
+
+    radius_dd.observe(_update, names="value")
+    back_dd.observe(_update, names="value")
+    controls = widgets.HBox([radius_dd, back_dd])
+    display(controls)
+    _update()
+
+# ---------- One-off render ----------
 if __name__ == "__main__":
     m, outfile = make_map(CENTER_LAT, CENTER_LON, DEFAULT_RADIUS_KM, BACK_DAYS)
     if IN_NOTEBOOK and m:
