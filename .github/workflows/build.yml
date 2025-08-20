@@ -7,17 +7,32 @@ on:
     - cron: "0 1 * * *"    # 21:00 ET during DST (next day UTC)
     - cron: "0 2 * * *"    # 21:00 ET during standard time (next day UTC)
   workflow_dispatch:
+    inputs:
+      FORCE_BUILD:
+        description: "Set to true to bypass the 12:00/21:00 ET gate"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write   # needed to commit into docs/
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Gate by America/New_York time
+      - name: Gate by America/New_York time (or FORCE_BUILD)
         id: gate
         run: |
+          force="${{ github.event.inputs.FORCE_BUILD }}"
+          if [ "$force" = "true" ]; then
+            echo "FORCE_BUILD=true -> bypassing time gate"
+            echo "ok=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
           now=$(TZ=America/New_York date +'%H:%M')
           echo "Current New York time: $now"
           if [ "$now" = "12:00" ] || [ "$now" = "21:00" ]; then
