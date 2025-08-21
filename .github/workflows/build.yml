@@ -1,49 +1,63 @@
-name: Build bird maps at 12:00 and 21:00 ET
+name: Build bird maps at 12:00 and 21:00 ET (EDT only)
 
 on:
   schedule:
-    - cron: "0 16 * * *"   # 12:00 ET during DST
-    - cron: "0 17 * * *"   # 12:00 ET during standard time
-    - cron: "0 1 * * *"    # 21:00 ET during DST (next day UTC)
-    - cron: "0 2 * * *"    # 21:00 ET during standard time (next day UTC)
+    - cron: "0 16 * * *"   # 12:00 PM EDT (UTC-4)
+    - cron: "0 1 * * *"    # 9:00 PM EDT (UTC-4) next-day UTC
   workflow_dispatch:
     inputs:
       FORCE_BUILD:
-        description: "Set to true to bypass the 12:00/21:00 ET gate"
+        description: "Set to true to run immediately (uses nearest slot label)"
         required: false
         default: "false"
 
 permissions:
-  contents: write   # needed to commit into docs/
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Gate by America/New_York time (or FORCE_BUILD)
-        id: gate
+      # Decide RUN_SLOT/RUN_DATE_ET from the triggering cron or a force run
+      - name: Determine intended slot
+        id: slot
         run: |
           force="${{ github.event.inputs.FORCE_BUILD }}"
+          # Default values
+          run_slot=""
+          run_date_et=$(TZ=America/New_York date +'%Y-%m-%d')
+
           if [ "$force" = "true" ]; then
-            echo "FORCE_BUILD=true -> bypassing time gate"
-            echo "ok=true" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          now=$(TZ=America/New_York date +'%H:%M')
-          echo "Current New York time: $now"
-          if [ "$now" = "12:00" ] || [ "$now" = "21:00" ]; then
-            echo "ok=true" >> $GITHUB_OUTPUT
+            # For force builds, pick the nearest slot by current ET hour
+            hour=$(TZ=America/New_York date +'%H')
+            if [ "$hour" -ge 6 ] && [ "$hour" -lt 18 ]; then
+              run_slot="12"
+            else
+              run_slot="21"
+            fi
           else
-            echo "ok=false" >> $GITHUB_OUTPUT
+            # Use the cron expression that triggered the run
+            trig="${{ github.event.schedule }}"
+            if [ "$trig" = "0 16 * * *" ]; then
+              run_slot="12"
+              # date already correct
+            elif [ "$trig" = "0 1 * * *" ]; then
+              run_slot="21"
+              # 01:00 UTC corresponds to 21:00 EDT of the previous local day
+              # For safety, recompute the ET date explicitly at runtime:
+              run_date_et=$(TZ=America/New_York date -d 'yesterday' +'%Y-%m-%d')
+            else
+              echo "Unexpected schedule: $trig"
+              exit 1
+            fi
           fi
 
-      - name: Stop if outside desired time
-        if: steps.gate.outputs.ok != 'true'
-        run: echo "Skipping - not 12:00 or 21:00 New York time." && exit 0
+          echo "run_slot=$run_slot" >> $GITHUB_OUTPUT
+          echo "run_date_et=$run_date_et" >> $GITHUB_OUTPUT
+          echo "Resolved slot=$run_slot on ET date=$run_date_et"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -60,6 +74,8 @@ jobs:
           EBIRD_API_KEY: ${{ secrets.EBIRD_API_KEY }}
           OUTPUT_DIR: ${{ github.workspace }}/docs/maps
           KEEP_COUNT: "30"
+          RUN_DATE_ET: ${{ steps.slot.outputs.run_date_et }}
+          RUN_SLOT: ${{ steps.slot.outputs.run_slot }}
         run: |
           mkdir -p "$OUTPUT_DIR"
           python scripts/build_map.py
@@ -72,7 +88,7 @@ jobs:
             echo '<style>body{font-family:sans-serif;margin:2rem;} h1{font-size:1.6rem;} ul{line-height:1.6;} .latest{margin-bottom:1.5rem;font-size:1.1rem;} .note{color:#555}</style>'
             echo '<h1>eBird Notable Maps</h1>'
             echo '<div class="latest"><strong><a href="maps/latest.html">Open Latest Map</a></strong></div>'
-            echo '<div class="note">Built at 12:00 and 21:00 New York time</div>'
+            echo '<div class="note">Scheduled at 12:00 and 21:00 New York time (EDT configuration)</div>'
             echo '<h2>Archive</h2><ul>'
             for f in $files; do
               fname=$(basename "$f")
@@ -87,3 +103,4 @@ jobs:
           add: "docs"
           message: "Automated map build"
           default_author: github_actions
+
