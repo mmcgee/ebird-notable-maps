@@ -7,7 +7,7 @@ import os
 import sys
 import hashlib
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from collections import defaultdict, OrderedDict
 
@@ -46,7 +46,6 @@ MAX_RESULTS = 200
 ZOOM_START = 11
 SPECIES_LAYER_THRESHOLD = 25  # fallback to single layer if many species
 ARCHIVE_URL = "https://mmcgee.github.io/ebird-notable-maps/"
-MAP_MAIN_TITLE = "North Cambridge and Vicinity"
 
 # ---------- Utilities ----------
 def color_for_species(name: str) -> str:
@@ -77,10 +76,12 @@ def fetch_notable(lat: float, lon: float, radius_km: int, back_days: int = BACK_
     try:
         resp = requests.get(url, headers=headers, params=params, timeout=20)
         if resp.status_code == 403:
+            # Generic error only. Never reveal or echo the key.
             raise RuntimeError("403 from eBird. API key missing or invalid.")
         resp.raise_for_status()
         return resp.json()
     except Exception as e:
+        # Keep logs generic. Do not print response text or headers.
         print(f"Error fetching data from eBird API: {e}")
         return []
 
@@ -189,91 +190,22 @@ def add_notice(m, text: str):
     """
     m.get_root().html.add_child(folium.Element(html))
 
-def compute_display_ts_et() -> str:
-    """
-    Prefer intended slot time if provided by the workflow:
-      RUN_DATE_ET = YYYY-MM-DD
-      RUN_SLOT = "12" or "21"
-    Otherwise fall back to current ET now.
-    """
-    tz = ZoneInfo("America/New_York")
-    run_date = os.getenv("RUN_DATE_ET", "")
-    run_slot = os.getenv("RUN_SLOT", "")
-    try:
-        if run_date and run_slot in ("12", "21"):
-            year, month, day = map(int, run_date.split("-"))
-            hour = int(run_slot)
-            dt = datetime(year, month, day, hour, 0, 0, tzinfo=tz)
-        else:
-            dt = datetime.now(tz)
-    except Exception:
-        dt = datetime.now(tz)
-    return dt.strftime("%b %d, %Y %I:%M %p %Z")
-
 def build_title_html(radius_km: int, back_days: int, ts_display_et: str) -> str:
-    """Top title block with main title, subline, timestamp, and archive link."""
+    """Top title bar with human-readable ET timestamp and archive link."""
     return f"""
       <div style="
           position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-          background: rgba(255,255,255,0.95); padding: 10px 14px; border:1px solid #999;
+          background: rgba(255,255,255,0.95); padding: 8px 12px; border:1px solid #999;
           border-radius:6px; z-index: 1000; font-size:14px;">
-        <div style="font-weight:700; font-size:16px; text-align:center;">
-          {MAP_MAIN_TITLE}
-        </div>
-        <div style="font-weight:600; margin-top:4px; text-align:center;">
+        <div style="font-weight:600;">
           eBird Notable • {radius_km} km radius • last {back_days} day(s)
         </div>
-        <div style="display:flex; gap:12px; justify-content:space-between; align-items:center; margin-top:6px; font-size:12px;">
+        <div style="display:flex; gap:12px; justify-content:space-between; align-items:center; margin-top:4px; font-size:12px;">
           <span>Built: {ts_display_et}</span>
           <a href="{ARCHIVE_URL}" target="_blank" rel="noopener" style="text-decoration:none;">Archive</a>
         </div>
       </div>
     """
-
-def add_clear_species_control(m: folium.Map, species_names):
-    """Adds a Leaflet button that unchecks all per-species overlays in the LayerControl."""
-    if not species_names:
-        return
-    # Inject a small Leaflet control that unchecks any overlay whose label text matches a species name
-    js = f"""
-    <script>
-    (function() {{
-      var speciesList = {list(species_names)!r};
-      function clearSpecies() {{
-        var labels = document.querySelectorAll('.leaflet-control-layers-overlays label');
-        labels.forEach(function(label){{
-          var span = label.querySelector('span');
-          var input = label.querySelector('input[type=checkbox]');
-          if(!span || !input) return;
-          var name = span.textContent.trim();
-          if (speciesList.indexOf(name) !== -1 && input.checked) {{
-            input.click(); // toggles the layer off and updates the UI
-          }}
-        }});
-      }}
-      var ClearCtl = L.Control.extend({{
-        onAdd: function(map) {{
-          var div = L.DomUtil.create('div', 'leaflet-bar');
-          div.style.background = 'white';
-          div.style.padding = '4px 6px';
-          div.style.cursor = 'pointer';
-          div.style.font = '12px/1.2 sans-serif';
-          div.style.boxShadow = '0 1px 4px rgba(0,0,0,0.2)';
-          div.title = 'Uncheck all species layers';
-          div.innerHTML = 'Clear species';
-          L.DomEvent.on(div, 'click', function(e) {{
-            L.DomEvent.stop(e);
-            clearSpecies();
-          }});
-          return div;
-        }},
-        onRemove: function(map) {{}}
-      }});
-      (new ClearCtl({{ position: 'topright' }})).addTo({m.get_name()});
-    }})();
-    </script>
-    """
-    m.get_root().html.add_child(folium.Element(js))
 
 def prune_archive(dirpath: str, keep: int = 30) -> int:
     """Keep the newest N timestamped maps. Do not touch latest.html."""
@@ -316,8 +248,9 @@ def save_and_publish(m, outfile: str):
 
 def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
              back_days=BACK_DAYS, zoom_start=ZOOM_START):
-    # Filename timestamp uses runner local time
+    # Timestamps: filename uses local system time, display uses America/New_York
     ts_file = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    ts_display_et = datetime.now(ZoneInfo("America/New_York")).strftime("%b %d, %Y %I:%M %p %Z")
     outfile = os.path.join(output_dir, f"ebird_radius_map_{ts_file}_{radius_km}km.html")
 
     data = get_data(lat, lon, radius_km, back_days)
@@ -325,8 +258,7 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
     # Base map shell
     m = folium.Map(location=[lat, lon], zoom_start=zoom_start, control_scale=True)
 
-    # Title block with main title, subline, timestamp, and archive link
-    ts_display_et = compute_display_ts_et()
+    # Title bar: includes timestamp and archive link
     m.get_root().html.add_child(folium.Element(build_title_html(radius_km, back_days, ts_display_et)))
 
     # Rings and controls
@@ -392,10 +324,7 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
                 )
                 folium.Marker([slat, slon], icon=icon, tooltip=sp,
                               popup=folium.Popup(popup_html, max_width=320)).add_to(species_groups[sp][1])
-
-        # Add a not-collapsed LayerControl and our Clear species control
         folium.LayerControl(collapsed=False).add_to(m)
-        add_clear_species_control(m, list(species_to_color.keys()))
     else:
         cluster = MarkerCluster(name="Notable sightings").add_to(m)
         for (slat, slon), species_dict in loc_species.items():
@@ -416,7 +345,6 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
                 folium.Marker([slat, slon], icon=icon, tooltip=sp,
                               popup=folium.Popup(popup_html, max_width=320)).add_to(cluster)
         folium.LayerControl(collapsed=False).add_to(m)
-        # No "Clear species" button here since we are not using per-species layers
 
     # Legend and publish
     legend_html = build_legend_html(species_to_color)
@@ -458,4 +386,3 @@ if __name__ == "__main__":
     m, outfile = make_map(CENTER_LAT, CENTER_LON, DEFAULT_RADIUS_KM, BACK_DAYS)
     if IN_NOTEBOOK and m:
         display(m)
-
