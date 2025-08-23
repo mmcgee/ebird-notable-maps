@@ -43,7 +43,6 @@ DEFAULT_RADIUS_KM = 10
 BACK_DAYS = 2
 MAX_RESULTS = 200
 ZOOM_START = 11
-# Raise threshold so we usually stay in per-species mode
 SPECIES_LAYER_THRESHOLD = 200
 ARCHIVE_URL = "https://mmcgee.github.io/ebird-notable-maps/"
 MAP_MAIN_TITLE = "North Cambridge and Vicinity"
@@ -156,7 +155,11 @@ def add_notice(m, text: str):
     """
     m.get_root().html.add_child(folium.Element(html))
 
-def compute_display_ts_et() -> str:
+def compute_dt_et():
+    """
+    Return a datetime in America/New_York for the intended run slot if provided,
+    else 'now' in ET. Also return strings for display and filename use.
+    """
     tz = ZoneInfo("America/New_York")
     run_date = os.getenv("RUN_DATE_ET", "")
     run_slot = os.getenv("RUN_SLOT", "")
@@ -169,7 +172,9 @@ def compute_display_ts_et() -> str:
             dt = datetime.now(tz)
     except Exception:
         dt = datetime.now(tz)
-    return dt.strftime("%b %d, %Y %I:%M %p %Z")
+    display_str = dt.strftime("%b %d, %Y %I:%M %p %Z")
+    file_str = dt.strftime("%Y-%m-%d_%H-%M-%S_ET")
+    return dt, display_str, file_str
 
 def build_title_html(radius_km: int, back_days: int, ts_display_et: str) -> str:
     return f"""
@@ -191,12 +196,6 @@ def build_title_html(radius_km: int, back_days: int, ts_display_et: str) -> str:
     """
 
 def add_clear_species_control(m: folium.Map, species_names):
-    """
-    Add a small button that unchecks all species layers that are currently checked.
-    Always inject it. If there are no per-species layers on this map, clicking does nothing.
-    Robust to Leaflet markup differences and delayed LayerControl render.
-    """
-    # Use a set to match by label text
     species_list = list(species_names or [])
     js = f"""
     <script>
@@ -281,14 +280,14 @@ def save_and_publish(m, outfile: str):
 
 def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
              back_days=BACK_DAYS, zoom_start=ZOOM_START):
-    ts_file = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    outfile = os.path.join(output_dir, f"ebird_radius_map_{ts_file}_{radius_km}km.html")
+    # Use intended ET time for both display and filename
+    _, ts_display_et, ts_file_et = compute_dt_et()
+    outfile = os.path.join(output_dir, f"ebird_radius_map_{ts_file_et}_{radius_km}km.html")
 
     data = get_data(lat, lon, radius_km, back_days)
 
     m = folium.Map(location=[lat, lon], zoom_start=zoom_start, control_scale=True)
 
-    ts_display_et = compute_display_ts_et()
     m.get_root().html.add_child(folium.Element(build_title_html(radius_km, back_days, ts_display_et)))
 
     add_radius_rings(m, lat, lon, radius_km)
@@ -302,12 +301,10 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
         add_notice(m, "No current notable birds for the selected window.")
         legend_html = build_legend_html(OrderedDict())
         m.get_root().html.add_child(folium.Element(legend_html))
-        # Add button anyway; it will do nothing on click
         add_clear_species_control(m, [])
         save_and_publish(m, outfile)
         return m, outfile
 
-    # Aggregate
     loc_species = defaultdict(lambda: defaultdict(list))
     species_set = set()
     for s in data:
@@ -352,10 +349,8 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
                 folium.Marker([slat, slon], icon=icon, tooltip=sp,
                               popup=folium.Popup(popup_html, max_width=320)).add_to(species_groups[sp][1])
         folium.LayerControl(collapsed=False).add_to(m)
-        # Always add the button, with the current species list
         add_clear_species_control(m, list(species_to_color.keys()))
     else:
-        # Fallback single layer
         cluster = MarkerCluster(name="Notable sightings").add_to(m)
         for (slat, slon), species_dict in loc_species.items():
             for sp, entries in species_dict.items():
@@ -374,7 +369,6 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
                 folium.Marker([slat, slon], icon=icon, tooltip=sp,
                               popup=folium.Popup(popup_html, max_width=320)).add_to(cluster)
         folium.LayerControl(collapsed=False).add_to(m)
-        # Add the button anyway; with no per-species layers, it safely does nothing
         add_clear_species_control(m, list(species_to_color.keys()))
 
     legend_html = build_legend_html(species_to_color)
