@@ -47,6 +47,9 @@ SPECIES_LAYER_THRESHOLD = 200
 ARCHIVE_URL = "https://mmcgee.github.io/ebird-notable-maps/"
 MAP_MAIN_TITLE = "North Cambridge and Vicinity"
 
+# logo file name (placed at docs/goodbirds_logo_text.png in repo)
+MAP_LOGO_FILENAME = "../goodbirds_logo_text.png"  # relative to docs/maps/*.html
+
 # ---------- Utilities ----------
 def color_for_species(name: str) -> str:
     h = int(hashlib.sha1((name or 'Unknown').encode("utf-8")).hexdigest(), 16) % 360
@@ -156,10 +159,6 @@ def add_notice(m, text: str):
     m.get_root().html.add_child(folium.Element(html))
 
 def compute_dt_et():
-    """
-    Return a datetime in America/New_York for the intended run slot if provided,
-    else 'now' in ET. Also return strings for display and filename use.
-    """
     tz = ZoneInfo("America/New_York")
     run_date = os.getenv("RUN_DATE_ET", "")
     run_slot = os.getenv("RUN_SLOT", "")
@@ -244,6 +243,23 @@ def add_clear_species_control(m: folium.Map, species_names):
     """
     m.get_root().html.add_child(folium.Element(js))
 
+def add_map_logo(m: folium.Map, logo_src: str = MAP_LOGO_FILENAME, height_px: int = 40):
+    """Fixed-position logo overlay on the map."""
+    html = f"""
+    <div style="
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      z-index: 1000;
+      background: rgba(255,255,255,0.85);
+      padding: 4px 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;">
+      <img src="{logo_src}" alt="Goodbirds logo" style="height:{height_px}px; display:block;">
+    </div>
+    """
+    m.get_root().html.add_child(folium.Element(html))
+
 def prune_archive(dirpath: str, keep: int = 30) -> int:
     try:
         files = [f for f in os.listdir(dirpath)
@@ -280,7 +296,6 @@ def save_and_publish(m, outfile: str):
 
 def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
              back_days=BACK_DAYS, zoom_start=ZOOM_START):
-    # Use intended ET time for both display and filename
     _, ts_display_et, ts_file_et = compute_dt_et()
     outfile = os.path.join(output_dir, f"ebird_radius_map_{ts_file_et}_{radius_km}km.html")
 
@@ -296,6 +311,9 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
     m.add_child(MeasureControl(primary_length_unit="kilometers"))
     LocateControl(auto_start=False, keepCurrentZoomLevel=False).add_to(m)
     MousePosition(separator=" , ", prefix="Lat, Lon:").add_to(m)
+
+    # small Goodbirds logo on the map
+    add_map_logo(m, MAP_LOGO_FILENAME, height_px=40)
 
     if not data:
         add_notice(m, "No current notable birds for the selected window.")

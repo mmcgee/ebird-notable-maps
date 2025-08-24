@@ -48,7 +48,6 @@ jobs:
           fi
           echo "run_slot=$run_slot" >> $GITHUB_OUTPUT
           echo "run_date_et=$run_date_et" >> $GITHUB_OUTPUT
-          echo "Resolved slot=$run_slot on ET date=$run_date_et"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -71,54 +70,50 @@ jobs:
           mkdir -p "$OUTPUT_DIR"
           python scripts/build_map.py
 
-      - name: Rebuild archive index (grouped by New York date)
+      - name: Rebuild archive index (grouped by New York date, with logo)
         run: |
           set -euo pipefail
           mkdir -p docs
-          # gather files that follow the ET filename pattern made by build_map.py
+          # files produced with ET timestamp in filename
           files=$(ls -1 docs/maps/ebird_radius_map_*_ET_*km.html 2>/dev/null | sort -r || true)
 
-          about_html='<p style="max-width:60ch;line-height:1.5;margin:0.5rem 0 1.25rem 0;color:#333;">
-          <strong>About:</strong> This is a vibe coding project to nudge everyone to step outside and
-          find a good bird near them. Maps are generated automatically twice a day from eBird notable reports.
-          Moving soon.
-          </p>'
-
+          # Write index.html
           cat > docs/index.html <<'HTML'
           <!doctype html><meta charset="utf-8"><title>eBird Notable Maps Archive</title>
           <style>
             body{font-family:sans-serif;margin:2rem;max-width:900px}
-            h1{font-size:1.8rem;margin:0 0 .5rem 0}
+            h1{font-size:1.8rem;margin:0 0 .5rem 0;display:flex;align-items:center;gap:.5rem}
+            .logo{height:48px}
             h2{font-size:1.2rem;margin:1.2rem 0 .3rem 0;color:#333}
             ul{line-height:1.6;margin:.2rem 0 .8rem 1rem}
             .latest{margin:.75rem 0 1rem 0;font-size:1.05rem}
             .note{color:#555}
             .datehdr{margin-top:1.25rem;border-top:1px solid #eee;padding-top:.75rem}
           </style>
-          <h1>eBird Notable Maps</h1>
+          <h1>
+            <img src="goodbirds_logo_text.png" alt="Goodbirds logo" class="logo">
+            eBird Notable Maps
+          </h1>
           <div class="latest"><strong><a href="maps/latest.html">Open Latest Map</a></strong></div>
           <div class="note">Built automatically at 12:00 and 21:00 New York time.</div>
+          <p style="max-width:60ch;line-height:1.5;margin:0.5rem 0 1.25rem 0;color:#333;">
+            <strong>About:</strong> Goodbirds is a vibe coding project to nudge everyone to step outside and
+            find a good bird near them. Maps are generated twice a day from eBird notable reports.
+            Moving soon to <a href="https://goodbirds.org" target="_blank" rel="noopener">goodbirds.org</a>.
+          </p>
           HTML
-
-          # insert About block
-          echo "$about_html" >> docs/index.html
 
           # group by ET date parsed from filename: ebird_radius_map_YYYY-MM-DD_HH-MM-SS_ET_10km.html
           last_date=""
           for f in $files; do
             base=$(basename "$f")
-            # extract the 'YYYY-MM-DD' between first and second underscore
-            # pattern: ebird_radius_map_2025-08-20_21-00-00_ET_10km.html
             date_part=$(echo "$base" | awk -F'_' '{print $4}' | sed 's/[^0-9-]//g')
-            # pretty header in ET
             if [ "$date_part" != "$last_date" ]; then
-              # Format: Wednesday, Aug 20, 2025
               pretty=$(TZ=America/New_York date -d "$date_part" +'%A, %b %d, %Y')
               echo "<h2 class=\"datehdr\">$pretty</h2><ul>" >> docs/index.html
               last_date="$date_part"
             fi
             echo "<li><a href=\"maps/$base\">$base</a></li>" >> docs/index.html
-            # if next file has different date, close the list in the next iteration or at end
           done
           if [ -n "$files" ]; then
             echo "</ul>" >> docs/index.html
@@ -128,5 +123,5 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           add: "docs"
-          message: "Automated map build (ET filenames, grouped archive, about)"
+          message: "Automated map build with logo on archive and maps"
           default_author: github_actions
