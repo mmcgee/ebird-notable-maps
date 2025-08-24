@@ -1,29 +1,38 @@
 <!doctype html><meta charset="utf-8"><title>eBird Notable Maps Archive</title>
 <style>
   body{font-family:sans-serif;margin:2rem;max-width:900px}
-  h1{font-size:1.8rem;margin:0 0 .5rem 0;display:flex;align-items:center;gap:.5rem}
-  .logo{height:48px}
-  h2{font-size:1.2rem;margin:1.2rem 0 .3rem 0;color:#333}
-  ul{line-height:1.6;margin:.2rem 0 .8rem 1rem}
+  h1{font-size:1.8rem;margin:0 0 .75rem 0;display:flex;align-items:center;gap:.75rem}
+  .logo{height:80px} /* bigger logo */
+  h2{font-size:1.15rem;margin:1.1rem 0 .4rem 0;color:#333}
+  /* Remove left-indent for lists; make all days align flush left */
+  ul{margin:.25rem 0 .9rem 0; padding-left:0}
+  li{list-style:none; line-height:1.6}
   .latest{margin:.75rem 0 1rem 0;font-size:1.05rem}
   .note{color:#555}
-  .datehdr{margin-top:1.25rem;border-top:1px solid #eee;padding-top:.75rem}
 </style>
 <h1>
   <img src="goodbirds_logo_text.png" alt="Goodbirds logo" class="logo">
   eBird Notable Maps
 </h1>
 <div class="latest"><strong><a href="maps/latest.html">Open Latest Map</a></strong></div>
-<div class="note">Built automatically at 12:00 and 21:00 New York time.</div>
-<p style="max-width:60ch;line-height:1.5;margin:0.5rem 0 1.25rem 0;color:#333;">
-  <strong>About:</strong> Goodbirds is a vibe coding project to nudge everyone to step outside and
-  find a good bird near them. Maps are generated twice a day from eBird notable reports.
-  Moving soon to <a href="https://goodbirds.org" target="_blank" rel="noopener">goodbirds.org</a>.
+
+<p class="note">
+  Maps are scheduled to build automatically at <strong>12:00</strong> and <strong>21:00</strong> New York time.
+  Each map visualizes recent <strong>eBird “Notable” observations</strong> near the selected center point.
 </p>
-<h2 class="datehdr">Sunday, Aug 24, 2025</h2><ul>
+<p class="note">
+  Built with the <strong>eBird API</strong>, <strong>Python</strong>, <strong>Folium</strong> (Leaflet),
+  <strong>GitHub Actions</strong>, and <strong>GitHub Pages</strong>.
+</p>
+<h2>Sunday, Aug 24, 2025</h2>
+<ul>
 <li><a href="maps/ebird_radius_map_2025-08-24_12-00-00_ET_10km.html">ebird_radius_map_2025-08-24_12-00-00_ET_10km.html</a></li>
-<h2 class="datehdr">Saturday, Aug 23, 2025</h2><ul>
+</ul>
+<h2>Saturday, Aug 23, 2025</h2>
+<ul>
 <li><a href="maps/ebird_radius_map_2025-08-23_21-00-00_ET_10km.html">ebird_radius_map_2025-08-23_21-00-00_ET_10km.html</a></li>
-<h2 class="datehdr">Friday, Aug 22, 2025</h2><ul>
+</ul>
+<h2>Friday, Aug 22, 2025</h2>
+<ul>
 <li><a href="maps/ebird_radius_map_2025-08-22_21-00-00_ET_10km.html">ebird_radius_map_2025-08-22_21-00-00_ET_10km.html</a></li>
 </ul>
