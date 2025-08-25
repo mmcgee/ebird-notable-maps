@@ -1,53 +1,33 @@
-name: Build bird maps at 12:00 and 21:00 ET (EDT only)
+name: Build Goodbirds Maps
 
 on:
   schedule:
-    - cron: "0 16 * * *"   # 12:00 PM EDT (UTC-4)
-    - cron: "0 1 * * *"    # 9:00 PM EDT (UTC-4) next-day UTC
+    - cron: "0 16 * * *"   # 12:00 pm ET
+    - cron: "0 1 * * *"    # 9:00 pm ET
   workflow_dispatch:
     inputs:
-      FORCE_BUILD:
-        description: "Run immediately (uses nearest slot label)"
+      force:
+        description: "Force rebuild"
         required: false
         default: "false"
-
-permissions:
-  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env:
+      EBIRD_API_KEY: ${{ secrets.EBIRD_API_KEY }}
+      OUTPUT_DIR: docs/maps
+      KEEP_COUNT: "30"
+      # Expose the logo file path to the script
+      MAP_LOGO_FILE: ${{ github.workspace }}/docs/goodbirds_logo_text.png
+      # For timestamping in title if you ever want fixed slots
+      RUN_DATE_ET: ${{ github.event.schedule != '' && fromJSON('null') || '' }}
+      RUN_SLOT: ""
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Determine intended slot
-        id: slot
-        run: |
-          force="${{ github.event.inputs.FORCE_BUILD }}"
-          run_slot=""
-          run_date_et=$(TZ=America/New_York date +'%Y-%m-%d')
-          if [ "$force" = "true" ]; then
-            hour=$(TZ=America/New_York date +'%H')
-            if [ "$hour" -ge 6 ] && [ "$hour" -lt 18 ]; then
-              run_slot="12"
-            else
-              run_slot="21"
-            fi
-          else
-            trig="${{ github.event.schedule }}"
-            if [ "$trig" = "0 16 * * *" ]; then
-              run_slot="12"
-            elif [ "$trig" = "0 1 * * *" ]; then
-              run_slot="21"
-              run_date_et=$(TZ=America/New_York date -d 'yesterday' +'%Y-%m-%d')
-            else
-              echo "Unexpected schedule: $trig"
-              exit 1
-            fi
-          fi
-          echo "run_slot=$run_slot" >> $GITHUB_OUTPUT
-          echo "run_date_et=$run_date_et" >> $GITHUB_OUTPUT
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -57,87 +37,66 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install folium requests branca
 
-      - name: Generate map
-        env:
-          EBIRD_API_KEY: ${{ secrets.EBIRD_API_KEY }}
-          OUTPUT_DIR: ${{ github.workspace }}/docs/maps
-          KEEP_COUNT: "30"
-          RUN_DATE_ET: ${{ steps.slot.outputs.run_date_et }}
-          RUN_SLOT: ${{ steps.slot.outputs.run_slot }}
-          MAP_LOGO_FILE: ${{ github.workspace }}/docs/goodbirds_logo_text.png   # <-- add this
+      - name: Build maps
         run: |
-          mkdir -p "$OUTPUT_DIR"
+          mkdir -p docs/maps
           python scripts/build_map.py
 
-      - name: Rebuild archive index (bigger logo, objective text, last 7 days, no indent)
+      - name: Rebuild archive index
         run: |
-          set -euo pipefail
-          mkdir -p docs
-          # All map files with ET timestamp in name
-          files=$(ls -1 docs/maps/ebird_radius_map_*_ET_*km.html 2>/dev/null | sort -r || true)
+          # Simple index writer that keeps last 7 days of links and shows a bigger header logo
+          python - << 'PY'
+          import os, re, datetime, pathlib
+          docs = pathlib.Path("docs")
+          maps_dir = docs/"maps"
+          files = sorted([f for f in maps_dir.glob("ebird_radius_map_*.html")], reverse=True)
+          # Group by date prefix
+          groups = {}
+          for f in files:
+              m = re.match(r"ebird_radius_map_(\d{4}-\d{2}-\d{2})_", f.name)
+              if not m: 
+                  continue
+              groups.setdefault(m.group(1), []).append(f.name)
+          # Keep only last 7 days
+          by_day = sorted(groups.items(), reverse=True)[:7]
 
-          # Collect unique ET dates from filenames (desc), keep only most recent 7
-          mapfile -t all_dates < <(for f in $files; do
-            b=$(basename "$f")
-            d=$(echo "$b" | awk -F'_' '{print $4}' | sed 's/[^0-9-]//g')
-            echo "$d"
-          done | awk '!seen[$0]++')
-          # Trim to 7 dates
-          keep_dates=("${all_dates[@]:0:7}")
+          html = []
+          html.append("<!doctype html><html><head><meta charset='utf-8'><title>Goodbirds Map Archive</title>")
+          html.append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
+          html.append("<style>")
+          html.append("body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;margin:20px;}")
+          html.append("h1{font-size:20px;margin:0 0 2px 0}")
+          html.append(".day{margin: 12px 0 18px 0}")
+          html.append(".grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}")
+          html.append("a{color:#0645ad;text-decoration:none} a:hover{text-decoration:underline}")
+          html.append("</style></head><body>")
+          # Bigger logo in header
+          html.append("<header style='display:flex;align-items:center;gap:12px;margin-bottom:12px;'>")
+          html.append("<img src='goodbirds_logo_text.png' alt='Goodbirds' style='height:64px;'>")
+          html.append("<div>")
+          html.append("<h1>Goodbirds — Notable eBird Maps</h1>")
+          html.append("<div>Updated twice daily — data: eBird API — credits in map footer</div>")
+          html.append("</div></header>")
+          for day, entries in by_day:
+              html.append(f"<div class='day'><div style='font-weight:700;margin-bottom:6px'>{day}</div>")
+              html.append("<div class='grid'>")
+              for name in sorted(entries, reverse=True):
+                  html.append(f"<a href='maps/{name}'>{name}</a>")
+              html.append("</div></div>")
+          html.append("</body></html>")
+          (docs/"index.html").write_text("\n".join(html), encoding="utf-8")
+          PY
 
-          # Build index.html
-          cat > docs/index.html <<'HTML'
-          <!doctype html><meta charset="utf-8"><title>eBird Notable Maps Archive</title>
-          <style>
-            body{font-family:sans-serif;margin:2rem;max-width:900px}
-            h1{font-size:1.8rem;margin:0 0 .75rem 0;display:flex;align-items:center;gap:.75rem}
-            .logo{height:80px} /* bigger logo */
-            h2{font-size:1.15rem;margin:1.1rem 0 .4rem 0;color:#333}
-            /* Remove left-indent for lists; make all days align flush left */
-            ul{margin:.25rem 0 .9rem 0; padding-left:0}
-            li{list-style:none; line-height:1.6}
-            .latest{margin:.75rem 0 1rem 0;font-size:1.05rem}
-            .note{color:#555}
-          </style>
-          <h1>
-            <img src="goodbirds_logo_text.png" alt="Goodbirds logo" class="logo">
-            eBird Notable Maps
-          </h1>
-          <div class="latest"><strong><a href="maps/latest.html">Open Latest Map</a></strong></div>
-
-          <p class="note">
-            Maps are scheduled to build automatically at <strong>12:00</strong> and <strong>21:00</strong> New York time.
-            Each map visualizes recent <strong>eBird “Notable” observations</strong> near the selected center point.
-          </p>
-          <p class="note">
-            Built with the <strong>eBird API</strong>, <strong>Python</strong>, <strong>Folium</strong> (Leaflet),
-            <strong>GitHub Actions</strong>, and <strong>GitHub Pages</strong>.
-          </p>
-          HTML
-
-          # Write sections for the last 7 ET dates only
-          if [ ${#keep_dates[@]} -gt 0 ]; then
-            for d in "${keep_dates[@]}"; do
-              pretty=$(TZ=America/New_York date -d "$d" +'%A, %b %d, %Y')
-              echo "<h2>$pretty</h2>" >> docs/index.html
-              echo "<ul>" >> docs/index.html
-              # list files for this date in reverse-chronological order
-              for f in $files; do
-                base=$(basename "$f")
-                dp=$(echo "$base" | awk -F'_' '{print $4}' | sed 's/[^0-9-]//g')
-                if [ "$dp" = "$d" ]; then
-                  echo "<li><a href=\"maps/$base\">$base</a></li>" >> docs/index.html
-                fi
-              done
-              echo "</ul>" >> docs/index.html
-            done
+      - name: Commit and publish
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/maps/*.html docs/index.html || true
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update maps and archive index"
+            git push
           fi
-
-      - name: Commit and push changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: "docs"
-          message: "Archive page: larger logo, objective text, last 7 days, no indent"
-          default_author: github_actions
