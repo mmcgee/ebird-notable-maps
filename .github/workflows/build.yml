@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       FORCE_BUILD:
-        description: "Set to true to run immediately (uses nearest slot label)"
+        description: "Run immediately (uses nearest slot label)"
         required: false
         default: "false"
 
@@ -66,68 +66,78 @@ jobs:
           KEEP_COUNT: "30"
           RUN_DATE_ET: ${{ steps.slot.outputs.run_date_et }}
           RUN_SLOT: ${{ steps.slot.outputs.run_slot }}
+          MAP_LOGO_FILE: ${{ github.workspace }}/docs/goodbirds_logo_text.png   # <-- add this
         run: |
           mkdir -p "$OUTPUT_DIR"
           python scripts/build_map.py
 
-      - name: Ensure logo asset is present for archive and maps
-        run: |
-          mkdir -p docs
-          if [ -f goodbirds_logo_test.png ]; then
-            cp -f goodbirds_logo_test.png docs/
-          fi
-
-      - name: Rebuild archive index with big logo
+      - name: Rebuild archive index (bigger logo, objective text, last 7 days, no indent)
         run: |
           set -euo pipefail
           mkdir -p docs
+          # All map files with ET timestamp in name
           files=$(ls -1 docs/maps/ebird_radius_map_*_ET_*km.html 2>/dev/null | sort -r || true)
 
+          # Collect unique ET dates from filenames (desc), keep only most recent 7
+          mapfile -t all_dates < <(for f in $files; do
+            b=$(basename "$f")
+            d=$(echo "$b" | awk -F'_' '{print $4}' | sed 's/[^0-9-]//g')
+            echo "$d"
+          done | awk '!seen[$0]++')
+          # Trim to 7 dates
+          keep_dates=("${all_dates[@]:0:7}")
+
+          # Build index.html
           cat > docs/index.html <<'HTML'
           <!doctype html><meta charset="utf-8"><title>eBird Notable Maps Archive</title>
           <style>
-            body{font-family:sans-serif;margin:2rem;max-width:980px}
-            header{display:flex;align-items:center;gap:14px;margin-bottom:1rem}
-            .logo{height:120px} /* bigger logo as requested */
-            h1{font-size:1.9rem;margin:0}
-            h2{font-size:1.2rem;margin:1.2rem 0 .3rem 0;color:#333}
-            ul{line-height:1.6;margin:.2rem 0 .8rem 1rem}
-            .latest{margin:.5rem 0 1rem 0;font-size:1.05rem}
+            body{font-family:sans-serif;margin:2rem;max-width:900px}
+            h1{font-size:1.8rem;margin:0 0 .75rem 0;display:flex;align-items:center;gap:.75rem}
+            .logo{height:80px} /* bigger logo */
+            h2{font-size:1.15rem;margin:1.1rem 0 .4rem 0;color:#333}
+            /* Remove left-indent for lists; make all days align flush left */
+            ul{margin:.25rem 0 .9rem 0; padding-left:0}
+            li{list-style:none; line-height:1.6}
+            .latest{margin:.75rem 0 1rem 0;font-size:1.05rem}
             .note{color:#555}
-            .datehdr{margin-top:1.25rem;border-top:1px solid #eee;padding-top:.75rem}
-            a{text-decoration:none}
           </style>
-          <header>
-            <img src="goodbirds_logo_test.png" alt="Goodbirds logo" class="logo">
-            <div>
-              <h1>eBird Notable Maps</h1>
-              <div class="latest"><strong><a href="maps/latest.html">Open Latest Map</a></strong></div>
-              <div class="note">Built automatically at 12:00 and 21:00 New York time.</div>
-            </div>
-          </header>
-          <p style="max-width:65ch;line-height:1.5;margin:.25rem 0 1.25rem 0;color:#333;">
-            <strong>About:</strong> Goodbirds is a vibe coding project to nudge everyone to step outside and find a good bird near them.
-            Maps are generated twice a day from eBird notable reports. Moving soon to <a href="https://goodbirds.org" target="_blank" rel="noopener">goodbirds.org</a>.
+          <h1>
+            <img src="goodbirds_logo_text.png" alt="Goodbirds logo" class="logo">
+            eBird Notable Maps
+          </h1>
+          <div class="latest"><strong><a href="maps/latest.html">Open Latest Map</a></strong></div>
+
+          <p class="note">
+            Maps are scheduled to build automatically at <strong>12:00</strong> and <strong>21:00</strong> New York time.
+            Each map visualizes recent <strong>eBird “Notable” observations</strong> near the selected center point.
+          </p>
+          <p class="note">
+            Built with the <strong>eBird API</strong>, <strong>Python</strong>, <strong>Folium</strong> (Leaflet),
+            <strong>GitHub Actions</strong>, and <strong>GitHub Pages</strong>.
           </p>
           HTML
 
-          last_date=""
-          for f in $files; do
-            base=$(basename "$f")
-            date_part=$(echo "$base" | awk -F'_' '{print $4}' | sed 's/[^0-9-]//g')
-            if [ "$date_part" != "$last_date" ]; then
-              pretty=$(TZ=America/New_York date -d "$date_part" +'%A, %b %d, %Y')
-              [ -n "$last_date" ] && echo "</ul>" >> docs/index.html
-              echo "<h2 class=\"datehdr\">$pretty</h2><ul>" >> docs/index.html
-              last_date="$date_part"
-            fi
-            echo "<li><a href=\"maps/$base\">$base</a></li>" >> docs/index.html
-          done
-          [ -n "$files" ] && echo "</ul>" >> docs/index.html
+          # Write sections for the last 7 ET dates only
+          if [ ${#keep_dates[@]} -gt 0 ]; then
+            for d in "${keep_dates[@]}"; do
+              pretty=$(TZ=America/New_York date -d "$d" +'%A, %b %d, %Y')
+              echo "<h2>$pretty</h2>" >> docs/index.html
+              echo "<ul>" >> docs/index.html
+              # list files for this date in reverse-chronological order
+              for f in $files; do
+                base=$(basename "$f")
+                dp=$(echo "$base" | awk -F'_' '{print $4}' | sed 's/[^0-9-]//g')
+                if [ "$dp" = "$d" ]; then
+                  echo "<li><a href=\"maps/$base\">$base</a></li>" >> docs/index.html
+                fi
+              done
+              echo "</ul>" >> docs/index.html
+            done
+          fi
 
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
         with:
           add: "docs"
-          message: "Archive header logo, map title logo, grouped archive"
+          message: "Archive page: larger logo, objective text, last 7 days, no indent"
           default_author: github_actions
