@@ -1,3 +1,5 @@
+# scripts/build_map.py
+
 import os
 import sys
 import base64
@@ -170,40 +172,21 @@ def compute_dt_et():
     file_str = dt.strftime("%Y-%m-%d_%H-%M-%S_ET")
     return dt, display_str, file_str
 
-# ---------- Logo helpers ----------
-def _load_logo_data_url(path: str):
-    try:
-        if not path or not os.path.isfile(path):
-            return None
-        with open(path, "rb") as f:
-            b64 = base64.b64encode(f.read()).decode("ascii")
-        return f"data:image/png;base64,{b64}"
-    except Exception:
-        return None
-
-def build_title_html(radius_km: int, back_days: int, ts_display_et: str, logo_data_url: str | None = None) -> str:
-    logo_html = (
-        f'<img src="{logo_data_url}" alt="Goodbirds logo" '
-        f'style="height:28px; display:block; flex:0 0 auto;">'
-        if logo_data_url else ""
-    )
+def build_title_html(radius_km: int, back_days: int, ts_display_et: str) -> str:
     return f"""
       <div style="
           position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
           background: rgba(255,255,255,0.95); padding: 10px 14px; border:1px solid #999;
-          border-radius:6px; z-index: 1500; font-size:14px;">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
-            <div style="font-weight:700; font-size:16px;">{MAP_MAIN_TITLE}</div>
-            <div style="font-weight:600; margin-top:4px;">
-              eBird Notable • {radius_km} km radius • last {back_days} day(s)
-            </div>
-            <div style="display:flex; gap:12px; justify-content:center; align-items:center; margin-top:6px; font-size:12px;">
-              <span>Built: {ts_display_et}</span>
-              <a href="{ARCHIVE_URL}" target="_blank" rel="noopener" style="text-decoration:none;">Archive</a>
-            </div>
-          </div>
-          {logo_html}
+          border-radius:6px; z-index: 1000; font-size:14px;">
+        <div style="font-weight:700; font-size:16px; text-align:center;">
+          {MAP_MAIN_TITLE}
+        </div>
+        <div style="font-weight:600; margin-top:4px; text-align:center;">
+          eBird Notable • {radius_km} km radius • last {back_days} day(s)
+        </div>
+        <div style="display:flex; gap:12px; justify-content:space-between; align-items:center; margin-top:6px; font-size:12px;">
+          <span>Built: {ts_display_et}</span>
+          <a href="{ARCHIVE_URL}" target="_blank" rel="noopener" style="text-decoration:none;">Archive</a>
         </div>
       </div>
     """
@@ -257,6 +240,31 @@ def add_clear_species_control(m: folium.Map, species_names):
     """
     m.get_root().html.add_child(folium.Element(js))
 
+def add_map_logo(m: folium.Map, logo_abs_path: str = MAP_LOGO_FILE, height_px: int = 40):
+    """Embed the PNG as base64 so it always renders regardless of path."""
+    try:
+        if not logo_abs_path or not os.path.isfile(logo_abs_path):
+            return  # silently skip if we can't find it
+        with open(logo_abs_path, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode("ascii")
+        img_src = f"data:image/png;base64,{b64}"
+        html = f"""
+        <div style="
+          position: fixed;
+          bottom: 10px;
+          right: 10px;
+          z-index: 1000;
+          background: rgba(255,255,255,0.85);
+          padding: 4px 6px;
+          border-radius: 6px;
+          border: 1px solid #ccc;">
+          <img src="{img_src}" alt="Goodbirds logo" style="height:{height_px}px; display:block;">
+        </div>
+        """
+        m.get_root().html.add_child(folium.Element(html))
+    except Exception as e:
+        print(f"Logo embed skipped: {e}")
+
 def prune_archive(dirpath: str, keep: int = 30) -> int:
     try:
         files = [f for f in os.listdir(dirpath)
@@ -298,10 +306,8 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
 
     data = get_data(lat, lon, radius_km, back_days)
 
-    # Title with inline logo
-    logo_data_url = _load_logo_data_url(MAP_LOGO_FILE)
     m = folium.Map(location=[lat, lon], zoom_start=zoom_start, control_scale=True)
-    m.get_root().html.add_child(folium.Element(build_title_html(radius_km, back_days, ts_display_et, logo_data_url)))
+    m.get_root().html.add_child(folium.Element(build_title_html(radius_km, back_days, ts_display_et)))
 
     add_radius_rings(m, lat, lon, radius_km)
     Fullscreen().add_to(m)
@@ -309,6 +315,9 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
     m.add_child(MeasureControl(primary_length_unit="kilometers"))
     LocateControl(auto_start=False, keepCurrentZoomLevel=False).add_to(m)
     MousePosition(separator=" , ", prefix="Lat, Lon:").add_to(m)
+
+    # Embed logo
+    add_map_logo(m, MAP_LOGO_FILE, height_px=40)
 
     if not data:
         add_notice(m, "No current notable birds for the selected window.")
