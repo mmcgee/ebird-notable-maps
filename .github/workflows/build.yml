@@ -54,6 +54,7 @@ jobs:
           python scripts/build_map.py
 
 
+
       - name: Rebuild archive index.html with bigger header logo
         run: |
           python - <<'PY'
@@ -107,7 +108,7 @@ jobs:
                 padding-bottom: 16px;
               }}
               .header img {{
-                height: 220px; /* much bigger logo for legibility */
+                height: 220px; /* large and legible on index */
               }}
               .title h1 {{
                 font-size: 32px;
@@ -156,6 +157,7 @@ jobs:
                 </div>
               </div>
           """
+
 
 
           sections = []
