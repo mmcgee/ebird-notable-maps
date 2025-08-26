@@ -53,10 +53,10 @@ jobs:
         run: |
           python scripts/build_map.py
 
-      - name: Rebuild archive index.html with big header logo
+      - name: Rebuild archive index.html with bigger header logo
         run: |
           python - <<'PY'
-          import os, re, datetime
+          import os, re
           from pathlib import Path
           DOCS = Path("docs")
           MAPS = DOCS / "maps"
@@ -66,10 +66,9 @@ jobs:
           # Gather map files
           files = sorted([p for p in MAPS.glob("ebird_radius_map_*.html")], reverse=True)
 
-          # Keep only last 7 days in the archive listing (do not delete files)
+          # Group by ET date from filename
           by_day = {}
           for p in files:
-            # Filename format: ebird_radius_map_YYYY-MM-DD_HH-MM-SS_ET_XXkm.html
             m = re.search(r"ebird_radius_map_(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})_ET_(\d+)km\.html$", p.name)
             if not m:
               continue
@@ -77,11 +76,10 @@ jobs:
             time = m.group(2).replace("-", ":")
             by_day.setdefault(day, []).append((time, p.name))
 
-          # Trim to last 7 distinct days
+          # Keep only last seven distinct days in the listing
           day_keys = sorted(by_day.keys(), reverse=True)[:7]
           by_day = {k: by_day[k] for k in day_keys}
 
-          # Build HTML
           logo = "goodbirds_logo_test.png"
           header = f"""
           <!doctype html>
@@ -106,16 +104,16 @@ jobs:
               .header {{
                 display: flex;
                 align-items: center;
-                gap: 14px;
+                gap: 16px;
                 margin-bottom: 12px;
                 border-bottom: 1px solid #ddd;
                 padding-bottom: 12px;
               }}
               .header img {{
-                height: 100px; /* Bigger logo as requested */
+                height: 160px; /* bigger logo on index */
               }}
               .title h1 {{
-                font-size: 26px;
+                font-size: 28px;
                 margin: 0 0 4px 0;
               }}
               .title p {{
