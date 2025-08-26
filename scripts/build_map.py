@@ -185,24 +185,23 @@ def _logo_data_url(logo_abs_path: str) -> str:
     except Exception:
         return ""
 
-
 def build_title_html(radius_km: int, back_days: int, ts_display_et: str, logo_data_url: str) -> str:
     """
     Title bar is fixed at the top center. The logo sits at the left side inside the bar.
-    Back to smaller logo size for mobile friendliness.
+    Increased logo size for stronger branding.
     """
     logo_img = ""
     if logo_data_url:
         logo_img = (
             f"<img src='{logo_data_url}' alt='Goodbirds logo' "
-            f"style='height:34px;display:block;margin-right:10px;'>"
+            f"style='height:64px;display:block;margin-right:12px;'>"
         )
     return f"""
       <div style="
           position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
           background: rgba(255,255,255,0.98); padding: 12px 16px; border:1px solid #999;
-          border-radius:6px; z-index: 1200; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
-        <div style="display:flex; align-items:center; gap:10px;">
+          border-radius:6px; z-index: 1200; font-size:14px; box-shadow:0 1px 4px rgba(0,0,0,0.2);">
+        <div style="display:flex; align-items:center; gap:12px;">
           {logo_img}
           <div>
             <div style="font-weight:700; font-size:18px; text-align:left;">
@@ -219,8 +218,6 @@ def build_title_html(radius_km: int, back_days: int, ts_display_et: str, logo_da
         </div>
       </div>
     """
-
-
 
 def add_clear_species_control(m: folium.Map, species_names):
     species_list = list(species_names or [])
