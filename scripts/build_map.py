@@ -1,4 +1,12 @@
 # scripts/build_map.py
+#
+# Compact, mobile-friendly title box:
+# - Bottom-left "i" button toggles an info panel
+# - Panel shows large logo, title, details, archive link
+# - Starts collapsed so it does not cover the map on phones
+#
+# Legend is raised from the bottom for breathing room.
+# MiniMap is removed. Logo is embedded via base64 for fully self-contained maps.
 
 import os
 import sys
@@ -45,7 +53,7 @@ SPECIES_LAYER_THRESHOLD = 200
 ARCHIVE_URL = "https://mmcgee.github.io/ebird-notable-maps/"
 MAP_MAIN_TITLE = "North Cambridge and Vicinity"
 
-# Absolute path to logo for embedding
+# Absolute path to logo for embedding - set via MAP_LOGO_FILE env in CI
 MAP_LOGO_FILE = os.getenv("MAP_LOGO_FILE", "")
 
 def color_for_species(name: str) -> str:
@@ -101,7 +109,7 @@ def build_legend_html(species_to_color: OrderedDict) -> str:
     html = f"""
     <div id="legend" style="
         position: fixed;
-        bottom: 48px;   /* raised for spacing from browser edge */
+        bottom: 48px;   /* raised for spacing on mobile */
         right: 16px;
         z-index: 900;
         background: rgba(255,255,255,0.95);
@@ -173,9 +181,7 @@ def compute_dt_et():
     return dt, display_str, file_str
 
 def _logo_data_url(logo_abs_path: str) -> str:
-    """
-    Return a data URL for the PNG logo if present - else return empty string.
-    """
+    # Return a data URL for the PNG logo if present - else return empty string
     try:
         if not logo_abs_path or not os.path.isfile(logo_abs_path):
             return ""
@@ -185,39 +191,158 @@ def _logo_data_url(logo_abs_path: str) -> str:
     except Exception:
         return ""
 
-def build_title_html(radius_km: int, back_days: int, ts_display_et: str, logo_data_url: str) -> str:
+def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_url: str) -> str:
     """
-    Title box sits bottom-left where the MiniMap used to be.
-    Enlarged logo for legibility.
+    Bottom-left compact info UI:
+      - Round "i" button toggles a hidden panel
+      - Panel shows big logo, title, details, archive link
+      - Collapsed by default for mobile friendliness
     """
     logo_img = ""
     if logo_data_url:
+        # Large logo for legibility when opened
         logo_img = (
             f"<img src='{logo_data_url}' alt='Goodbirds logo' "
-            f"style='height:100px;display:block;margin-right:16px;'>"
+            f"style='height:100px;display:block;'>"
         )
-    return f"""
-      <div style="
-          position: fixed; bottom: 16px; left: 16px;
-          background: rgba(255,255,255,0.98); padding: 16px 20px; border:1px solid #999;
-          border-radius:8px; z-index: 1200; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
-        <div style="display:flex; align-items:center; gap:16px;">
-          {logo_img}
-          <div>
-            <div style="font-weight:700; font-size:22px; text-align:left;">
-              {MAP_MAIN_TITLE}
-            </div>
-            <div style="font-weight:600; margin-top:6px; text-align:left; font-size:16px;">
-              eBird Notable - {radius_km} km radius - last {back_days} day(s)
-            </div>
-            <div style="display:flex; gap:16px; align-items:center; margin-top:8px; font-size:13px;">
-              <span>Built: {ts_display_et}</span>
-              <a href="{ARCHIVE_URL}" target="_blank" rel="noopener" style="text-decoration:none;">Archive</a>
-            </div>
+    html = f"""
+    <style>
+      /* Info button */
+      .gb-info-btn {{
+        position: fixed;
+        left: 16px;
+        bottom: 16px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #ffffff;
+        border: 1px solid #999;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+        z-index: 1201;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font: 700 18px/1 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        cursor: pointer;
+        user-select: none;
+      }}
+      .gb-info-btn:focus {{ outline: 2px solid #2c7fb8; }}
+
+      /* Info panel */
+      .gb-info-panel {{
+        position: fixed;
+        left: 16px;
+        bottom: 16px;
+        z-index: 1200;
+        background: rgba(255,255,255,0.98);
+        border: 1px solid #999;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        padding: 12px;
+        width: min(92vw, 360px);
+        max-height: 70vh;
+        display: none; /* hidden until toggled */
+      }}
+      .gb-info-header {{
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-gap: 12px;
+        align-items: center;
+      }}
+      .gb-info-title {{
+        font-weight: 700;
+        font-size: 16px;
+        margin: 0;
+      }}
+      .gb-info-meta {{
+        font-size: 13px;
+        margin-top: 2px;
+      }}
+      .gb-info-row {{
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 12px;
+      }}
+      .gb-info-close {{
+        position: absolute;
+        right: 8px;
+        top: 6px;
+        border: none;
+        background: transparent;
+        font-size: 18px;
+        cursor: pointer;
+        line-height: 1;
+      }}
+      .gb-info-close:focus {{ outline: 2px solid #2c7fb8; }}
+
+      /* Small screens - keep it compact */
+      @media (max-width: 480px) {{
+        .gb-info-panel {{
+          width: 92vw;
+        }}
+        .gb-info-title {{ font-size: 15px; }}
+        .gb-info-meta {{ font-size: 12px; }}
+        .gb-info-row {{ font-size: 11px; }}
+      }}
+    </style>
+
+    <div class="gb-info-btn" id="gbInfoBtn" role="button" aria-label="Show map info" aria-expanded="false">i</div>
+
+    <div class="gb-info-panel" id="gbInfoPanel" aria-hidden="true">
+      <button class="gb-info-close" id="gbInfoClose" aria-label="Close info">×</button>
+      <div class="gb-info-header">
+        <div>{logo_img}</div>
+        <div>
+          <h3 class="gb-info-title">{MAP_MAIN_TITLE}</h3>
+          <div class="gb-info-meta">eBird Notable - {radius_km} km radius - last {back_days} day(s)</div>
+          <div class="gb-info-row">
+            <span>Built: {ts_display_et}</span>
+            <a href="{ARCHIVE_URL}" target="_blank" rel="noopener">Archive</a>
           </div>
         </div>
       </div>
+    </div>
+
+    <script>
+      (function() {{
+        var btn = document.getElementById('gbInfoBtn');
+        var panel = document.getElementById('gbInfoPanel');
+        var closeBtn = document.getElementById('gbInfoClose');
+
+        function openPanel() {{
+          panel.style.display = 'block';
+          btn.setAttribute('aria-expanded', 'true');
+          panel.setAttribute('aria-hidden', 'false');
+        }}
+        function closePanel() {{
+          panel.style.display = 'none';
+          btn.setAttribute('aria-expanded', 'false');
+          panel.setAttribute('aria-hidden', 'true');
+        }}
+
+        btn.addEventListener('click', function(e) {{
+          if (panel.style.display === 'block') {{
+            closePanel();
+          }} else {{
+            openPanel();
+          }}
+        }});
+        closeBtn.addEventListener('click', function(e) {{
+          closePanel();
+        }});
+
+        // Close panel when clicking outside it
+        document.addEventListener('click', function(e) {{
+          if (!panel.contains(e.target) && e.target !== btn) {{
+            closePanel();
+          }}
+        }});
+      }})();
+    </script>
     """
+    return html
 
 def add_clear_species_control(m: folium.Map, species_names):
     species_list = list(species_names or [])
@@ -311,13 +436,13 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
 
     m = folium.Map(location=[lat, lon], zoom_start=zoom_start, control_scale=True)
 
-    # Title box in bottom-left - replaces MiniMap
+    # Bottom-left compact info UI replaces the old MiniMap
     logo_data_url = _logo_data_url(MAP_LOGO_FILE)
-    m.get_root().html.add_child(folium.Element(build_title_html(radius_km, back_days, ts_display_et, logo_data_url)))
+    m.get_root().html.add_child(folium.Element(build_info_ui(radius_km, back_days, ts_display_et, logo_data_url)))
 
     add_radius_rings(m, lat, lon, radius_km)
     Fullscreen().add_to(m)
-    # MiniMap removed as requested
+    # MiniMap removed
     m.add_child(MeasureControl(primary_length_unit="kilometers"))
     LocateControl(auto_start=False, keepCurrentZoomLevel=False).add_to(m)
     MousePosition(separator=" , ", prefix="Lat, Lon:").add_to(m)
