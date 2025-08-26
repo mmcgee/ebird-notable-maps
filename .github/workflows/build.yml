@@ -1,15 +1,12 @@
-name: Build bird maps at 12:00 and 21:00 ET (EDT only)
+name: Build Goodbirds Maps
 
 on:
   schedule:
-    - cron: "0 16 * * *"   # 12:00 PM EDT (UTC-4)
-    - cron: "0 1 * * *"    # 9:00 PM EDT (UTC-4) next-day UTC
+    # 12:00 ET and 21:00 ET - convert to UTC
+    # During EDT (UTC-4): 12:00 ET -> 16:00 UTC, 21:00 ET -> 01:00 UTC next day
+    - cron: "0 16 * * *"
+    - cron: "0 1 * * *"
   workflow_dispatch:
-    inputs:
-      FORCE_BUILD:
-        description: "Run immediately (uses nearest slot label)"
-        required: false
-        default: "false"
 
 permissions:
   contents: write
@@ -17,39 +14,16 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      OUTPUT_DIR: docs/maps
+      LOGO_BASENAME: goodbirds_logo_test.png
+      MAP_LOGO_FILE: ${{ github.workspace }}/docs/goodbirds_logo_test.png
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Determine intended slot
-        id: slot
-        run: |
-          force="${{ github.event.inputs.FORCE_BUILD }}"
-          run_slot=""
-          run_date_et=$(TZ=America/New_York date +'%Y-%m-%d')
-          if [ "$force" = "true" ]; then
-            hour=$(TZ=America/New_York date +'%H')
-            if [ "$hour" -ge 6 ] && [ "$hour" -lt 18 ]; then
-              run_slot="12"
-            else
-              run_slot="21"
-            fi
-          else
-            trig="${{ github.event.schedule }}"
-            if [ "$trig" = "0 16 * * *" ]; then
-              run_slot="12"
-            elif [ "$trig" = "0 1 * * *" ]; then
-              run_slot="21"
-              run_date_et=$(TZ=America/New_York date -d 'yesterday' +'%Y-%m-%d')
-            else
-              echo "Unexpected schedule: $trig"
-              exit 1
-            fi
-          fi
-          echo "run_slot=$run_slot" >> $GITHUB_OUTPUT
-          echo "run_date_et=$run_date_et" >> $GITHUB_OUTPUT
-
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -59,85 +33,161 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Generate map
-        env:
-          EBIRD_API_KEY: ${{ secrets.EBIRD_API_KEY }}
-          OUTPUT_DIR: ${{ github.workspace }}/docs/maps
-          KEEP_COUNT: "30"
-          RUN_DATE_ET: ${{ steps.slot.outputs.run_date_et }}
-          RUN_SLOT: ${{ steps.slot.outputs.run_slot }}
-          MAP_LOGO_FILE: ${{ github.workspace }}/docs/goodbirds_logo_text.png   # <-- add this
+      - name: Ensure docs and maps directories exist
         run: |
-          mkdir -p "$OUTPUT_DIR"
-          python scripts/build_map.py
+          mkdir -p docs/maps
 
-      - name: Rebuild archive index (bigger logo, objective text, last 7 days, no indent)
+      - name: Copy logo to docs
         run: |
-          set -euo pipefail
-          mkdir -p docs
-          # All map files with ET timestamp in name
-          files=$(ls -1 docs/maps/ebird_radius_map_*_ET_*km.html 2>/dev/null | sort -r || true)
-
-          # Collect unique ET dates from filenames (desc), keep only most recent 7
-          mapfile -t all_dates < <(for f in $files; do
-            b=$(basename "$f")
-            d=$(echo "$b" | awk -F'_' '{print $4}' | sed 's/[^0-9-]//g')
-            echo "$d"
-          done | awk '!seen[$0]++')
-          # Trim to 7 dates
-          keep_dates=("${all_dates[@]:0:7}")
-
-          # Build index.html
-          cat > docs/index.html <<'HTML'
-          <!doctype html><meta charset="utf-8"><title>eBird Notable Maps Archive</title>
-          <style>
-            body{font-family:sans-serif;margin:2rem;max-width:900px}
-            h1{font-size:1.8rem;margin:0 0 .75rem 0;display:flex;align-items:center;gap:.75rem}
-            .logo{height:80px} /* bigger logo */
-            h2{font-size:1.15rem;margin:1.1rem 0 .4rem 0;color:#333}
-            /* Remove left-indent for lists; make all days align flush left */
-            ul{margin:.25rem 0 .9rem 0; padding-left:0}
-            li{list-style:none; line-height:1.6}
-            .latest{margin:.75rem 0 1rem 0;font-size:1.05rem}
-            .note{color:#555}
-          </style>
-          <h1>
-            <img src="goodbirds_logo_text.png" alt="Goodbirds logo" class="logo">
-            eBird Notable Maps
-          </h1>
-          <div class="latest"><strong><a href="maps/latest.html">Open Latest Map</a></strong></div>
-
-          <p class="note">
-            Maps are scheduled to build automatically at <strong>12:00</strong> and <strong>21:00</strong> New York time.
-            Each map visualizes recent <strong>eBird “Notable” observations</strong> near the selected center point.
-          </p>
-          <p class="note">
-            Built with the <strong>eBird API</strong>, <strong>Python</strong>, <strong>Folium</strong> (Leaflet),
-            <strong>GitHub Actions</strong>, and <strong>GitHub Pages</strong>.
-          </p>
-          HTML
-
-          # Write sections for the last 7 ET dates only
-          if [ ${#keep_dates[@]} -gt 0 ]; then
-            for d in "${keep_dates[@]}"; do
-              pretty=$(TZ=America/New_York date -d "$d" +'%A, %b %d, %Y')
-              echo "<h2>$pretty</h2>" >> docs/index.html
-              echo "<ul>" >> docs/index.html
-              # list files for this date in reverse-chronological order
-              for f in $files; do
-                base=$(basename "$f")
-                dp=$(echo "$base" | awk -F'_' '{print $4}' | sed 's/[^0-9-]//g')
-                if [ "$dp" = "$d" ]; then
-                  echo "<li><a href=\"maps/$base\">$base</a></li>" >> docs/index.html
-                fi
-              done
-              echo "</ul>" >> docs/index.html
-            done
+          if [ -f "${{ env.LOGO_BASENAME }}" ]; then
+            cp "${{ env.LOGO_BASENAME }}" "docs/${{ env.LOGO_BASENAME }}"
+          else
+            echo "Logo not found at repo root - ${LOGO_BASENAME}"
           fi
 
+      - name: Build map(s)
+        env:
+          EBIRD_API_KEY: ${{ secrets.EBIRD_API_KEY }}
+          OUTPUT_DIR: ${{ env.OUTPUT_DIR }}
+          MAP_LOGO_FILE: ${{ env.MAP_LOGO_FILE }}
+        run: |
+          python scripts/build_map.py
+
+      - name: Rebuild archive index.html with big header logo
+        run: |
+          python - <<'PY'
+          import os, re, datetime
+          from pathlib import Path
+          DOCS = Path("docs")
+          MAPS = DOCS / "maps"
+          DOCS.mkdir(exist_ok=True)
+          MAPS.mkdir(exist_ok=True)
+
+          # Gather map files
+          files = sorted([p for p in MAPS.glob("ebird_radius_map_*.html")], reverse=True)
+
+          # Keep only last 7 days in the archive listing (do not delete files)
+          by_day = {}
+          for p in files:
+            # Filename format: ebird_radius_map_YYYY-MM-DD_HH-MM-SS_ET_XXkm.html
+            m = re.search(r"ebird_radius_map_(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})_ET_(\d+)km\.html$", p.name)
+            if not m:
+              continue
+            day = m.group(1)
+            time = m.group(2).replace("-", ":")
+            by_day.setdefault(day, []).append((time, p.name))
+
+          # Trim to last 7 distinct days
+          day_keys = sorted(by_day.keys(), reverse=True)[:7]
+          by_day = {k: by_day[k] for k in day_keys}
+
+          # Build HTML
+          logo = "goodbirds_logo_test.png"
+          header = f"""
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Goodbirds - Notable Maps Archive</title>
+            <style>
+              body {{
+                font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+                margin: 0;
+                padding: 0 0 40px 0;
+                background: #fafafa;
+                color: #222;
+              }}
+              .wrap {{
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 20px 16px 40px 16px;
+              }}
+              .header {{
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                margin-bottom: 12px;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 12px;
+              }}
+              .header img {{
+                height: 100px; /* Bigger logo as requested */
+              }}
+              .title h1 {{
+                font-size: 26px;
+                margin: 0 0 4px 0;
+              }}
+              .title p {{
+                margin: 4px 0 0 0;
+                font-size: 14px;
+                color: #444;
+              }}
+              .day {{
+                margin-top: 20px;
+              }}
+              .day h2 {{
+                font-size: 18px;
+                margin: 0 0 8px 0;
+              }}
+              ul {{
+                list-style: none;
+                padding-left: 0;
+                margin: 0;
+              }}
+              li {{
+                margin: 4px 0;
+              }}
+              a {{
+                text-decoration: none;
+                color: #0a58ca;
+              }}
+              a:hover {{
+                text-decoration: underline;
+              }}
+              .latest-link {{
+                margin-top: 6px;
+              }}
+            </style>
+          </head>
+          <body>
+            <div class="wrap">
+              <div class="header">
+                <img src="{logo}" alt="Goodbirds logo">
+                <div class="title">
+                  <h1>Goodbirds - Notable Maps Archive</h1>
+                  <p>Updated twice daily - data from the eBird Notable API - maps generated with Folium - credits in repository.</p>
+                  <div class="latest-link"><a href="maps/latest.html">View the latest map</a></div>
+                </div>
+              </div>
+          """
+
+          sections = []
+          for day in sorted(by_day.keys(), reverse=True):
+            items = []
+            for time, fname in sorted(by_day[day], reverse=True):
+              items.append(f'<li><a href="maps/{fname}">{day} {time} ET</a></li>')
+            sections.append(f'<div class="day"><h2>{day}</h2><ul>' + "\n".join(items) + "</ul></div>")
+
+          footer = """
+              </div>
+            </body>
+          </html>
+          """
+
+          html = header + "\n".join(sections) + footer
+          (DOCS / "index.html").write_text(html, encoding="utf-8")
+          print("Wrote docs/index.html")
+          PY
+
       - name: Commit and push changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: "docs"
-          message: "Archive page: larger logo, objective text, last 7 days, no indent"
-          default_author: github_actions
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Automated map build - update maps and archive"
+            git push
+          else
+            echo "No changes to commit."
+          fi

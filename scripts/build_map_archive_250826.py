@@ -45,7 +45,7 @@ SPECIES_LAYER_THRESHOLD = 200
 ARCHIVE_URL = "https://mmcgee.github.io/ebird-notable-maps/"
 MAP_MAIN_TITLE = "North Cambridge and Vicinity"
 
-# Absolute path to logo for embedding
+# Absolute path to logo (for embedding). In Actions we pass this.
 MAP_LOGO_FILE = os.getenv("MAP_LOGO_FILE", "")
 
 def color_for_species(name: str) -> str:
@@ -103,7 +103,7 @@ def build_legend_html(species_to_color: OrderedDict) -> str:
         position: fixed;
         bottom: 16px;
         right: 16px;
-        z-index: 900;
+        z-index: 1000;
         background: rgba(255,255,255,0.95);
         padding: 8px 10px;
         border: 1px solid #888;
@@ -172,49 +172,21 @@ def compute_dt_et():
     file_str = dt.strftime("%Y-%m-%d_%H-%M-%S_ET")
     return dt, display_str, file_str
 
-def _logo_data_url(logo_abs_path: str) -> str:
-    """
-    Return a data URL for the PNG logo if present - else return empty string.
-    """
-    try:
-        if not logo_abs_path or not os.path.isfile(logo_abs_path):
-            return ""
-        with open(logo_abs_path, "rb") as f:
-            b64 = base64.b64encode(f.read()).decode("ascii")
-        return f"data:image/png;base64,{b64}"
-    except Exception:
-        return ""
-
-def build_title_html(radius_km: int, back_days: int, ts_display_et: str, logo_data_url: str) -> str:
-    """
-    Title bar is fixed at the top center. The logo is placed at the left inside the bar.
-    This avoids overlap with the legend and keeps the logo visible.
-    """
-    logo_img = ""
-    if logo_data_url:
-        logo_img = (
-            f"<img src='{logo_data_url}' alt='Goodbirds logo' "
-            f"style='height:34px;display:block;margin-right:10px;'>"
-        )
+def build_title_html(radius_km: int, back_days: int, ts_display_et: str) -> str:
     return f"""
       <div style="
           position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-          background: rgba(255,255,255,0.98); padding: 10px 14px; border:1px solid #999;
-          border-radius:6px; z-index: 1200; font-size:14px; box-shadow:0 1px 4px rgba(0,0,0,0.2);">
-        <div style="display:flex; align-items:center; gap:10px;">
-          {logo_img}
-          <div>
-            <div style="font-weight:700; font-size:16px; text-align:left;">
-              {MAP_MAIN_TITLE}
-            </div>
-            <div style="font-weight:600; margin-top:2px; text-align:left;">
-              eBird Notable - {radius_km} km radius - last {back_days} day(s)
-            </div>
-            <div style="display:flex; gap:12px; align-items:center; margin-top:4px; font-size:12px;">
-              <span>Built: {ts_display_et}</span>
-              <a href="{ARCHIVE_URL}" target="_blank" rel="noopener" style="text-decoration:none;">Archive</a>
-            </div>
-          </div>
+          background: rgba(255,255,255,0.95); padding: 10px 14px; border:1px solid #999;
+          border-radius:6px; z-index: 1000; font-size:14px;">
+        <div style="font-weight:700; font-size:16px; text-align:center;">
+          {MAP_MAIN_TITLE}
+        </div>
+        <div style="font-weight:600; margin-top:4px; text-align:center;">
+          eBird Notable • {radius_km} km radius • last {back_days} day(s)
+        </div>
+        <div style="display:flex; gap:12px; justify-content:space-between; align-items:center; margin-top:6px; font-size:12px;">
+          <span>Built: {ts_display_et}</span>
+          <a href="{ARCHIVE_URL}" target="_blank" rel="noopener" style="text-decoration:none;">Archive</a>
         </div>
       </div>
     """
@@ -268,6 +240,31 @@ def add_clear_species_control(m: folium.Map, species_names):
     """
     m.get_root().html.add_child(folium.Element(js))
 
+def add_map_logo(m: folium.Map, logo_abs_path: str = MAP_LOGO_FILE, height_px: int = 40):
+    """Embed the PNG as base64 so it always renders regardless of path."""
+    try:
+        if not logo_abs_path or not os.path.isfile(logo_abs_path):
+            return  # silently skip if we can't find it
+        with open(logo_abs_path, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode("ascii")
+        img_src = f"data:image/png;base64,{b64}"
+        html = f"""
+        <div style="
+          position: fixed;
+          bottom: 10px;
+          right: 10px;
+          z-index: 1000;
+          background: rgba(255,255,255,0.85);
+          padding: 4px 6px;
+          border-radius: 6px;
+          border: 1px solid #ccc;">
+          <img src="{img_src}" alt="Goodbirds logo" style="height:{height_px}px; display:block;">
+        </div>
+        """
+        m.get_root().html.add_child(folium.Element(html))
+    except Exception as e:
+        print(f"Logo embed skipped: {e}")
+
 def prune_archive(dirpath: str, keep: int = 30) -> int:
     try:
         files = [f for f in os.listdir(dirpath)
@@ -310,10 +307,7 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
     data = get_data(lat, lon, radius_km, back_days)
 
     m = folium.Map(location=[lat, lon], zoom_start=zoom_start, control_scale=True)
-
-    # Build title block with embedded logo up top - avoids legend overlap
-    logo_data_url = _logo_data_url(MAP_LOGO_FILE)
-    m.get_root().html.add_child(folium.Element(build_title_html(radius_km, back_days, ts_display_et, logo_data_url)))
+    m.get_root().html.add_child(folium.Element(build_title_html(radius_km, back_days, ts_display_et)))
 
     add_radius_rings(m, lat, lon, radius_km)
     Fullscreen().add_to(m)
@@ -321,6 +315,9 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
     m.add_child(MeasureControl(primary_length_unit="kilometers"))
     LocateControl(auto_start=False, keepCurrentZoomLevel=False).add_to(m)
     MousePosition(separator=" , ", prefix="Lat, Lon:").add_to(m)
+
+    # Embed logo
+    add_map_logo(m, MAP_LOGO_FILE, height_px=40)
 
     if not data:
         add_notice(m, "No current notable birds for the selected window.")
