@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 from collections import defaultdict, OrderedDict
 
 import folium
-from folium.plugins import MarkerCluster, MiniMap, Fullscreen, MeasureControl, LocateControl, MousePosition
+from folium.plugins import MarkerCluster, Fullscreen, MeasureControl, LocateControl, MousePosition
 try:
     import ipywidgets as widgets
     from IPython.display import display
@@ -101,7 +101,7 @@ def build_legend_html(species_to_color: OrderedDict) -> str:
     html = f"""
     <div id="legend" style="
         position: fixed;
-        bottom: 48px;   /* raised by about half an inch */
+        bottom: 48px;   /* raised for spacing from browser edge */
         right: 16px;
         z-index: 900;
         background: rgba(255,255,255,0.95);
@@ -187,30 +187,30 @@ def _logo_data_url(logo_abs_path: str) -> str:
 
 def build_title_html(radius_km: int, back_days: int, ts_display_et: str, logo_data_url: str) -> str:
     """
-    Title bar is fixed at the top center. The logo sits at the left side inside the bar.
-    Increased logo size for stronger branding.
+    Title box sits bottom-left where the MiniMap used to be.
+    Enlarged logo for legibility.
     """
     logo_img = ""
     if logo_data_url:
         logo_img = (
             f"<img src='{logo_data_url}' alt='Goodbirds logo' "
-            f"style='height:64px;display:block;margin-right:12px;'>"
+            f"style='height:100px;display:block;margin-right:16px;'>"
         )
     return f"""
       <div style="
-          position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-          background: rgba(255,255,255,0.98); padding: 12px 16px; border:1px solid #999;
-          border-radius:6px; z-index: 1200; font-size:14px; box-shadow:0 1px 4px rgba(0,0,0,0.2);">
-        <div style="display:flex; align-items:center; gap:12px;">
+          position: fixed; bottom: 16px; left: 16px;
+          background: rgba(255,255,255,0.98); padding: 16px 20px; border:1px solid #999;
+          border-radius:8px; z-index: 1200; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+        <div style="display:flex; align-items:center; gap:16px;">
           {logo_img}
           <div>
-            <div style="font-weight:700; font-size:18px; text-align:left;">
+            <div style="font-weight:700; font-size:22px; text-align:left;">
               {MAP_MAIN_TITLE}
             </div>
-            <div style="font-weight:600; margin-top:4px; text-align:left; font-size:14px;">
+            <div style="font-weight:600; margin-top:6px; text-align:left; font-size:16px;">
               eBird Notable - {radius_km} km radius - last {back_days} day(s)
             </div>
-            <div style="display:flex; gap:12px; align-items:center; margin-top:6px; font-size:12px;">
+            <div style="display:flex; gap:16px; align-items:center; margin-top:8px; font-size:13px;">
               <span>Built: {ts_display_et}</span>
               <a href="{ARCHIVE_URL}" target="_blank" rel="noopener" style="text-decoration:none;">Archive</a>
             </div>
@@ -311,13 +311,13 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
 
     m = folium.Map(location=[lat, lon], zoom_start=zoom_start, control_scale=True)
 
-    # Title block with larger embedded logo at the top
+    # Title box in bottom-left - replaces MiniMap
     logo_data_url = _logo_data_url(MAP_LOGO_FILE)
     m.get_root().html.add_child(folium.Element(build_title_html(radius_km, back_days, ts_display_et, logo_data_url)))
 
     add_radius_rings(m, lat, lon, radius_km)
     Fullscreen().add_to(m)
-    MiniMap(toggle_display=True, position="bottomleft").add_to(m)
+    # MiniMap removed as requested
     m.add_child(MeasureControl(primary_length_unit="kilometers"))
     LocateControl(auto_start=False, keepCurrentZoomLevel=False).add_to(m)
     MousePosition(separator=" , ", prefix="Lat, Lon:").add_to(m)
