@@ -1,12 +1,12 @@
 # scripts/build_map.py
 #
-# Compact, mobile-friendly title box:
-# - Bottom-left "i" button toggles an info panel
+# Compact, mobile-friendly title/info UI:
+# - Bottom-left "i" button toggles an info panel (collapsed by default)
 # - Panel shows large logo, title, details, archive link
-# - Starts collapsed so it does not cover the map on phones
+# - Legend remains raised from the bottom for mobile
+# - MiniMap removed
 #
-# Legend is raised from the bottom for breathing room.
-# MiniMap is removed. Logo is embedded via base64 for fully self-contained maps.
+# NOTE: All CSS/JS braces in template strings are doubled {{ }} to avoid f-string formatting issues.
 
 import os
 import sys
@@ -201,11 +201,9 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
     logo_img = ""
     if logo_data_url:
         # Large logo for legibility when opened
-        logo_img = (
-            f"<img src='{logo_data_url}' alt='Goodbirds logo' "
-            f"style='height:100px;display:block;'>"
-        )
-    html = f"""
+        logo_img = "<img src='{src}' alt='Goodbirds logo' style='height:100px;display:block;'>".format(src=logo_data_url)
+
+    html = """
     <style>
       /* Info button */
       .gb-info-btn {{
@@ -295,11 +293,11 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
       <div class="gb-info-header">
         <div>{logo_img}</div>
         <div>
-          <h3 class="gb-info-title">{MAP_MAIN_TITLE}</h3>
-          <div class="gb-info-meta">eBird Notable - {radius_km} km radius - last {back_days} day(s)</div>
+          <h3 class="gb-info-title">{title}</h3>
+          <div class="gb-info-meta">eBird Notable - {radius} km radius - last {back} day(s)</div>
           <div class="gb-info-row">
-            <span>Built: {ts_display_et}</span>
-            <a href="{ARCHIVE_URL}" target="_blank" rel="noopener">Archive</a>
+            <span>Built: {ts}</span>
+            <a href="{archive}" target="_blank" rel="noopener">Archive</a>
           </div>
         </div>
       </div>
@@ -341,7 +339,14 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
         }});
       }})();
     </script>
-    """
+    """.format(
+        logo_img=logo_img,
+        title=MAP_MAIN_TITLE,
+        radius=radius_km,
+        back=back_days,
+        ts=ts_display_et,
+        archive=ARCHIVE_URL,
+    )
     return html
 
 def add_clear_species_control(m: folium.Map, species_names):
@@ -436,7 +441,7 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
 
     m = folium.Map(location=[lat, lon], zoom_start=zoom_start, control_scale=True)
 
-    # Bottom-left compact info UI replaces the old MiniMap
+    # Bottom-left compact info UI
     logo_data_url = _logo_data_url(MAP_LOGO_FILE)
     m.get_root().html.add_child(folium.Element(build_info_ui(radius_km, back_days, ts_display_et, logo_data_url)))
 
