@@ -1,12 +1,8 @@
 # scripts/build_map.py
 #
-# Compact, mobile-friendly title/info UI:
-# - Bottom-left "i" button toggles an info panel (collapsed by default)
-# - Panel shows large logo, title, details, archive link
-# - Legend remains raised from the bottom for mobile
-# - MiniMap removed
-#
-# NOTE: All CSS/JS braces in template strings are doubled {{ }} to avoid f-string formatting issues.
+# Floating logo button opens a compact info panel (no logo inside panel).
+# Legend is raised for breathing room. MiniMap removed.
+# HTML/CSS/JS blocks use .format(...) with doubled braces to avoid brace issues.
 
 import os
 import sys
@@ -53,9 +49,10 @@ SPECIES_LAYER_THRESHOLD = 200
 ARCHIVE_URL = "https://mmcgee.github.io/ebird-notable-maps/"
 MAP_MAIN_TITLE = "North Cambridge and Vicinity"
 
-# Absolute path to logo for embedding - set via MAP_LOGO_FILE env in CI
+# Logo path is provided by CI via env var; embed as base64 for self-contained maps
 MAP_LOGO_FILE = os.getenv("MAP_LOGO_FILE", "")
 
+# ---------- Helpers ----------
 def color_for_species(name: str) -> str:
     h = int(hashlib.sha1((name or 'Unknown').encode("utf-8")).hexdigest(), 16) % 360
     def hsl_to_rgb(h, s=0.70, l=0.45):
@@ -106,10 +103,10 @@ def build_legend_html(species_to_color: OrderedDict) -> str:
         f"<span style='font-size:12px;line-height:1.2'>{sp}</span></div>"
         for sp, hexcolor in species_to_color.items()
     )
-    html = f"""
+    html = """
     <div id="legend" style="
         position: fixed;
-        bottom: 48px;   /* raised for spacing on mobile */
+        bottom: 48px;   /* raised for spacing */
         right: 16px;
         z-index: 900;
         background: rgba(255,255,255,0.95);
@@ -124,9 +121,9 @@ def build_legend_html(species_to_color: OrderedDict) -> str:
         box-shadow: 0 1px 4px rgba(0,0,0,0.2);
         ">
         <div style="font-weight:600;margin-bottom:6px;">Species Legend</div>
-        {items if items else "<div style='font-size:12px;'>No species</div>"}
+        {items}
     </div>
-    """
+    """.format(items=items if items else "<div style='font-size:12px;'>No species</div>")
     return html
 
 def add_radius_rings(m, lat, lon, main_radius_km):
@@ -146,7 +143,7 @@ def add_radius_rings(m, lat, lon, main_radius_km):
                   icon=folium.DivIcon(html="<div style='font-size:11px;color:#555;'>5 km</div>")).add_to(m)
 
 def add_notice(m, text: str):
-    html = f"""
+    html = """
     <div style="
       position: fixed;
       top: 50%;
@@ -160,7 +157,7 @@ def add_notice(m, text: str):
       font-size: 14px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     ">{text}</div>
-    """
+    """.format(text=text)
     m.get_root().html.add_child(folium.Element(html))
 
 def compute_dt_et():
@@ -181,7 +178,6 @@ def compute_dt_et():
     return dt, display_str, file_str
 
 def _logo_data_url(logo_abs_path: str) -> str:
-    # Return a data URL for the PNG logo if present - else return empty string
     try:
         if not logo_abs_path or not os.path.isfile(logo_abs_path):
             return ""
@@ -193,19 +189,17 @@ def _logo_data_url(logo_abs_path: str) -> str:
 
 def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_url: str) -> str:
     """
-    Bottom-left compact info UI:
-      - Round "i" button toggles a hidden panel
-      - Panel shows big logo, title, details, archive link
-      - Collapsed by default for mobile friendliness
+    Bottom-left floating logo button toggles a compact info panel.
+    Panel contains title and meta only. No logo inside the panel.
     """
-    logo_img = ""
+    # Logo button content
     if logo_data_url:
-        # Large logo for legibility when opened
-        logo_img = "<img src='{src}' alt='Goodbirds logo' style='height:100px;display:block;'>".format(src=logo_data_url)
+        btn_inner = "<img src='{src}' alt='Goodbirds logo' style='height:36px;width:36px;border-radius:50%;'>".format(src=logo_data_url)
+    else:
+        btn_inner = "<span style='font:700 18px/1 system-ui;'>i</span>"
 
     html = """
     <style>
-      /* Info button */
       .gb-info-btn {{
         position: fixed;
         left: 16px;
@@ -220,13 +214,10 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
         display: flex;
         align-items: center;
         justify-content: center;
-        font: 700 18px/1 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
         cursor: pointer;
-        user-select: none;
       }}
       .gb-info-btn:focus {{ outline: 2px solid #2c7fb8; }}
 
-      /* Info panel */
       .gb-info-panel {{
         position: fixed;
         left: 16px;
@@ -236,70 +227,27 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
         border: 1px solid #999;
         border-radius: 10px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        padding: 12px;
-        width: min(92vw, 360px);
+        padding: 10px 12px;
+        width: min(92vw, 340px);
         max-height: 70vh;
         display: none; /* hidden until toggled */
       }}
-      .gb-info-header {{
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-gap: 12px;
-        align-items: center;
-      }}
-      .gb-info-title {{
-        font-weight: 700;
-        font-size: 16px;
-        margin: 0;
-      }}
-      .gb-info-meta {{
-        font-size: 13px;
-        margin-top: 2px;
-      }}
-      .gb-info-row {{
-        margin-top: 6px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-size: 12px;
-      }}
-      .gb-info-close {{
-        position: absolute;
-        right: 8px;
-        top: 6px;
-        border: none;
-        background: transparent;
-        font-size: 18px;
-        cursor: pointer;
-        line-height: 1;
-      }}
-      .gb-info-close:focus {{ outline: 2px solid #2c7fb8; }}
-
-      /* Small screens - keep it compact */
+      .gb-info-title {{ font-weight: 700; font-size: 16px; margin: 0; }}
+      .gb-info-meta {{ font-size: 13px; margin-top: 2px; }}
+      .gb-info-row {{ margin-top: 6px; font-size: 12px; display: flex; gap: 12px; align-items: center; }}
       @media (max-width: 480px) {{
-        .gb-info-panel {{
-          width: 92vw;
-        }}
-        .gb-info-title {{ font-size: 15px; }}
-        .gb-info-meta {{ font-size: 12px; }}
-        .gb-info-row {{ font-size: 11px; }}
+        .gb-info-panel {{ width: 92vw; }}
       }}
     </style>
 
-    <div class="gb-info-btn" id="gbInfoBtn" role="button" aria-label="Show map info" aria-expanded="false">i</div>
+    <div class="gb-info-btn" id="gbInfoBtn" role="button" aria-label="Show map info" aria-expanded="false">{btn}</div>
 
     <div class="gb-info-panel" id="gbInfoPanel" aria-hidden="true">
-      <button class="gb-info-close" id="gbInfoClose" aria-label="Close info">×</button>
-      <div class="gb-info-header">
-        <div>{logo_img}</div>
-        <div>
-          <h3 class="gb-info-title">{title}</h3>
-          <div class="gb-info-meta">eBird Notable - {radius} km radius - last {back} day(s)</div>
-          <div class="gb-info-row">
-            <span>Built: {ts}</span>
-            <a href="{archive}" target="_blank" rel="noopener">Archive</a>
-          </div>
-        </div>
+      <h3 class="gb-info-title">{title}</h3>
+      <div class="gb-info-meta">eBird Notable - {radius} km radius - last {back} day(s)</div>
+      <div class="gb-info-row">
+        <span>Built: {ts}</span>
+        <a href="{archive}" target="_blank" rel="noopener">Archive</a>
       </div>
     </div>
 
@@ -307,7 +255,6 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
       (function() {{
         var btn = document.getElementById('gbInfoBtn');
         var panel = document.getElementById('gbInfoPanel');
-        var closeBtn = document.getElementById('gbInfoClose');
 
         function openPanel() {{
           panel.style.display = 'block';
@@ -327,20 +274,17 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
             openPanel();
           }}
         }});
-        closeBtn.addEventListener('click', function(e) {{
-          closePanel();
-        }});
 
-        // Close panel when clicking outside it
+        // Close when clicking outside
         document.addEventListener('click', function(e) {{
-          if (!panel.contains(e.target) && e.target !== btn) {{
+          if (!panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {{
             closePanel();
           }}
         }});
       }})();
     </script>
     """.format(
-        logo_img=logo_img,
+        btn=btn_inner,
         title=MAP_MAIN_TITLE,
         radius=radius_km,
         back=back_days,
@@ -351,10 +295,10 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
 
 def add_clear_species_control(m: folium.Map, species_names):
     species_list = list(species_names or [])
-    js = f"""
+    js = """
     <script>
     (function() {{
-      var speciesSet = new Set({species_list!r});
+      var speciesSet = new Set({species_list});
       function clearSpecies() {{
         var root = document.querySelector('.leaflet-control-layers-overlays');
         if (!root) return;
@@ -390,12 +334,12 @@ def add_clear_species_control(m: folium.Map, species_names):
         if (!document.querySelector('.leaflet-control-layers')) {{
           return setTimeout(addWhenReady, 150);
         }}
-        (new ClearCtl({{ position: 'topright' }})).addTo({m.get_name()});
+        (new ClearCtl({{ position: 'topright' }})).addTo({map_name});
       }}
       addWhenReady();
     }})();
     </script>
-    """
+    """.format(species_list=species_list, map_name=m.get_name())
     m.get_root().html.add_child(folium.Element(js))
 
 def prune_archive(dirpath: str, keep: int = 30) -> int:
@@ -432,6 +376,7 @@ def save_and_publish(m, outfile: str):
     removed = prune_archive(output_dir, KEEP_COUNT)
     print(f"Archive pruning - kept {KEEP_COUNT}, removed {removed}")
 
+# ---------- Main map build ----------
 def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
              back_days=BACK_DAYS, zoom_start=ZOOM_START):
     _, ts_display_et, ts_file_et = compute_dt_et()
@@ -441,7 +386,7 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
 
     m = folium.Map(location=[lat, lon], zoom_start=zoom_start, control_scale=True)
 
-    # Bottom-left compact info UI
+    # Bottom-left floating logo button + compact info panel
     logo_data_url = _logo_data_url(MAP_LOGO_FILE)
     m.get_root().html.add_child(folium.Element(build_info_ui(radius_km, back_days, ts_display_et, logo_data_url)))
 
@@ -460,6 +405,7 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
         save_and_publish(m, outfile)
         return m, outfile
 
+    # Group observations by location and species
     loc_species = defaultdict(lambda: defaultdict(list))
     species_set = set()
     for s in data:
@@ -477,6 +423,7 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
 
         loc_species[(slat, slon)][sp].append({"entry_html": entry_html, "loc_name": loc_name})
 
+    # Color map per species
     species_to_color = OrderedDict(sorted([(sp, color_for_species(sp)) for sp in species_set], key=lambda x: x[0]))
     too_many = len(species_to_color) > SPECIES_LAYER_THRESHOLD
 
@@ -492,12 +439,12 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
             for sp, entries in species_dict.items():
                 hexcol = species_to_color.get(sp, "#444444")
                 loc_name = entries[0]["loc_name"]
-                popup_html = f"""
+                popup_html = """
                 <div style="font-size:13px;">
-                  <div><b>Location:</b> {loc_name}</div>
+                  <div><b>Location:</b> {loc}</div>
                   <hr style="margin:6px 0;">
-                  <div>{"<br>".join(e["entry_html"] for e in entries)}</div>
-                </div>"""
+                  <div>{entries}</div>
+                </div>""".format(loc=loc_name, entries="<br>".join(e["entry_html"] for e in entries))
                 icon = folium.DivIcon(
                     html=f"<div style='width:14px;height:14px;border-radius:50%;background:{hexcol};border:1.5px solid #222;'></div>",
                     icon_size=(14, 14), icon_anchor=(7, 7),
@@ -512,18 +459,19 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
             for sp, entries in species_dict.items():
                 hexcol = species_to_color.get(sp, "#444444")
                 loc_name = entries[0]["loc_name"]
-                popup_html = f"""
+                popup_html = """
                 <div style="font-size:13px;">
-                  <div><b>Location:</b> {loc_name}</div>
+                  <div><b>Location:</b> {loc}</div>
                   <hr style="margin:6px 0;">
-                  <div>{"<br>".join(e["entry_html"] for e in entries)}</div>
-                </div>"""
+                  <div>{entries}</div>
+                </div>""".format(loc=loc_name, entries="<br>".join(e["entry_html"] for e in entries))
                 icon = folium.DivIcon(
                     html=f"<div style='width:14px;height:14px;border-radius:50%;background:{hexcol};border:1.5px solid #222;'></div>",
                     icon_size=(14, 14), icon_anchor=(7, 7),
                 )
                 folium.Marker([slat, slon], icon=icon, tooltip=sp,
                               popup=folium.Popup(popup_html, max_width=320)).add_to(cluster)
+
         folium.LayerControl(collapsed=False).add_to(m)
         add_clear_species_control(m, list(species_to_color.keys()))
 
