@@ -53,6 +53,7 @@ jobs:
         run: |
           python scripts/build_map.py
 
+
       - name: Rebuild archive index.html with bigger header logo
         run: |
           python - <<'PY'
@@ -63,10 +64,7 @@ jobs:
           DOCS.mkdir(exist_ok=True)
           MAPS.mkdir(exist_ok=True)
 
-          # Gather map files
           files = sorted([p for p in MAPS.glob("ebird_radius_map_*.html")], reverse=True)
-
-          # Group by ET date from filename
           by_day = {}
           for p in files:
             m = re.search(r"ebird_radius_map_(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})_ET_(\d+)km\.html$", p.name)
@@ -76,7 +74,6 @@ jobs:
             time = m.group(2).replace("-", ":")
             by_day.setdefault(day, []).append((time, p.name))
 
-          # Keep only last seven distinct days in the listing
           day_keys = sorted(by_day.keys(), reverse=True)[:7]
           by_day = {k: by_day[k] for k in day_keys}
 
@@ -104,29 +101,29 @@ jobs:
               .header {{
                 display: flex;
                 align-items: center;
-                gap: 16px;
-                margin-bottom: 12px;
+                gap: 20px;
+                margin-bottom: 16px;
                 border-bottom: 1px solid #ddd;
-                padding-bottom: 12px;
+                padding-bottom: 16px;
               }}
               .header img {{
-                height: 160px; /* bigger logo on index */
+                height: 220px; /* much bigger logo for legibility */
               }}
               .title h1 {{
-                font-size: 28px;
-                margin: 0 0 4px 0;
+                font-size: 32px;
+                margin: 0 0 6px 0;
               }}
               .title p {{
-                margin: 4px 0 0 0;
-                font-size: 14px;
+                margin: 6px 0 0 0;
+                font-size: 16px;
                 color: #444;
               }}
               .day {{
-                margin-top: 20px;
+                margin-top: 24px;
               }}
               .day h2 {{
-                font-size: 18px;
-                margin: 0 0 8px 0;
+                font-size: 20px;
+                margin: 0 0 10px 0;
               }}
               ul {{
                 list-style: none;
@@ -134,7 +131,7 @@ jobs:
                 margin: 0;
               }}
               li {{
-                margin: 4px 0;
+                margin: 5px 0;
               }}
               a {{
                 text-decoration: none;
@@ -144,7 +141,7 @@ jobs:
                 text-decoration: underline;
               }}
               .latest-link {{
-                margin-top: 6px;
+                margin-top: 8px;
               }}
             </style>
           </head>
@@ -159,6 +156,7 @@ jobs:
                 </div>
               </div>
           """
+
 
           sections = []
           for day in sorted(by_day.keys(), reverse=True):

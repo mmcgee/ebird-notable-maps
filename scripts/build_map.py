@@ -188,29 +188,29 @@ def _logo_data_url(logo_abs_path: str) -> str:
 def build_title_html(radius_km: int, back_days: int, ts_display_et: str, logo_data_url: str) -> str:
     """
     Title bar is fixed at the top center. The logo sits at the left side inside the bar.
-    Increased logo size for stronger branding.
+    Enlarged logo for better legibility.
     """
     logo_img = ""
     if logo_data_url:
         logo_img = (
             f"<img src='{logo_data_url}' alt='Goodbirds logo' "
-            f"style='height:64px;display:block;margin-right:12px;'>"
+            f"style='height:100px;display:block;margin-right:16px;'>"
         )
     return f"""
       <div style="
           position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
-          background: rgba(255,255,255,0.98); padding: 12px 16px; border:1px solid #999;
-          border-radius:6px; z-index: 1200; font-size:14px; box-shadow:0 1px 4px rgba(0,0,0,0.2);">
-        <div style="display:flex; align-items:center; gap:12px;">
+          background: rgba(255,255,255,0.98); padding: 16px 20px; border:1px solid #999;
+          border-radius:8px; z-index: 1200; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.3);">
+        <div style="display:flex; align-items:center; gap:16px;">
           {logo_img}
           <div>
-            <div style="font-weight:700; font-size:18px; text-align:left;">
+            <div style="font-weight:700; font-size:22px; text-align:left;">
               {MAP_MAIN_TITLE}
             </div>
-            <div style="font-weight:600; margin-top:4px; text-align:left; font-size:14px;">
+            <div style="font-weight:600; margin-top:6px; text-align:left; font-size:16px;">
               eBird Notable - {radius_km} km radius - last {back_days} day(s)
             </div>
-            <div style="display:flex; gap:12px; align-items:center; margin-top:6px; font-size:12px;">
+            <div style="display:flex; gap:16px; align-items:center; margin-top:8px; font-size:13px;">
               <span>Built: {ts_display_et}</span>
               <a href="{ARCHIVE_URL}" target="_blank" rel="noopener" style="text-decoration:none;">Archive</a>
             </div>
@@ -218,6 +218,7 @@ def build_title_html(radius_km: int, back_days: int, ts_display_et: str, logo_da
         </div>
       </div>
     """
+
 
 def add_clear_species_control(m: folium.Map, species_names):
     species_list = list(species_names or [])
