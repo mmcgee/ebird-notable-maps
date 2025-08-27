@@ -3,14 +3,17 @@
 # Mobile-friendly info panel:
 # - Bottom-left "i" button toggles a compact panel with a large logo
 # - Panel content: logo, title, details, archive link
-# - Legend raised from bottom for mobile
-# - MiniMap removed
+# - Panel is offset up/right so it never sits under the "i" button
+# Legend raised from bottom for mobile
+# MiniMap removed
 #
 # Logo loading is robust:
 # - Tries MAP_LOGO_FILE
 # - Tries ./docs/goodbirds_logo_text.png and ./goodbirds_logo_text.png
 # - Falls back to MAP_LOGO_URL or ARCHIVE_URL + 'goodbirds_logo_text.png'
 # - Returns either a data: URL (embedded) or an https: URL
+#
+# Note: CSS and JS template blocks use .format with doubled braces {{ }}.
 
 import os
 import sys
@@ -23,9 +26,10 @@ from collections import defaultdict, OrderedDict
 
 import folium
 from folium.plugins import MarkerCluster, Fullscreen, MeasureControl, LocateControl, MousePosition
+
 try:
-    import ipywidgets as widgets
-    from IPython.display import display
+    import ipywidgets as widgets  # noqa: F401
+    from IPython.display import display  # noqa: F401
     IN_NOTEBOOK = True
 except Exception:
     IN_NOTEBOOK = False
@@ -137,32 +141,33 @@ def build_legend_html(species_to_color: OrderedDict) -> str:
 
 def add_radius_rings(m, lat, lon, main_radius_km):
     # Center marker
-    folium.CircleMarker([lat, lon], radius=4, color="#2c7fb8", fill=True,
-                        fill_opacity=1, tooltip="Center").add_to(m)
+    folium.CircleMarker(
+        [lat, lon], radius=4, color="#2c7fb8", fill=True, fill_opacity=1, tooltip="Center"
+    ).add_to(m)
 
     # Main radius ring and label
     folium.Circle([lat, lon], radius=km_to_m(main_radius_km),
                   color="#08519c", fill=False, weight=3, opacity=0.9).add_to(m)
-    folium.Marker([lat + main_radius_km/111.0, lon],
-                  icon=folium.DivIcon(
-                      html=f"<div style='font-size:12px; color:#08519c; font-weight:bold;'>{main_radius_km} km</div>"
-                  )).add_to(m)
+    folium.Marker(
+        [lat + main_radius_km/111.0, lon],
+        icon=folium.DivIcon(html=f"<div style='font-size:12px; color:#08519c; font-weight:bold;'>{main_radius_km} km</div>")
+    ).add_to(m)
 
     # 1 km ring and label
     folium.Circle([lat, lon], radius=km_to_m(1), color="#000000",
                   fill=False, weight=2, opacity=0.9, dash_array="5,5").add_to(m)
-    folium.Marker([lat + 1/111.0, lon],
-                  icon=folium.DivIcon(
-                      html="<div style='font-size:12px; color:#000;'>1 km</div>"
-                  )).add_to(m)
+    folium.Marker(
+        [lat + 1/111.0, lon],
+        icon=folium.DivIcon(html="<div style='font-size:12px; color:#000;'>1 km</div>")
+    ).add_to(m)
 
     # 5 km ring and label
     folium.Circle([lat, lon], radius=km_to_m(5), color="#555555",
                   fill=False, weight=2, opacity=0.9, dash_array="5,7").add_to(m)
-    folium.Marker([lat + 5/111.0, lon],
-                  icon=folium.DivIcon(
-                      html="<div style='font-size:12px; color:#555;'>5 km</div>"
-                  )).add_to(m)
+    folium.Marker(
+        [lat + 5/111.0, lon],
+        icon=folium.DivIcon(html="<div style='font-size:12px; color:#555;'>5 km</div>")
+    ).add_to(m)
 
 def add_notice(m, text: str):
     html = f"""
@@ -208,11 +213,17 @@ def _file_to_data_url(path: str) -> str:
         return ""
 
 def get_logo_src() -> str:
+    """
+    Try to produce an <img src> value for the logo.
+    Preference: data URL from a local file to keep maps self-contained.
+    Fallback: HTTPS URL so the panel still shows a logo if no file is found.
+    """
     # 1) Explicit env file path
     if MAP_LOGO_FILE and os.path.isfile(MAP_LOGO_FILE):
         d = _file_to_data_url(MAP_LOGO_FILE)
         if d:
             return d
+
     # 2) Common project locations
     candidate_paths = [
         os.path.join("docs", DEFAULT_LOGO_NAME),
@@ -223,13 +234,19 @@ def get_logo_src() -> str:
             d = _file_to_data_url(p)
             if d:
                 return d
+
     # 3) URL env
     if MAP_LOGO_URL:
         return MAP_LOGO_URL
+
     # 4) Final fallback - public Pages URL
     return ARCHIVE_URL + DEFAULT_LOGO_NAME
 
 def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_src: str) -> str:
+    """
+    Bottom-left compact info UI with a large logo.
+    Panel is offset up/right so it does not sit under the "i" button.
+    """
     logo_img = "<img src='{src}' alt='Goodbirds logo' style='height:100px;display:block;'>".format(src=logo_src)
 
     html = """
@@ -256,8 +273,9 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_src: 
 
       .gb-info-panel {{
         position: fixed;
-        left: 16px;
-        bottom: 16px;
+        /* Shift up and right so the button never covers the panel corner */
+        left: 70px;    /* was 16px */
+        bottom: 70px;  /* was 16px */
         z-index: 1200;
         background: rgba(255,255,255,0.98);
         border: 1px solid #999;
@@ -355,6 +373,7 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_src: 
           closePanel();
         }});
 
+        // Close panel when clicking outside it
         document.addEventListener('click', function(e) {{
           if (!panel.contains(e.target) && e.target !== btn) {{
             closePanel();
@@ -558,5 +577,5 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
 if __name__ == "__main__":
     m, outfile = make_map(CENTER_LAT, CENTER_LON, DEFAULT_RADIUS_KM, BACK_DAYS)
     if IN_NOTEBOOK and m:
+        from IPython.display import display  # type: ignore
         display(m)
-
