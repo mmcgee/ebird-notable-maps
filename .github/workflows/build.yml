@@ -16,8 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OUTPUT_DIR: docs/maps
-      LOGO_BASENAME: goodbirds_logo_test.png
-      MAP_LOGO_FILE: ${{ github.workspace }}/docs/goodbirds_logo_test.png
+      # Standardize on the real filename in your repo
+      LOGO_BASENAME: goodbirds_logo_text.png
+      MAP_LOGO_FILE: ${{ github.workspace }}/docs/goodbirds_logo_text.png
+      # Optional URL fallback - not required, but handy
+      MAP_LOGO_URL: https://mmcgee.github.io/ebird-notable-maps/goodbirds_logo_text.png
 
     steps:
       - name: Checkout
@@ -37,12 +40,10 @@ jobs:
         run: |
           mkdir -p docs/maps
 
-      - name: Copy logo to docs
+      - name: Copy logo into docs if present at repo root
         run: |
           if [ -f "${{ env.LOGO_BASENAME }}" ]; then
             cp "${{ env.LOGO_BASENAME }}" "docs/${{ env.LOGO_BASENAME }}"
-          else
-            echo "Logo not found at repo root - ${LOGO_BASENAME}"
           fi
 
       - name: Build map(s)
@@ -50,10 +51,11 @@ jobs:
           EBIRD_API_KEY: ${{ secrets.EBIRD_API_KEY }}
           OUTPUT_DIR: ${{ env.OUTPUT_DIR }}
           MAP_LOGO_FILE: ${{ env.MAP_LOGO_FILE }}
+          MAP_LOGO_URL: ${{ env.MAP_LOGO_URL }}
         run: |
           python scripts/build_map.py
 
-      - name: Rebuild archive index.html with large header logo
+      - name: Rebuild archive index.html with header logo
         run: |
           python - <<'PY'
           import os, re
@@ -76,7 +78,7 @@ jobs:
           day_keys = sorted(by_day.keys(), reverse=True)[:7]
           by_day = {k: by_day[k] for k in day_keys}
 
-          logo = "goodbirds_logo_test.png"
+          logo = "goodbirds_logo_text.png"
           header = f"""
           <!doctype html>
           <html lang="en">

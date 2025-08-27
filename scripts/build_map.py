@@ -1,12 +1,16 @@
 # scripts/build_map.py
 #
-# Compact, mobile-friendly title/info UI:
-# - Bottom-left "i" button toggles an info panel (collapsed by default)
-# - Panel shows large logo, title, details, archive link
-# - Legend remains raised from the bottom for mobile
+# Mobile-friendly info panel:
+# - Bottom-left "i" button toggles a compact panel with a large logo
+# - Panel content: logo, title, details, archive link
+# - Legend raised from bottom for mobile
 # - MiniMap removed
 #
-# NOTE: All CSS/JS braces in template strings are doubled {{ }} to avoid f-string formatting issues.
+# Logo loading is robust:
+# - Tries MAP_LOGO_FILE
+# - Tries ./docs/goodbirds_logo_text.png and ./goodbirds_logo_text.png
+# - Falls back to MAP_LOGO_URL or ARCHIVE_URL + 'goodbirds_logo_text.png'
+# - Returns either a data: URL (embedded) or an https: URL
 
 import os
 import sys
@@ -53,8 +57,12 @@ SPECIES_LAYER_THRESHOLD = 200
 ARCHIVE_URL = "https://mmcgee.github.io/ebird-notable-maps/"
 MAP_MAIN_TITLE = "North Cambridge and Vicinity"
 
-# Absolute path to logo for embedding - set via MAP_LOGO_FILE env in CI
-MAP_LOGO_FILE = os.getenv("MAP_LOGO_FILE", "")
+# Logo configuration
+# - File path is preferred for embedding as base64
+# - URL is used as a fallback
+MAP_LOGO_FILE = os.getenv("MAP_LOGO_FILE", "").strip()
+MAP_LOGO_URL = os.getenv("MAP_LOGO_URL", "").strip()
+DEFAULT_LOGO_NAME = "goodbirds_logo_text.png"
 
 def color_for_species(name: str) -> str:
     h = int(hashlib.sha1((name or 'Unknown').encode("utf-8")).hexdigest(), 16) % 360
@@ -109,7 +117,7 @@ def build_legend_html(species_to_color: OrderedDict) -> str:
     html = f"""
     <div id="legend" style="
         position: fixed;
-        bottom: 48px;   /* raised for spacing on mobile */
+        bottom: 48px;
         right: 16px;
         z-index: 900;
         background: rgba(255,255,255,0.95);
@@ -131,65 +139,32 @@ def build_legend_html(species_to_color: OrderedDict) -> str:
 
 def add_radius_rings(m, lat, lon, main_radius_km):
     # Center marker
-    folium.CircleMarker(
-        [lat, lon],
-        radius=4,
-        color="#2c7fb8",
-        fill=True,
-        fill_opacity=1,
-        tooltip="Center"
-    ).add_to(m)
+    folium.CircleMarker([lat, lon], radius=4, color="#2c7fb8", fill=True,
+                        fill_opacity=1, tooltip="Center").add_to(m)
 
-    # Main radius
-    folium.Circle(
-        [lat, lon],
-        radius=km_to_m(main_radius_km),
-        color="#08519c",
-        fill=False,
-        weight=3,
-        opacity=0.9
-    ).add_to(m)
-    folium.Marker(
-        [lat + main_radius_km/111.0, lon],
-        icon=folium.DivIcon(
-            html=f"<div style='font-size:12px; color:#08519c; font-weight:bold;'>{main_radius_km} km</div>"
-        )
-    ).add_to(m)
+    # Main radius ring and label
+    folium.Circle([lat, lon], radius=km_to_m(main_radius_km),
+                  color="#08519c", fill=False, weight=3, opacity=0.9).add_to(m)
+    folium.Marker([lat + main_radius_km/111.0, lon],
+                  icon=folium.DivIcon(
+                      html=f"<div style='font-size:12px; color:#08519c; font-weight:bold;'>{main_radius_km} km</div>"
+                  )).add_to(m)
 
-    # 1 km ring
-    folium.Circle(
-        [lat, lon],
-        radius=km_to_m(1),
-        color="#000000",
-        fill=False,
-        weight=2,
-        opacity=0.9,
-        dash_array="5,5"
-    ).add_to(m)
-    folium.Marker(
-        [lat + 1/111.0, lon],
-        icon=folium.DivIcon(
-            html="<div style='font-size:12px; color:#000;'>1 km</div>"
-        )
-    ).add_to(m)
+    # 1 km ring and label
+    folium.Circle([lat, lon], radius=km_to_m(1), color="#000000",
+                  fill=False, weight=2, opacity=0.9, dash_array="5,5").add_to(m)
+    folium.Marker([lat + 1/111.0, lon],
+                  icon=folium.DivIcon(
+                      html="<div style='font-size:12px; color:#000;'>1 km</div>"
+                  )).add_to(m)
 
-    # 5 km ring
-    folium.Circle(
-        [lat, lon],
-        radius=km_to_m(5),
-        color="#555555",
-        fill=False,
-        weight=2,
-        opacity=0.9,
-        dash_array="5,7"
-    ).add_to(m)
-    folium.Marker(
-        [lat + 5/111.0, lon],
-        icon=folium.DivIcon(
-            html="<div style='font-size:12px; color:#555;'>5 km</div>"
-        )
-    ).add_to(m)
-
+    # 5 km ring and label
+    folium.Circle([lat, lon], radius=km_to_m(5), color="#555555",
+                  fill=False, weight=2, opacity=0.9, dash_array="5,7").add_to(m)
+    folium.Marker([lat + 5/111.0, lon],
+                  icon=folium.DivIcon(
+                      html="<div style='font-size:12px; color:#555;'>5 km</div>"
+                  )).add_to(m)
 
 def add_notice(m, text: str):
     html = f"""
@@ -226,32 +201,53 @@ def compute_dt_et():
     file_str = dt.strftime("%Y-%m-%d_%H-%M-%S_ET")
     return dt, display_str, file_str
 
-def _logo_data_url(logo_abs_path: str) -> str:
-    # Return a data URL for the PNG logo if present - else return empty string
+def _file_to_data_url(path: str) -> str:
     try:
-        if not logo_abs_path or not os.path.isfile(logo_abs_path):
-            return ""
-        with open(logo_abs_path, "rb") as f:
+        with open(path, "rb") as f:
             b64 = base64.b64encode(f.read()).decode("ascii")
         return f"data:image/png;base64,{b64}"
     except Exception:
         return ""
 
-def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_url: str) -> str:
+def get_logo_src() -> str:
     """
-    Bottom-left compact info UI:
-      - Round "i" button toggles a hidden panel
-      - Panel shows big logo, title, details, archive link
-      - Collapsed by default for mobile friendliness
+    Try to produce an <img src> value for the logo.
+    Preference - data: URL from a local file to keep maps self-contained.
+    Fallback - HTTPS URL so the panel still shows a logo if no file is found.
     """
-    logo_img = ""
-    if logo_data_url:
-        # Large logo for legibility when opened
-        logo_img = "<img src='{src}' alt='Goodbirds logo' style='height:100px;display:block;'>".format(src=logo_data_url)
+    # 1) Explicit env file path
+    if MAP_LOGO_FILE and os.path.isfile(MAP_LOGO_FILE):
+        d = _file_to_data_url(MAP_LOGO_FILE)
+        if d:
+            return d
+
+    # 2) Common project locations
+    candidate_paths = [
+        os.path.join("docs", DEFAULT_LOGO_NAME),
+        DEFAULT_LOGO_NAME,
+    ]
+    for p in candidate_paths:
+        if os.path.isfile(p):
+            d = _file_to_data_url(p)
+            if d:
+                return d
+
+    # 3) URL env
+    if MAP_LOGO_URL:
+        return MAP_LOGO_URL
+
+    # 4) Final fallback - public Pages URL
+    return ARCHIVE_URL + DEFAULT_LOGO_NAME
+
+def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_src: str) -> str:
+    """
+    Bottom-left compact info UI with a large logo.
+    Uses CSS and JS with doubled braces for literal braces.
+    """
+    logo_img = "<img src='{src}' alt='Goodbirds logo' style='height:100px;display:block;'>".format(src=logo_src)
 
     html = """
     <style>
-      /* Info button */
       .gb-info-btn {{
         position: fixed;
         left: 16px;
@@ -272,7 +268,6 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
       }}
       .gb-info-btn:focus {{ outline: 2px solid #2c7fb8; }}
 
-      /* Info panel */
       .gb-info-panel {{
         position: fixed;
         left: 16px;
@@ -285,7 +280,7 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
         padding: 12px;
         width: min(92vw, 360px);
         max-height: 70vh;
-        display: none; /* hidden until toggled */
+        display: none;
       }}
       .gb-info-header {{
         display: grid;
@@ -321,11 +316,8 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
       }}
       .gb-info-close:focus {{ outline: 2px solid #2c7fb8; }}
 
-      /* Small screens - keep it compact */
       @media (max-width: 480px) {{
-        .gb-info-panel {{
-          width: 92vw;
-        }}
+        .gb-info-panel {{ width: 92vw; }}
         .gb-info-title {{ font-size: 15px; }}
         .gb-info-meta {{ font-size: 12px; }}
         .gb-info-row {{ font-size: 11px; }}
@@ -377,7 +369,6 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_data_
           closePanel();
         }});
 
-        // Close panel when clicking outside it
         document.addEventListener('click', function(e) {{
           if (!panel.contains(e.target) && e.target !== btn) {{
             closePanel();
@@ -487,9 +478,9 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
 
     m = folium.Map(location=[lat, lon], zoom_start=zoom_start, control_scale=True)
 
-    # Bottom-left compact info UI
-    logo_data_url = _logo_data_url(MAP_LOGO_FILE)
-    m.get_root().html.add_child(folium.Element(build_info_ui(radius_km, back_days, ts_display_et, logo_data_url)))
+    # Bottom-left compact info UI with robust logo src
+    logo_src = get_logo_src()
+    m.get_root().html.add_child(folium.Element(build_info_ui(radius_km, back_days, ts_display_et, logo_src)))
 
     add_radius_rings(m, lat, lon, radius_km)
     Fullscreen().add_to(m)
