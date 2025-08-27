@@ -245,7 +245,8 @@ def get_logo_src() -> str:
 def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_src: str) -> str:
     """
     Bottom-left compact info UI with a large logo.
-    Panel is offset up/right so it does not sit under the "i" button.
+    Panel is offset up so it does not overlap the "i" button,
+    but stays aligned horizontally with the button.
     """
     logo_img = "<img src='{src}' alt='Goodbirds logo' style='height:100px;display:block;'>".format(src=logo_src)
 
@@ -273,9 +274,8 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_src: 
 
       .gb-info-panel {{
         position: fixed;
-        /* Shift up and right so the button never covers the panel corner */
-        left: 70px;    /* was 16px */
-        bottom: 70px;  /* was 16px */
+        left: 16px;     /* align with the button */
+        bottom: 70px;   /* raise above button */
         z-index: 1200;
         background: rgba(255,255,255,0.98);
         border: 1px solid #999;
@@ -373,7 +373,6 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_src: 
           closePanel();
         }});
 
-        // Close panel when clicking outside it
         document.addEventListener('click', function(e) {{
           if (!panel.contains(e.target) && e.target !== btn) {{
             closePanel();
@@ -390,6 +389,7 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_src: 
         archive=ARCHIVE_URL,
     )
     return html
+
 
 def add_clear_species_control(m: folium.Map, species_names):
     species_list = list(species_names or [])
