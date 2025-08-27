@@ -58,8 +58,6 @@ ARCHIVE_URL = "https://mmcgee.github.io/ebird-notable-maps/"
 MAP_MAIN_TITLE = "North Cambridge and Vicinity"
 
 # Logo configuration
-# - File path is preferred for embedding as base64
-# - URL is used as a fallback
 MAP_LOGO_FILE = os.getenv("MAP_LOGO_FILE", "").strip()
 MAP_LOGO_URL = os.getenv("MAP_LOGO_URL", "").strip()
 DEFAULT_LOGO_NAME = "goodbirds_logo_text.png"
@@ -210,17 +208,11 @@ def _file_to_data_url(path: str) -> str:
         return ""
 
 def get_logo_src() -> str:
-    """
-    Try to produce an <img src> value for the logo.
-    Preference - data: URL from a local file to keep maps self-contained.
-    Fallback - HTTPS URL so the panel still shows a logo if no file is found.
-    """
     # 1) Explicit env file path
     if MAP_LOGO_FILE and os.path.isfile(MAP_LOGO_FILE):
         d = _file_to_data_url(MAP_LOGO_FILE)
         if d:
             return d
-
     # 2) Common project locations
     candidate_paths = [
         os.path.join("docs", DEFAULT_LOGO_NAME),
@@ -231,19 +223,13 @@ def get_logo_src() -> str:
             d = _file_to_data_url(p)
             if d:
                 return d
-
     # 3) URL env
     if MAP_LOGO_URL:
         return MAP_LOGO_URL
-
     # 4) Final fallback - public Pages URL
     return ARCHIVE_URL + DEFAULT_LOGO_NAME
 
 def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_src: str) -> str:
-    """
-    Bottom-left compact info UI with a large logo.
-    Uses CSS and JS with doubled braces for literal braces.
-    """
     logo_img = "<img src='{src}' alt='Goodbirds logo' style='height:100px;display:block;'>".format(src=logo_src)
 
     html = """
@@ -573,3 +559,4 @@ if __name__ == "__main__":
     m, outfile = make_map(CENTER_LAT, CENTER_LON, DEFAULT_RADIUS_KM, BACK_DAYS)
     if IN_NOTEBOOK and m:
         display(m)
+

@@ -2,8 +2,7 @@ name: Build Goodbirds Maps
 
 on:
   schedule:
-    # 12:00 ET and 21:00 ET - convert to UTC
-    # During EDT (UTC-4): 12:00 ET -> 16:00 UTC, 21:00 ET -> 01:00 UTC next day
+    # 12:00 ET and 21:00 ET converted to UTC
     - cron: "0 16 * * *"
     - cron: "0 1 * * *"
   workflow_dispatch:
@@ -16,10 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OUTPUT_DIR: docs/maps
-      # Standardize on the real filename in your repo
       LOGO_BASENAME: goodbirds_logo_text.png
       MAP_LOGO_FILE: ${{ github.workspace }}/docs/goodbirds_logo_text.png
-      # Optional URL fallback - not required, but handy
       MAP_LOGO_URL: https://mmcgee.github.io/ebird-notable-maps/goodbirds_logo_text.png
 
     steps:
@@ -55,7 +52,9 @@ jobs:
         run: |
           python scripts/build_map.py
 
-      - name: Rebuild archive index.html with header logo
+      - name: Rebuild archive index.html and link to newest file (cache-busting)
+        env:
+          GIT_SHA: ${{ github.sha }}
         run: |
           python - <<'PY'
           import os, re
@@ -66,6 +65,7 @@ jobs:
           MAPS.mkdir(exist_ok=True)
 
           files = sorted([p for p in MAPS.glob("ebird_radius_map_*.html")], reverse=True)
+          newest = files[0].name if files else "latest.html"
           by_day = {}
           for p in files:
             m = re.search(r"ebird_radius_map_(\d{4}-\d{2}-\d{2})_(\d{2}-\d{2}-\d{2})_ET_(\d+)km\.html$", p.name)
@@ -75,10 +75,15 @@ jobs:
             time = m.group(2).replace("-", ":")
             by_day.setdefault(day, []).append((time, p.name))
 
+          # Keep only last seven distinct days in the listing
           day_keys = sorted(by_day.keys(), reverse=True)[:7]
           by_day = {k: by_day[k] for k in day_keys}
 
           logo = "goodbirds_logo_text.png"
+          cache_bust = os.getenv("GIT_SHA","")[:8]
+          latest_link_file = f"maps/{newest}"
+          latest_link_cachebusted = f"maps/latest.html?v={cache_bust}" if cache_bust else "maps/latest.html"
+
           header = f"""
           <!doctype html>
           <html lang="en">
@@ -107,43 +112,16 @@ jobs:
                 border-bottom: 1px solid #ddd;
                 padding-bottom: 16px;
               }}
-              .header img {{
-                height: 220px;
-              }}
-              .title h1 {{
-                font-size: 32px;
-                margin: 0 0 6px 0;
-              }}
-              .title p {{
-                margin: 6px 0 0 0;
-                font-size: 16px;
-                color: #444;
-              }}
-              .day {{
-                margin-top: 24px;
-              }}
-              .day h2 {{
-                font-size: 20px;
-                margin: 0 0 10px 0;
-              }}
-              ul {{
-                list-style: none;
-                padding-left: 0;
-                margin: 0;
-              }}
-              li {{
-                margin: 5px 0;
-              }}
-              a {{
-                text-decoration: none;
-                color: #0a58ca;
-              }}
-              a:hover {{
-                text-decoration: underline;
-              }}
-              .latest-link {{
-                margin-top: 8px;
-              }}
+              .header img {{ height: 220px; }}
+              .title h1 {{ font-size: 32px; margin: 0 0 6px 0; }}
+              .title p {{ margin: 6px 0 0 0; font-size: 16px; color: #444; }}
+              .day {{ margin-top: 24px; }}
+              .day h2 {{ font-size: 20px; margin: 0 0 10px 0; }}
+              ul {{ list-style: none; padding-left: 0; margin: 0; }}
+              li {{ margin: 5px 0; }}
+              a {{ text-decoration: none; color: #0a58ca; }}
+              a:hover {{ text-decoration: underline; }}
+              .latest-link {{ margin-top: 8px; }}
             </style>
           </head>
           <body>
@@ -153,7 +131,11 @@ jobs:
                 <div class="title">
                   <h1>Goodbirds - Notable Maps Archive</h1>
                   <p>Updated twice daily - data from the eBird Notable API - maps generated with Folium - credits in repository.</p>
-                  <div class="latest-link"><a href="maps/latest.html">View the latest map</a></div>
+                  <div class="latest-link">
+                    <a href="{latest_link_file}">View the latest map</a>
+                    <span style="margin:0 6px; color:#666;">|</span>
+                    <a href="{latest_link_cachebusted}">or via latest.html</a>
+                  </div>
                 </div>
               </div>
           """
@@ -173,7 +155,7 @@ jobs:
 
           html = header + "\n".join(sections) + footer
           (DOCS / "index.html").write_text(html, encoding="utf-8")
-          print("Wrote docs/index.html")
+          print("Wrote docs/index.html with latest:", newest)
           PY
 
       - name: Commit and push changes
