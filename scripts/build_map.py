@@ -1,15 +1,17 @@
 # scripts/build_map.py
 #
-# What this version does:
-# - Mobile-friendly info panel with an "i" button (bottom-left).
-# - Panel is aligned above the button (no overlap), shows a large logo, title, details, archive link.
-# - Robust logo loading: tries local file(s), then URL fallback; embeds as base64 if local exists.
-# - Labeled radius rings (1 km, 5 km, main radius).
-# - Legend raised from the bottom for breathing room.
+# What this build does:
+# - Popups: for each marker (species at a location), list ALL checklists
+#   that contain that species at that location. Deduplicated by checklist id.
+#   Each item shows date/time, count if present, and a link to the checklist.
+# - Mobile-friendly info panel toggled by a bottom-left "i" button.
+#   The panel is aligned above the button (left edges aligned) to avoid overlap.
+# - Legend raised from the bottom for breathing room on mobile.
+# - Radius rings labeled (1 km, 5 km, main radius).
+# - Robust logo loading (file -> data: URL preferred, falls back to public URL).
 # - MiniMap removed.
-# - Popup improvement: for each marker (species at location), show a list of all checklists for that species at that location, deduped, newest first.
 #
-# Note: CSS/JS templates use .format with doubled braces {{ }} inside style/script blocks.
+# Note: CSS/JS template blocks use .format with doubled braces {{ }}.
 
 import os
 import sys
@@ -241,7 +243,7 @@ def get_logo_src() -> str:
 def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_src: str) -> str:
     """
     Bottom-left compact info UI with a large logo.
-    Panel aligns horizontally with the "i" button and is raised above it.
+    Panel is raised above the "i" button and aligned to it (left edges match).
     """
     logo_img = "<img src='{src}' alt='Goodbirds logo' style='height:100px;display:block;'>".format(src=logo_src)
 
@@ -270,7 +272,7 @@ def build_info_ui(radius_km: int, back_days: int, ts_display_et: str, logo_src: 
       .gb-info-panel {{
         position: fixed;
         left: 16px;     /* align with the button */
-        bottom: 70px;   /* raise above the button to avoid overlap */
+        bottom: 70px;   /* raise above button */
         z-index: 1200;
         background: rgba(255,255,255,0.98);
         border: 1px solid #999;
@@ -469,23 +471,6 @@ def save_and_publish(m, outfile: str):
     removed = prune_archive(output_dir, KEEP_COUNT)
     print(f"Archive pruning - kept {KEEP_COUNT}, removed {removed}")
 
-def _parse_obs_dt(dt_str: str):
-    """
-    Parse eBird obsDt variants safely. Returns datetime for sorting.
-    Falls back to minimal parse if the format is unexpected.
-    """
-    if not dt_str:
-        return datetime.min
-    # Common formats: "2025-08-27 14:23" or ISO "2025-08-27T14:23Z"
-    for fmt in ("%Y-%m-%d %H:%M", "%Y-%m-%d %H:%M:%S",
-                "%Y-%m-%dT%H:%MZ", "%Y-%m-%dT%H:%M:%SZ",
-                "%Y-%m-%d"):
-        try:
-            return datetime.strptime(dt_str, fmt)
-        except Exception:
-            continue
-    return datetime.min
-
 def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
              back_days=BACK_DAYS, zoom_start=ZOOM_START):
     _, ts_display_et, ts_file_et = compute_dt_et()
@@ -514,77 +499,62 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
         save_and_publish(m, outfile)
         return m, outfile
 
-    # Aggregate by (lat, lon) -> species -> list of entries
+    # Group observations by (lat, lon) -> species -> list of entries for that species at that location
     loc_species = defaultdict(lambda: defaultdict(list))
     species_set = set()
     for s in data:
-        slat = s.get("lat"); slon = s.get("lng")
+        slat = s.get("lat")
+        slon = s.get("lng")
         sp = s.get("comName") or "Unknown"
         species_set.add(sp)
         loc_name = s.get("locName") or "Unknown location"
         obs_date = s.get("obsDt") or ""
-        dt_key = _parse_obs_dt(obs_date)
         how_many = s.get("howMany", None)
         checklist_id = s.get("subId") or ""
         checklist_url = f"https://ebird.org/checklist/{checklist_id}" if checklist_id else ""
 
-        # Store raw fields; we'll format in the popup
-        loc_species[(slat, slon)][sp].append({
-            "loc_name": loc_name,
-            "obs_dt": obs_date,
-            "dt_key": dt_key,
-            "how_many": how_many,
-            "checklist_url": checklist_url,
-            "checklist_id": checklist_id,
-        })
+        # Store raw fields; we'll render a clean list in the popup
+        loc_species[(slat, slon)][sp].append(
+            {
+                "loc_name": loc_name,
+                "obs_date": obs_date,
+                "how_many": how_many,
+                "checklist_id": checklist_id,
+                "checklist_url": checklist_url,
+            }
+        )
 
     species_to_color = OrderedDict(sorted([(sp, color_for_species(sp)) for sp in species_set], key=lambda x: x[0]))
     too_many = len(species_to_color) > SPECIES_LAYER_THRESHOLD
 
-    def _popup_html_for_species_at_loc(species: str, entries: list) -> str:
-        """Build a bullet list of checklists for one species at one location, newest first, deduped by checklist ID."""
-        if not entries:
-            return "<div style='font-size:13px;'>No details available.</div>"
-
-        loc_name = entries[0].get("loc_name", "Unknown location")
-
-        # Deduplicate by checklist_id but preserve newest
-        by_id = {}
-        for e in entries:
-            cid = e.get("checklist_id") or f"{e.get('obs_dt')}-{e.get('how_many')}"
-            # Keep newest per ID
-            if cid not in by_id or e["dt_key"] > by_id[cid]["dt_key"]:
-                by_id[cid] = e
-
-        ordered = sorted(by_id.values(), key=lambda e: e["dt_key"], reverse=True)
-
+    def popup_html_for_entries(loc_name: str, entries: list) -> str:
+        # Deduplicate checklists by subId while preserving order
+        seen = set()
         items = []
-        for e in ordered:
-            dt_str = e.get("obs_dt") or "unknown time"
-            count = e.get("how_many")
-            count_txt = f"{count} " if isinstance(count, int) else ""
-            url = e.get("checklist_url")
-            if url:
-                item = f"<li>{dt_str} - {count_txt}<a href='{url}' target='_blank' rel='noopener'>Checklist</a></li>"
+        for e in entries:
+            cid = e["checklist_id"]
+            if cid in seen:
+                continue
+            seen.add(cid)
+            count_txt = f" ({e['how_many']})" if e["how_many"] not in (None, "Unknown") else ""
+            if e["checklist_url"]:
+                items.append(
+                    f"<li><a href='{e['checklist_url']}' target='_blank' rel='noopener'>Checklist</a> – "
+                    f"{e['obs_date']}{count_txt}</li>"
+                )
             else:
-                item = f"<li>{dt_str} - {count_txt}Checklist unavailable</li>"
-            items.append(item)
-
-        html = f"""
-        <div style="font-size:13px;">
-          <div><b>Location:</b> {loc_name}</div>
-          <div><b>Species:</b> {species}</div>
-          <hr style="margin:6px 0;">
-          <div><b>Checklists ({len(ordered)}):</b></div>
-          <ul style="margin:6px 0 0 16px;padding:0;">
-            {''.join(items)}
-          </ul>
-        </div>
-        """
-        return html
+                items.append(f"<li>{e['obs_date']}{count_txt}</li>")
+        lst = "<ul style='margin:6px 0 0 16px; padding:0;'>" + "".join(items) + "</ul>" if items else "<div>No checklists.</div>"
+        return (
+            "<div style='font-size:13px;'>"
+            f"<div><b>Location:</b> {loc_name}</div>"
+            "<div style='margin-top:6px; font-weight:600;'>Checklists:</div>"
+            f"{lst}"
+            "</div>"
+        )
 
     if not too_many:
-        # One layer per species
+        # One layer per species, cluster within it
         species_groups = {}
         for sp, hexcol in species_to_color.items():
             fg = folium.FeatureGroup(name=sp, show=True)
@@ -596,7 +566,8 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
         for (slat, slon), species_dict in loc_species.items():
             for sp, entries in species_dict.items():
                 hexcol = species_to_color.get(sp, "#444444")
-                popup_html = _popup_html_for_species_at_loc(sp, entries)
+                loc_name = entries[0]["loc_name"]
+                popup_html = popup_html_for_entries(loc_name, entries)
                 icon = folium.DivIcon(
                     html=f"<div style='width:14px;height:14px;border-radius:50%;background:{hexcol};border:1.5px solid #222;'></div>",
                     icon_size=(14, 14), icon_anchor=(7, 7),
@@ -605,18 +576,20 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
                     [slat, slon],
                     icon=icon,
                     tooltip=sp,
-                    popup=folium.Popup(popup_html, max_width=360)
+                    popup=folium.Popup(popup_html, max_width=320)
                 ).add_to(species_groups[sp][1])
 
         folium.LayerControl(collapsed=False).add_to(m)
         add_clear_species_control(m, list(species_to_color.keys()))
+
     else:
-        # Too many species - single cluster
+        # Single clustered layer if too many species
         cluster = MarkerCluster(name="Notable sightings").add_to(m)
         for (slat, slon), species_dict in loc_species.items():
             for sp, entries in species_dict.items():
                 hexcol = species_to_color.get(sp, "#444444")
-                popup_html = _popup_html_for_species_at_loc(sp, entries)
+                loc_name = entries[0]["loc_name"]
+                popup_html = popup_html_for_entries(loc_name, entries)
                 icon = folium.DivIcon(
                     html=f"<div style='width:14px;height:14px;border-radius:50%;background:{hexcol};border:1.5px solid #222;'></div>",
                     icon_size=(14, 14), icon_anchor=(7, 7),
@@ -625,7 +598,7 @@ def make_map(lat=CENTER_LAT, lon=CENTER_LON, radius_km=DEFAULT_RADIUS_KM,
                     [slat, slon],
                     icon=icon,
                     tooltip=sp,
-                    popup=folium.Popup(popup_html, max_width=360)
+                    popup=folium.Popup(popup_html, max_width=320)
                 ).add_to(cluster)
 
         folium.LayerControl(collapsed=False).add_to(m)
