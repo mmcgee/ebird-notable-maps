@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_26331ca07832e1a25d6afedd09dc2550 {
+                #map_2b94878535fa15217a9f7f0cd84b113d {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -88,8 +88,8 @@
 
       .gb-info-panel {
         position: fixed;
-        left: 16px;
-        bottom: 16px;
+        left: 16px;     /* align with the button */
+        bottom: 70px;   /* raise above button */
         z-index: 1200;
         background: rgba(255,255,255,0.98);
         border: 1px solid #999;
@@ -152,7 +152,7 @@
           <h3 class="gb-info-title">North Cambridge and Vicinity</h3>
           <div class="gb-info-meta">eBird Notable - 10 km radius - last 2 day(s)</div>
           <div class="gb-info-row">
-            <span>Built: Aug 27, 2025 12:10 PM EDT</span>
+            <span>Built: Sep 04, 2025 12:10 PM EDT</span>
             <a href="https://mmcgee.github.io/ebird-notable-maps/" target="_blank" rel="noopener">Archive</a>
           </div>
         </div>
@@ -187,6 +187,7 @@
           closePanel();
         });
 
+        // Close panel when clicking outside it
         document.addEventListener('click', function(e) {
           if (!panel.contains(e.target) && e.target !== btn) {
             closePanel();
@@ -198,7 +199,7 @@
     
     <script>
     (function() {
-      var speciesSet = new Set(['Cape May Warbler', 'Common Tern', 'Little Blue Heron', 'Northern Parula', "Swainson's Thrush"]);
+      var speciesSet = new Set(['Cape May Warbler', 'Common Gallinule', 'Little Blue Heron']);
       function clearSpecies() {
         var root = document.querySelector('.leaflet-control-layers-overlays');
         if (!root) return;
@@ -234,7 +235,7 @@
         if (!document.querySelector('.leaflet-control-layers')) {
           return setTimeout(addWhenReady, 150);
         }
-        (new ClearCtl({ position: 'topright' })).addTo(map_26331ca07832e1a25d6afedd09dc2550);
+        (new ClearCtl({ position: 'topright' })).addTo(map_2b94878535fa15217a9f7f0cd84b113d);
       }
       addWhenReady();
     })();
@@ -258,18 +259,18 @@
         box-shadow: 0 1px 4px rgba(0,0,0,0.2);
         ">
         <div style="font-weight:600;margin-bottom:6px;">Species Legend</div>
-        <div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c32282;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Cape May Warbler</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c32f22;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Common Tern</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#adc322;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Little Blue Heron</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#7a22c3;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Northern Parula</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c32280;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Swainson's Thrush</span></div>
+        <div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c32282;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Cape May Warbler</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c3a522;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Common Gallinule</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#adc322;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Little Blue Heron</span></div>
     </div>
     
     
-            <div class="folium-map" id="map_26331ca07832e1a25d6afedd09dc2550" ></div>
+            <div class="folium-map" id="map_2b94878535fa15217a9f7f0cd84b113d" ></div>
         
 </body>
 <script>
     
     
-            var map_26331ca07832e1a25d6afedd09dc2550 = L.map(
-                "map_26331ca07832e1a25d6afedd09dc2550",
+            var map_2b94878535fa15217a9f7f0cd84b113d = L.map(
+                "map_2b94878535fa15217a9f7f0cd84b113d",
                 {
                     center: [42.3974042, -71.1366337],
                     crs: L.CRS.EPSG3857,
@@ -281,13 +282,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            L.control.scale().addTo(map_2b94878535fa15217a9f7f0cd84b113d);
 
             
 
         
     
-            var tile_layer_e920d4b64669b18e1a0c75a31da77103 = L.tileLayer(
+            var tile_layer_6100012a7e358d842cc5d3ea1a52b522 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -304,16 +305,16 @@
             );
         
     
-            tile_layer_e920d4b64669b18e1a0c75a31da77103.addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            tile_layer_6100012a7e358d842cc5d3ea1a52b522.addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            var circle_marker_d508466491addf2563f629055aa4eece = L.circleMarker(
+            var circle_marker_07c91715a83427469ebd3f00fabcefd4 = L.circleMarker(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#2c7fb8", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2c7fb8", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            ).addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            circle_marker_d508466491addf2563f629055aa4eece.bindTooltip(
+            circle_marker_07c91715a83427469ebd3f00fabcefd4.bindTooltip(
                 `<div>
                      Center
                  </div>`,
@@ -323,70 +324,70 @@
             );
         
     
-            var circle_becdf8d49e90ae0c0523b992ac504be4 = L.circle(
+            var circle_0e3d03718744d0f4ab49d2fa73b55086 = L.circle(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#08519c", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#08519c", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10000.0, "stroke": true, "weight": 3}
-            ).addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            ).addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            var marker_fcba11609bca7cb008d60609b22b5862 = L.marker(
+            var marker_1e946ac7ce8f3bb688fd83754e24ac77 = L.marker(
                 [42.48749429009009, -71.1366337],
                 {
 }
-            ).addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            ).addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            var div_icon_36c80dfba11cd67db8d09310834aa3dc = L.divIcon({
+            var div_icon_6d4c1c55908739d2da5590ac24041038 = L.divIcon({
   "html": "\u003cdiv style=\u0027font-size:12px; color:#08519c; font-weight:bold;\u0027\u003e10 km\u003c/div\u003e",
   "className": "empty",
 });
         
     
-                marker_fcba11609bca7cb008d60609b22b5862.setIcon(div_icon_36c80dfba11cd67db8d09310834aa3dc);
+                marker_1e946ac7ce8f3bb688fd83754e24ac77.setIcon(div_icon_6d4c1c55908739d2da5590ac24041038);
             
     
-            var circle_9914ab88ad958fb28139bdfed358208e = L.circle(
+            var circle_113177e5bee4ec0d833d44fed695788a = L.circle(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#000000", "dashArray": "5,5", "dashOffset": null, "fill": false, "fillColor": "#000000", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 1000.0, "stroke": true, "weight": 2}
-            ).addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            ).addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            var marker_5679d71c52cedc89409e5f0474a184f8 = L.marker(
+            var marker_6d3ea5c4abcdb8f5be95e05c8d543c0a = L.marker(
                 [42.406413209009, -71.1366337],
                 {
 }
-            ).addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            ).addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            var div_icon_7377ec0e9df2d41d3601245e4703cf7d = L.divIcon({
+            var div_icon_28d0b6db014046efae16b68d41494379 = L.divIcon({
   "html": "\u003cdiv style=\u0027font-size:12px; color:#000;\u0027\u003e1 km\u003c/div\u003e",
   "className": "empty",
 });
         
     
-                marker_5679d71c52cedc89409e5f0474a184f8.setIcon(div_icon_7377ec0e9df2d41d3601245e4703cf7d);
+                marker_6d3ea5c4abcdb8f5be95e05c8d543c0a.setIcon(div_icon_28d0b6db014046efae16b68d41494379);
             
     
-            var circle_e4af352954fb9321260ecb711a1769c5 = L.circle(
+            var circle_6ac7638bd34e99e0e9b95a5ffe003677 = L.circle(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#555555", "dashArray": "5,7", "dashOffset": null, "fill": false, "fillColor": "#555555", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 5000.0, "stroke": true, "weight": 2}
-            ).addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            ).addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            var marker_a6b1b9510844766e45576d2cd02a0086 = L.marker(
+            var marker_122fbcb150d88cf45649cce41c2b14bb = L.marker(
                 [42.44244924504504, -71.1366337],
                 {
 }
-            ).addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            ).addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            var div_icon_529ce879835b2a795cc565af791fdd2b = L.divIcon({
+            var div_icon_10c059f9fdbec5f5622822003b481692 = L.divIcon({
   "html": "\u003cdiv style=\u0027font-size:12px; color:#555;\u0027\u003e5 km\u003c/div\u003e",
   "className": "empty",
 });
         
     
-                marker_a6b1b9510844766e45576d2cd02a0086.setIcon(div_icon_529ce879835b2a795cc565af791fdd2b);
+                marker_122fbcb150d88cf45649cce41c2b14bb.setIcon(div_icon_10c059f9fdbec5f5622822003b481692);
             
     
             L.control.fullscreen(
@@ -396,10 +397,10 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            ).addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            var measure_control_4538123e98ba6dd96846902c0ae01ded = new L.Control.Measure(
+            var measure_control_bf006ce165b5487a45fae27cd78947cc = new L.Control.Measure(
                 {
   "position": "topright",
   "primaryLengthUnit": "kilometers",
@@ -407,7 +408,7 @@
   "primaryAreaUnit": "sqmeters",
   "secondaryAreaUnit": "acres",
 });
-            map_26331ca07832e1a25d6afedd09dc2550.addControl(measure_control_4538123e98ba6dd96846902c0ae01ded);
+            map_2b94878535fa15217a9f7f0cd84b113d.addControl(measure_control_bf006ce165b5487a45fae27cd78947cc);
 
             // Workaround for using this plugin with Leaflet>=1.8.0
             // https://github.com/ljagis/leaflet-measure/issues/171
@@ -426,13 +427,13 @@
 
         
     
-            var locate_control_2ef149f055f9b77c3f137f06eca1f1f6 = L.control.locate(
+            var locate_control_9a31fb5d9a636c591be2f5e4dea8601d = L.control.locate(
                 {"keepCurrentZoomLevel": false}
-            ).addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            ).addTo(map_2b94878535fa15217a9f7f0cd84b113d);
             
         
     
-            var mouse_position_4933d5213765370b6f500a749b86d963 = new L.Control.MousePosition(
+            var mouse_position_19d5bd8db954a88008a89ab609658b2f = new L.Control.MousePosition(
                 {
   "position": "bottomright",
   "separator": " , ",
@@ -442,33 +443,33 @@
   "prefix": "Lat, Lon:",
 }
             );
-            mouse_position_4933d5213765370b6f500a749b86d963.options["latFormatter"] =
+            mouse_position_19d5bd8db954a88008a89ab609658b2f.options["latFormatter"] =
                 undefined;
-            mouse_position_4933d5213765370b6f500a749b86d963.options["lngFormatter"] =
+            mouse_position_19d5bd8db954a88008a89ab609658b2f.options["lngFormatter"] =
                 undefined;
-            map_26331ca07832e1a25d6afedd09dc2550.addControl(mouse_position_4933d5213765370b6f500a749b86d963);
+            map_2b94878535fa15217a9f7f0cd84b113d.addControl(mouse_position_19d5bd8db954a88008a89ab609658b2f);
         
     
-            var feature_group_5651fd94ed53389458da876433834e2f = L.featureGroup(
+            var feature_group_feb7ed311a5249552a3f099e4b365504 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_cluster_617aac9293c6784f9b145371b036451b = L.markerClusterGroup(
+            var marker_cluster_dda486e780d1f52bc914e1fdb39ef919 = L.markerClusterGroup(
                 {
 }
             );
         
     
-            var marker_e9393528a44c9381f2c5b5ef86b7a44b = L.marker(
-                [42.4027349, -71.2068558],
+            var marker_75a5c48ce9029ce7d645338d0ed01a57 = L.marker(
+                [42.4142547, -71.1729537],
                 {
 }
-            ).addTo(marker_cluster_617aac9293c6784f9b145371b036451b);
+            ).addTo(marker_cluster_dda486e780d1f52bc914e1fdb39ef919);
         
     
-            var div_icon_f642b7736fec879f14aa46e5ef1719f2 = L.divIcon({
+            var div_icon_55259edfb94f6eb65b74d1a80e0a84db = L.divIcon({
   "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c32282;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
@@ -476,24 +477,24 @@
 });
         
     
-        var popup_5431a7dc05fab896210b4382895b1204 = L.popup({
+        var popup_d75e14fb5f176d870e70bf4ba5c3a2c1 = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_c914d044dce1b1239a2b6fc19b817f21 = $(`<div id="html_c914d044dce1b1239a2b6fc19b817f21" style="width: 100.0%; height: 100.0%;">                 <div style="font-size:13px;">                   <div><b>Location:</b> Beaver Brook North Reservation</div>                   <hr style="margin:6px 0;">                   <div><b>Cape May Warbler</b> (1) on 2025-08-27 07:55 [<a href='https://ebird.org/checklist/S269830723' target='_blank' rel='noopener'>Checklist</a>]</div>                 </div></div>`)[0];
-                popup_5431a7dc05fab896210b4382895b1204.setContent(html_c914d044dce1b1239a2b6fc19b817f21);
+                var html_7aed7bbb0c6aabc176387847b85493db = $(`<div id="html_7aed7bbb0c6aabc176387847b85493db" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Cape May Warbler</div><div><b>Location:</b> Mount Vernon St.</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S271273217' target='_blank' rel='noopener'>Checklist</a> – 2025-09-03 03:04</li><li><a href='https://ebird.org/checklist/S271310601' target='_blank' rel='noopener'>Checklist</a> – 2025-09-02 23:27</li></ul></div></div>`)[0];
+                popup_d75e14fb5f176d870e70bf4ba5c3a2c1.setContent(html_7aed7bbb0c6aabc176387847b85493db);
             
         
 
-        marker_e9393528a44c9381f2c5b5ef86b7a44b.bindPopup(popup_5431a7dc05fab896210b4382895b1204)
+        marker_75a5c48ce9029ce7d645338d0ed01a57.bindPopup(popup_d75e14fb5f176d870e70bf4ba5c3a2c1)
         ;
 
         
     
     
-            marker_e9393528a44c9381f2c5b5ef86b7a44b.bindTooltip(
+            marker_75a5c48ce9029ce7d645338d0ed01a57.bindTooltip(
                 `<div>
                      Cape May Warbler
                  </div>`,
@@ -503,62 +504,62 @@
             );
         
     
-                marker_e9393528a44c9381f2c5b5ef86b7a44b.setIcon(div_icon_f642b7736fec879f14aa46e5ef1719f2);
+                marker_75a5c48ce9029ce7d645338d0ed01a57.setIcon(div_icon_55259edfb94f6eb65b74d1a80e0a84db);
             
     
-            marker_cluster_617aac9293c6784f9b145371b036451b.addTo(feature_group_5651fd94ed53389458da876433834e2f);
+            marker_cluster_dda486e780d1f52bc914e1fdb39ef919.addTo(feature_group_feb7ed311a5249552a3f099e4b365504);
         
     
-            feature_group_5651fd94ed53389458da876433834e2f.addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            feature_group_feb7ed311a5249552a3f099e4b365504.addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            var feature_group_0bf232a9825c599b46f91bb7d6604648 = L.featureGroup(
+            var feature_group_92de2b578cf16b7316e210997b13b481 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_cluster_d47cacadb7d82b963c95c50e47461c66 = L.markerClusterGroup(
+            var marker_cluster_63e8bd0cbdcf83fc37a0e38e54c1e16a = L.markerClusterGroup(
                 {
 }
             );
         
     
-            var marker_c59904023e4455edf8148e3f47fc1baa = L.marker(
-                [42.3966819, -71.0810494],
+            var marker_d7d6669c880efdc0468c1aa3f6bbfd91 = L.marker(
+                [42.4736361, -71.1680778],
                 {
 }
-            ).addTo(marker_cluster_d47cacadb7d82b963c95c50e47461c66);
+            ).addTo(marker_cluster_63e8bd0cbdcf83fc37a0e38e54c1e16a);
         
     
-            var div_icon_c20956c4226d8b68d9b253ab9c871d04 = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c32f22;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+            var div_icon_aabf2ced093b644b4cc56987bc2201cb = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c3a522;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
   "className": "empty",
 });
         
     
-        var popup_ade03ca27d1fe3e61fd13a50fc5b7f0c = L.popup({
+        var popup_7b8f65af02760599009487a3c581297d = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_19580d49e159d2c8bc8a4719a6d31ecf = $(`<div id="html_19580d49e159d2c8bc8a4719a6d31ecf" style="width: 100.0%; height: 100.0%;">                 <div style="font-size:13px;">                   <div><b>Location:</b> Sylvester Baxter Riverfront Park</div>                   <hr style="margin:6px 0;">                   <div><b>Common Tern</b> (1) on 2025-08-26 14:36 [<a href='https://ebird.org/checklist/S269719599' target='_blank' rel='noopener'>Checklist</a>]</div>                 </div></div>`)[0];
-                popup_ade03ca27d1fe3e61fd13a50fc5b7f0c.setContent(html_19580d49e159d2c8bc8a4719a6d31ecf);
+                var html_32c8ca4e275f0a46ff7df271202c3f1c = $(`<div id="html_32c8ca4e275f0a46ff7df271202c3f1c" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Common Gallinule</div><div><b>Location:</b> Woburn Community Gardens</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S271435423' target='_blank' rel='noopener'>Checklist</a> – 2025-09-04 10:17 (1)</li><li><a href='https://ebird.org/checklist/S271420033' target='_blank' rel='noopener'>Checklist</a> – 2025-09-04 10:01 (1)</li></ul></div></div>`)[0];
+                popup_7b8f65af02760599009487a3c581297d.setContent(html_32c8ca4e275f0a46ff7df271202c3f1c);
             
         
 
-        marker_c59904023e4455edf8148e3f47fc1baa.bindPopup(popup_ade03ca27d1fe3e61fd13a50fc5b7f0c)
+        marker_d7d6669c880efdc0468c1aa3f6bbfd91.bindPopup(popup_7b8f65af02760599009487a3c581297d)
         ;
 
         
     
     
-            marker_c59904023e4455edf8148e3f47fc1baa.bindTooltip(
+            marker_d7d6669c880efdc0468c1aa3f6bbfd91.bindTooltip(
                 `<div>
-                     Common Tern
+                     Common Gallinule
                  </div>`,
                 {
   "sticky": true,
@@ -566,44 +567,44 @@
             );
         
     
-                marker_c59904023e4455edf8148e3f47fc1baa.setIcon(div_icon_c20956c4226d8b68d9b253ab9c871d04);
+                marker_d7d6669c880efdc0468c1aa3f6bbfd91.setIcon(div_icon_aabf2ced093b644b4cc56987bc2201cb);
             
     
-            var marker_87b39029d6c86dea2b7c826eb4a54006 = L.marker(
-                [42.4030518, -71.0882378],
+            var marker_77c6f602d030f4496cd439ef07a912db = L.marker(
+                [42.4680852, -71.1582396],
                 {
 }
-            ).addTo(marker_cluster_d47cacadb7d82b963c95c50e47461c66);
+            ).addTo(marker_cluster_63e8bd0cbdcf83fc37a0e38e54c1e16a);
         
     
-            var div_icon_28a98383afb1555600165eb3de8362be = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c32f22;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+            var div_icon_2b9f29bc6d1453288f90f7a54f98898d = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c3a522;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
   "className": "empty",
 });
         
     
-        var popup_f55ecd85c629f8d1a52b129a98fb40ae = L.popup({
+        var popup_37a6cc96834ff1b5f0af15d91efa40fd = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_fcbc5e05b07fd000c68c61132d6af8d0 = $(`<div id="html_fcbc5e05b07fd000c68c61132d6af8d0" style="width: 100.0%; height: 100.0%;">                 <div style="font-size:13px;">                   <div><b>Location:</b> Mystic River Reservation--Torbert Macdonald State Park</div>                   <hr style="margin:6px 0;">                   <div><b>Common Tern</b> (2) on 2025-08-26 13:09 [<a href='https://ebird.org/checklist/S269747804' target='_blank' rel='noopener'>Checklist</a>]</div>                 </div></div>`)[0];
-                popup_f55ecd85c629f8d1a52b129a98fb40ae.setContent(html_fcbc5e05b07fd000c68c61132d6af8d0);
+                var html_372fe0bddbfc50c535196cc4a5ebef3f = $(`<div id="html_372fe0bddbfc50c535196cc4a5ebef3f" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Common Gallinule</div><div><b>Location:</b> Horn Pond Recreation Area</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S271419600' target='_blank' rel='noopener'>Checklist</a> – 2025-09-04 09:07 (1)</li><li><a href='https://ebird.org/checklist/S271427980' target='_blank' rel='noopener'>Checklist</a> – 2025-09-04 07:46 (1)</li><li><a href='https://ebird.org/checklist/S271412723' target='_blank' rel='noopener'>Checklist</a> – 2025-09-04 07:28 (1)</li><li><a href='https://ebird.org/checklist/S271414204' target='_blank' rel='noopener'>Checklist</a> – 2025-09-04 07:12 (1)</li><li><a href='https://ebird.org/checklist/S271409847' target='_blank' rel='noopener'>Checklist</a> – 2025-09-04 06:54 (1)</li><li><a href='https://ebird.org/checklist/S271414040' target='_blank' rel='noopener'>Checklist</a> – 2025-09-04 06:47 (1)</li></ul></div></div>`)[0];
+                popup_37a6cc96834ff1b5f0af15d91efa40fd.setContent(html_372fe0bddbfc50c535196cc4a5ebef3f);
             
         
 
-        marker_87b39029d6c86dea2b7c826eb4a54006.bindPopup(popup_f55ecd85c629f8d1a52b129a98fb40ae)
+        marker_77c6f602d030f4496cd439ef07a912db.bindPopup(popup_37a6cc96834ff1b5f0af15d91efa40fd)
         ;
 
         
     
     
-            marker_87b39029d6c86dea2b7c826eb4a54006.bindTooltip(
+            marker_77c6f602d030f4496cd439ef07a912db.bindTooltip(
                 `<div>
-                     Common Tern
+                     Common Gallinule
                  </div>`,
                 {
   "sticky": true,
@@ -611,35 +612,35 @@
             );
         
     
-                marker_87b39029d6c86dea2b7c826eb4a54006.setIcon(div_icon_28a98383afb1555600165eb3de8362be);
+                marker_77c6f602d030f4496cd439ef07a912db.setIcon(div_icon_2b9f29bc6d1453288f90f7a54f98898d);
             
     
-            marker_cluster_d47cacadb7d82b963c95c50e47461c66.addTo(feature_group_0bf232a9825c599b46f91bb7d6604648);
+            marker_cluster_63e8bd0cbdcf83fc37a0e38e54c1e16a.addTo(feature_group_92de2b578cf16b7316e210997b13b481);
         
     
-            feature_group_0bf232a9825c599b46f91bb7d6604648.addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            feature_group_92de2b578cf16b7316e210997b13b481.addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            var feature_group_46dd99f64f4228cf47d0cf692bbcb849 = L.featureGroup(
+            var feature_group_de69bf3e8cba494eabacdc7612c25ac7 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_cluster_e674418154cf02c87139727effb95066 = L.markerClusterGroup(
+            var marker_cluster_77627eca9240e8cb14c678bd548338b8 = L.markerClusterGroup(
                 {
 }
             );
         
     
-            var marker_25cb3bb2b4c52468cdaa6b0d051eac6b = L.marker(
+            var marker_bc9b68bfa2012c796cf36bb4580435fb = L.marker(
                 [42.383, -71.15],
                 {
 }
-            ).addTo(marker_cluster_e674418154cf02c87139727effb95066);
+            ).addTo(marker_cluster_77627eca9240e8cb14c678bd548338b8);
         
     
-            var div_icon_5325546b6e24d11f0b12607ec4039bcb = L.divIcon({
+            var div_icon_981b3f520230a299847da879861ac949 = L.divIcon({
   "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#adc322;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
@@ -647,24 +648,24 @@
 });
         
     
-        var popup_cba39103073c1c2b43737483deb9b13e = L.popup({
+        var popup_565141bb0de08a8145e01c8bafc70be6 = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_77fae7f7ecf1d50468e39ea5ead9948c = $(`<div id="html_77fae7f7ecf1d50468e39ea5ead9948c" style="width: 100.0%; height: 100.0%;">                 <div style="font-size:13px;">                   <div><b>Location:</b> Fresh Pond, Cambridge</div>                   <hr style="margin:6px 0;">                   <div><b>Little Blue Heron</b> (1) on 2025-08-27 10:04 [<a href='https://ebird.org/checklist/S269837480' target='_blank' rel='noopener'>Checklist</a>]<br><b>Little Blue Heron</b> (1) on 2025-08-27 07:09 [<a href='https://ebird.org/checklist/S269817897' target='_blank' rel='noopener'>Checklist</a>]<br><b>Little Blue Heron</b> (1) on 2025-08-26 18:19 [<a href='https://ebird.org/checklist/S269736080' target='_blank' rel='noopener'>Checklist</a>]<br><b>Little Blue Heron</b> (1) on 2025-08-25 18:25 [<a href='https://ebird.org/checklist/S269558095' target='_blank' rel='noopener'>Checklist</a>]</div>                 </div></div>`)[0];
-                popup_cba39103073c1c2b43737483deb9b13e.setContent(html_77fae7f7ecf1d50468e39ea5ead9948c);
+                var html_eeb2368b1f7fe01c9f171498190d9fa6 = $(`<div id="html_eeb2368b1f7fe01c9f171498190d9fa6" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Little Blue Heron</div><div><b>Location:</b> Fresh Pond, Cambridge</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S271342064' target='_blank' rel='noopener'>Checklist</a> – 2025-09-03 18:29 (1)</li><li><a href='https://ebird.org/checklist/S271295654' target='_blank' rel='noopener'>Checklist</a> – 2025-09-03 11:42 (1)</li></ul></div></div>`)[0];
+                popup_565141bb0de08a8145e01c8bafc70be6.setContent(html_eeb2368b1f7fe01c9f171498190d9fa6);
             
         
 
-        marker_25cb3bb2b4c52468cdaa6b0d051eac6b.bindPopup(popup_cba39103073c1c2b43737483deb9b13e)
+        marker_bc9b68bfa2012c796cf36bb4580435fb.bindPopup(popup_565141bb0de08a8145e01c8bafc70be6)
         ;
 
         
     
     
-            marker_25cb3bb2b4c52468cdaa6b0d051eac6b.bindTooltip(
+            marker_bc9b68bfa2012c796cf36bb4580435fb.bindTooltip(
                 `<div>
                      Little Blue Heron
                  </div>`,
@@ -674,17 +675,17 @@
             );
         
     
-                marker_25cb3bb2b4c52468cdaa6b0d051eac6b.setIcon(div_icon_5325546b6e24d11f0b12607ec4039bcb);
+                marker_bc9b68bfa2012c796cf36bb4580435fb.setIcon(div_icon_981b3f520230a299847da879861ac949);
             
     
-            var marker_4e0d0a1614fe8705e47873dfb9669582 = L.marker(
+            var marker_65c46e2ff280155f79b19a6259c474a8 = L.marker(
                 [42.3890884, -71.1506626],
                 {
 }
-            ).addTo(marker_cluster_e674418154cf02c87139727effb95066);
+            ).addTo(marker_cluster_77627eca9240e8cb14c678bd548338b8);
         
     
-            var div_icon_803e1d096b8163570a152475abb381eb = L.divIcon({
+            var div_icon_b62470c751edd41fc8f9e18383b3f8ea = L.divIcon({
   "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#adc322;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
@@ -692,24 +693,24 @@
 });
         
     
-        var popup_21e9cca458241246342334833841c56c = L.popup({
+        var popup_0f4e1adb5c5450ecf1439cb9d79b5442 = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_b0132a2790ed79c58f395f2bed6314bc = $(`<div id="html_b0132a2790ed79c58f395f2bed6314bc" style="width: 100.0%; height: 100.0%;">                 <div style="font-size:13px;">                   <div><b>Location:</b> Fresh Pond--Black's Nook</div>                   <hr style="margin:6px 0;">                   <div><b>Little Blue Heron</b> (1) on 2025-08-26 15:56 [<a href='https://ebird.org/checklist/S269735458' target='_blank' rel='noopener'>Checklist</a>]</div>                 </div></div>`)[0];
-                popup_21e9cca458241246342334833841c56c.setContent(html_b0132a2790ed79c58f395f2bed6314bc);
+                var html_2f0db0ec9fa4a3dc6fec95fea1b3ee80 = $(`<div id="html_2f0db0ec9fa4a3dc6fec95fea1b3ee80" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Little Blue Heron</div><div><b>Location:</b> Fresh Pond--Black's Nook</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S271151754' target='_blank' rel='noopener'>Checklist</a> – 2025-09-02 12:20 (1)</li></ul></div></div>`)[0];
+                popup_0f4e1adb5c5450ecf1439cb9d79b5442.setContent(html_2f0db0ec9fa4a3dc6fec95fea1b3ee80);
             
         
 
-        marker_4e0d0a1614fe8705e47873dfb9669582.bindPopup(popup_21e9cca458241246342334833841c56c)
+        marker_65c46e2ff280155f79b19a6259c474a8.bindPopup(popup_0f4e1adb5c5450ecf1439cb9d79b5442)
         ;
 
         
     
     
-            marker_4e0d0a1614fe8705e47873dfb9669582.bindTooltip(
+            marker_65c46e2ff280155f79b19a6259c474a8.bindTooltip(
                 `<div>
                      Little Blue Heron
                  </div>`,
@@ -719,207 +720,34 @@
             );
         
     
-                marker_4e0d0a1614fe8705e47873dfb9669582.setIcon(div_icon_803e1d096b8163570a152475abb381eb);
+                marker_65c46e2ff280155f79b19a6259c474a8.setIcon(div_icon_b62470c751edd41fc8f9e18383b3f8ea);
             
     
-            marker_cluster_e674418154cf02c87139727effb95066.addTo(feature_group_46dd99f64f4228cf47d0cf692bbcb849);
+            marker_cluster_77627eca9240e8cb14c678bd548338b8.addTo(feature_group_de69bf3e8cba494eabacdc7612c25ac7);
         
     
-            feature_group_46dd99f64f4228cf47d0cf692bbcb849.addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            feature_group_de69bf3e8cba494eabacdc7612c25ac7.addTo(map_2b94878535fa15217a9f7f0cd84b113d);
         
     
-            var feature_group_1848f3b9225bcdfe6b7a050aaffcc84e = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var marker_cluster_3fca94a29763f35e5951af34f3e0e29c = L.markerClusterGroup(
-                {
-}
-            );
-        
-    
-            var marker_31b3bd856b2de98ea4a9467a817d4e4b = L.marker(
-                [42.4275113, -71.2269402],
-                {
-}
-            ).addTo(marker_cluster_3fca94a29763f35e5951af34f3e0e29c);
-        
-    
-            var div_icon_4bc15f30a1c6e500e4e44708a4b25cd1 = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#7a22c3;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
-  "iconSize": [14, 14],
-  "iconAnchor": [7, 7],
-  "className": "empty",
-});
-        
-    
-        var popup_1393ccbc143184cba92681b8c060558d = L.popup({
-  "maxWidth": 320,
-});
-
-        
-            
-                var html_8bd18b6f44c11a174dec96fea2879819 = $(`<div id="html_8bd18b6f44c11a174dec96fea2879819" style="width: 100.0%; height: 100.0%;">                 <div style="font-size:13px;">                   <div><b>Location:</b> Dunback Meadow</div>                   <hr style="margin:6px 0;">                   <div><b>Northern Parula</b> (1) on 2025-08-26 07:19 [<a href='https://ebird.org/checklist/S269664936' target='_blank' rel='noopener'>Checklist</a>]</div>                 </div></div>`)[0];
-                popup_1393ccbc143184cba92681b8c060558d.setContent(html_8bd18b6f44c11a174dec96fea2879819);
-            
-        
-
-        marker_31b3bd856b2de98ea4a9467a817d4e4b.bindPopup(popup_1393ccbc143184cba92681b8c060558d)
-        ;
-
-        
-    
-    
-            marker_31b3bd856b2de98ea4a9467a817d4e4b.bindTooltip(
-                `<div>
-                     Northern Parula
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-                marker_31b3bd856b2de98ea4a9467a817d4e4b.setIcon(div_icon_4bc15f30a1c6e500e4e44708a4b25cd1);
-            
-    
-            var marker_bacbae2b600df4370bafad00ffe648bd = L.marker(
-                [42.3874621, -71.1275308],
-                {
-}
-            ).addTo(marker_cluster_3fca94a29763f35e5951af34f3e0e29c);
-        
-    
-            var div_icon_65fb2761a5d621b168e94c03d1374084 = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#7a22c3;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
-  "iconSize": [14, 14],
-  "iconAnchor": [7, 7],
-  "className": "empty",
-});
-        
-    
-        var popup_fb49b9993eb3c430f878d49f755e43ed = L.popup({
-  "maxWidth": 320,
-});
-
-        
-            
-                var html_ea224bd781955e7ddaa72615b08683a2 = $(`<div id="html_ea224bd781955e7ddaa72615b08683a2" style="width: 100.0%; height: 100.0%;">                 <div style="font-size:13px;">                   <div><b>Location:</b> Neighborhood 9 NFC</div>                   <hr style="margin:6px 0;">                   <div><b>Northern Parula</b> (1) on 2025-08-26 04:00 [<a href='https://ebird.org/checklist/S269685285' target='_blank' rel='noopener'>Checklist</a>]</div>                 </div></div>`)[0];
-                popup_fb49b9993eb3c430f878d49f755e43ed.setContent(html_ea224bd781955e7ddaa72615b08683a2);
-            
-        
-
-        marker_bacbae2b600df4370bafad00ffe648bd.bindPopup(popup_fb49b9993eb3c430f878d49f755e43ed)
-        ;
-
-        
-    
-    
-            marker_bacbae2b600df4370bafad00ffe648bd.bindTooltip(
-                `<div>
-                     Northern Parula
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-                marker_bacbae2b600df4370bafad00ffe648bd.setIcon(div_icon_65fb2761a5d621b168e94c03d1374084);
-            
-    
-            marker_cluster_3fca94a29763f35e5951af34f3e0e29c.addTo(feature_group_1848f3b9225bcdfe6b7a050aaffcc84e);
-        
-    
-            feature_group_1848f3b9225bcdfe6b7a050aaffcc84e.addTo(map_26331ca07832e1a25d6afedd09dc2550);
-        
-    
-            var feature_group_aa02ce8252f44ff76c83b294028d716d = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var marker_cluster_41cf6542ef8a8e7b1fbdf0cf475ac76e = L.markerClusterGroup(
-                {
-}
-            );
-        
-    
-            var marker_a8c72bedeffa13dbe37e1cf74e0b6c23 = L.marker(
-                [42.3874621, -71.1275308],
-                {
-}
-            ).addTo(marker_cluster_41cf6542ef8a8e7b1fbdf0cf475ac76e);
-        
-    
-            var div_icon_7c7d31dfd86738aba72d7e378379162b = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c32280;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
-  "iconSize": [14, 14],
-  "iconAnchor": [7, 7],
-  "className": "empty",
-});
-        
-    
-        var popup_efff186bd2ac7f01ce2ab932fb63636a = L.popup({
-  "maxWidth": 320,
-});
-
-        
-            
-                var html_e9368081c32eec87c6f675e94cabd84c = $(`<div id="html_e9368081c32eec87c6f675e94cabd84c" style="width: 100.0%; height: 100.0%;">                 <div style="font-size:13px;">                   <div><b>Location:</b> Neighborhood 9 NFC</div>                   <hr style="margin:6px 0;">                   <div><b>Swainson's Thrush</b> (1) on 2025-08-26 04:00 [<a href='https://ebird.org/checklist/S269685285' target='_blank' rel='noopener'>Checklist</a>]</div>                 </div></div>`)[0];
-                popup_efff186bd2ac7f01ce2ab932fb63636a.setContent(html_e9368081c32eec87c6f675e94cabd84c);
-            
-        
-
-        marker_a8c72bedeffa13dbe37e1cf74e0b6c23.bindPopup(popup_efff186bd2ac7f01ce2ab932fb63636a)
-        ;
-
-        
-    
-    
-            marker_a8c72bedeffa13dbe37e1cf74e0b6c23.bindTooltip(
-                `<div>
-                     Swainson's Thrush
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-                marker_a8c72bedeffa13dbe37e1cf74e0b6c23.setIcon(div_icon_7c7d31dfd86738aba72d7e378379162b);
-            
-    
-            marker_cluster_41cf6542ef8a8e7b1fbdf0cf475ac76e.addTo(feature_group_aa02ce8252f44ff76c83b294028d716d);
-        
-    
-            feature_group_aa02ce8252f44ff76c83b294028d716d.addTo(map_26331ca07832e1a25d6afedd09dc2550);
-        
-    
-            var layer_control_53c66b063c683cefba78cbc09a26f469_layers = {
+            var layer_control_7d2b1bd305567ed25d3525ead4f7c3e5_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_e920d4b64669b18e1a0c75a31da77103,
+                    "openstreetmap" : tile_layer_6100012a7e358d842cc5d3ea1a52b522,
                 },
                 overlays :  {
-                    "Cape May Warbler" : feature_group_5651fd94ed53389458da876433834e2f,
-                    "Common Tern" : feature_group_0bf232a9825c599b46f91bb7d6604648,
-                    "Little Blue Heron" : feature_group_46dd99f64f4228cf47d0cf692bbcb849,
-                    "Northern Parula" : feature_group_1848f3b9225bcdfe6b7a050aaffcc84e,
-                    "Swainson\u0027s Thrush" : feature_group_aa02ce8252f44ff76c83b294028d716d,
+                    "Cape May Warbler" : feature_group_feb7ed311a5249552a3f099e4b365504,
+                    "Common Gallinule" : feature_group_92de2b578cf16b7316e210997b13b481,
+                    "Little Blue Heron" : feature_group_de69bf3e8cba494eabacdc7612c25ac7,
                 },
             };
-            let layer_control_53c66b063c683cefba78cbc09a26f469 = L.control.layers(
-                layer_control_53c66b063c683cefba78cbc09a26f469_layers.base_layers,
-                layer_control_53c66b063c683cefba78cbc09a26f469_layers.overlays,
+            let layer_control_7d2b1bd305567ed25d3525ead4f7c3e5 = L.control.layers(
+                layer_control_7d2b1bd305567ed25d3525ead4f7c3e5_layers.base_layers,
+                layer_control_7d2b1bd305567ed25d3525ead4f7c3e5_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_26331ca07832e1a25d6afedd09dc2550);
+            ).addTo(map_2b94878535fa15217a9f7f0cd84b113d);
 
         
 </script>
