@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_9fad7c25a5c3d83a41e87055e643c9a1 {
+                #map_1277b734a0178d18447d7af1def86cd9 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -152,7 +152,7 @@
           <h3 class="gb-info-title">North Cambridge and Vicinity</h3>
           <div class="gb-info-meta">eBird Notable - 10 km radius - last 2 day(s)</div>
           <div class="gb-info-row">
-            <span>Built: Mar 06, 2026 12:00 PM EST</span>
+            <span>Built: Mar 14, 2026 12:15 PM EDT</span>
             <a href="https://mmcgee.github.io/ebird-notable-maps/" target="_blank" rel="noopener">Archive</a>
           </div>
         </div>
@@ -199,7 +199,7 @@
     
     <script>
     (function() {
-      var speciesSet = new Set(['Brown Thrasher', 'Eastern Towhee', 'Orange-crowned Warbler']);
+      var speciesSet = new Set(['Double-crested Cormorant', 'Eastern Phoebe', 'Eastern Towhee', 'Redpoll', 'Savannah Sparrow']);
       function clearSpecies() {
         var root = document.querySelector('.leaflet-control-layers-overlays');
         if (!root) return;
@@ -235,7 +235,7 @@
         if (!document.querySelector('.leaflet-control-layers')) {
           return setTimeout(addWhenReady, 150);
         }
-        (new ClearCtl({ position: 'topright' })).addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+        (new ClearCtl({ position: 'topright' })).addTo(map_1277b734a0178d18447d7af1def86cd9);
       }
       addWhenReady();
     })();
@@ -259,18 +259,18 @@
         box-shadow: 0 1px 4px rgba(0,0,0,0.2);
         ">
         <div style="font-weight:600;margin-bottom:6px;">Species Legend</div>
-        <div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c32260;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Brown Thrasher</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#25c322;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Eastern Towhee</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#5222c3;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Orange-crowned Warbler</span></div>
+        <div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c322a5;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Double-crested Cormorant</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#3dc322;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Eastern Phoebe</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#25c322;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Eastern Towhee</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c32280;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Redpoll</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#7822c3;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Savannah Sparrow</span></div>
     </div>
     
     
-            <div class="folium-map" id="map_9fad7c25a5c3d83a41e87055e643c9a1" ></div>
+            <div class="folium-map" id="map_1277b734a0178d18447d7af1def86cd9" ></div>
         
 </body>
 <script>
     
     
-            var map_9fad7c25a5c3d83a41e87055e643c9a1 = L.map(
-                "map_9fad7c25a5c3d83a41e87055e643c9a1",
+            var map_1277b734a0178d18447d7af1def86cd9 = L.map(
+                "map_1277b734a0178d18447d7af1def86cd9",
                 {
                     center: [42.3974042, -71.1366337],
                     crs: L.CRS.EPSG3857,
@@ -282,13 +282,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            L.control.scale().addTo(map_1277b734a0178d18447d7af1def86cd9);
 
             
 
         
     
-            var tile_layer_1946306b09875b3641aacd4be37d6898 = L.tileLayer(
+            var tile_layer_1dff2e97c5b96ec6ae3bc02b721795df = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -305,16 +305,16 @@
             );
         
     
-            tile_layer_1946306b09875b3641aacd4be37d6898.addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            tile_layer_1dff2e97c5b96ec6ae3bc02b721795df.addTo(map_1277b734a0178d18447d7af1def86cd9);
         
     
-            var circle_marker_4a2451aa423f7d84769fd29d41f96b1e = L.circleMarker(
+            var circle_marker_0fa0b9b6a0fcc025b2856ff9cf87cb3d = L.circleMarker(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#2c7fb8", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2c7fb8", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            ).addTo(map_1277b734a0178d18447d7af1def86cd9);
         
     
-            circle_marker_4a2451aa423f7d84769fd29d41f96b1e.bindTooltip(
+            circle_marker_0fa0b9b6a0fcc025b2856ff9cf87cb3d.bindTooltip(
                 `<div>
                      Center
                  </div>`,
@@ -324,70 +324,70 @@
             );
         
     
-            var circle_46449bee6558cd34aeca67d76b2e7032 = L.circle(
+            var circle_320341946e0c9916dd2b22107cb52d4f = L.circle(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#08519c", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#08519c", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10000.0, "stroke": true, "weight": 3}
-            ).addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            ).addTo(map_1277b734a0178d18447d7af1def86cd9);
         
     
-            var marker_7e56b747fa60f909352ba71ef81c21fe = L.marker(
+            var marker_62f81c5b3f9e90ad9351288f5684081d = L.marker(
                 [42.48749429009009, -71.1366337],
                 {
 }
-            ).addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            ).addTo(map_1277b734a0178d18447d7af1def86cd9);
         
     
-            var div_icon_f9eb394aeea416caf32bedbba6527df0 = L.divIcon({
+            var div_icon_f11732fe4768c982ac8de86a727a9598 = L.divIcon({
   "html": "\u003cdiv style=\u0027font-size:12px; color:#08519c; font-weight:bold;\u0027\u003e10 km\u003c/div\u003e",
   "className": "empty",
 });
         
     
-                marker_7e56b747fa60f909352ba71ef81c21fe.setIcon(div_icon_f9eb394aeea416caf32bedbba6527df0);
+                marker_62f81c5b3f9e90ad9351288f5684081d.setIcon(div_icon_f11732fe4768c982ac8de86a727a9598);
             
     
-            var circle_ba6b298151d9b50a0d42ad7924ec4f18 = L.circle(
+            var circle_7cb7852aa14adb541057c4476ada7f3a = L.circle(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#000000", "dashArray": "5,5", "dashOffset": null, "fill": false, "fillColor": "#000000", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 1000.0, "stroke": true, "weight": 2}
-            ).addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            ).addTo(map_1277b734a0178d18447d7af1def86cd9);
         
     
-            var marker_087549b4fa74c293e67d31d4d81f79f6 = L.marker(
+            var marker_3090a94d09cb514d4aefc113d46944dd = L.marker(
                 [42.406413209009, -71.1366337],
                 {
 }
-            ).addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            ).addTo(map_1277b734a0178d18447d7af1def86cd9);
         
     
-            var div_icon_b5f2a87cbdb9f0e21b718cf9a2b35af7 = L.divIcon({
+            var div_icon_02bf03ffa8f622c4a5c45e531c314cbf = L.divIcon({
   "html": "\u003cdiv style=\u0027font-size:12px; color:#000;\u0027\u003e1 km\u003c/div\u003e",
   "className": "empty",
 });
         
     
-                marker_087549b4fa74c293e67d31d4d81f79f6.setIcon(div_icon_b5f2a87cbdb9f0e21b718cf9a2b35af7);
+                marker_3090a94d09cb514d4aefc113d46944dd.setIcon(div_icon_02bf03ffa8f622c4a5c45e531c314cbf);
             
     
-            var circle_8535aaafc44f10b030afafd0c7ce4afd = L.circle(
+            var circle_c16aed31d5d1b038005009fba1a4d1c5 = L.circle(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#555555", "dashArray": "5,7", "dashOffset": null, "fill": false, "fillColor": "#555555", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 5000.0, "stroke": true, "weight": 2}
-            ).addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            ).addTo(map_1277b734a0178d18447d7af1def86cd9);
         
     
-            var marker_68d1bc628cca65b57c518273e32cfcaf = L.marker(
+            var marker_c35a123d9bee1852f53ede9ffbb405e5 = L.marker(
                 [42.44244924504504, -71.1366337],
                 {
 }
-            ).addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            ).addTo(map_1277b734a0178d18447d7af1def86cd9);
         
     
-            var div_icon_94f92de763ebe56500c4a6d7afd512dc = L.divIcon({
+            var div_icon_a7c9aeec22881705d5464fee4d71b775 = L.divIcon({
   "html": "\u003cdiv style=\u0027font-size:12px; color:#555;\u0027\u003e5 km\u003c/div\u003e",
   "className": "empty",
 });
         
     
-                marker_68d1bc628cca65b57c518273e32cfcaf.setIcon(div_icon_94f92de763ebe56500c4a6d7afd512dc);
+                marker_c35a123d9bee1852f53ede9ffbb405e5.setIcon(div_icon_a7c9aeec22881705d5464fee4d71b775);
             
     
             L.control.fullscreen(
@@ -397,10 +397,10 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            ).addTo(map_1277b734a0178d18447d7af1def86cd9);
         
     
-            var measure_control_cd41f1b98fc90f12ce5f176d7fa19f26 = new L.Control.Measure(
+            var measure_control_e3af60e2a5c7cf533cf1801ab9cb3767 = new L.Control.Measure(
                 {
   "position": "topright",
   "primaryLengthUnit": "kilometers",
@@ -408,7 +408,7 @@
   "primaryAreaUnit": "sqmeters",
   "secondaryAreaUnit": "acres",
 });
-            map_9fad7c25a5c3d83a41e87055e643c9a1.addControl(measure_control_cd41f1b98fc90f12ce5f176d7fa19f26);
+            map_1277b734a0178d18447d7af1def86cd9.addControl(measure_control_e3af60e2a5c7cf533cf1801ab9cb3767);
 
             // Workaround for using this plugin with Leaflet>=1.8.0
             // https://github.com/ljagis/leaflet-measure/issues/171
@@ -427,13 +427,13 @@
 
         
     
-            var locate_control_3af6d67d1e95b69bcc4e62d0ce0fa4da = L.control.locate(
+            var locate_control_a1f4ba3107bacf6474a22e15c162d27e = L.control.locate(
                 {"keepCurrentZoomLevel": false}
-            ).addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            ).addTo(map_1277b734a0178d18447d7af1def86cd9);
             
         
     
-            var mouse_position_24062d3bbfb61254d0fde39ff7ef2c20 = new L.Control.MousePosition(
+            var mouse_position_053dc40a98a97ddf5bd4ed75af216c61 = new L.Control.MousePosition(
                 {
   "position": "bottomright",
   "separator": " , ",
@@ -443,60 +443,60 @@
   "prefix": "Lat, Lon:",
 }
             );
-            mouse_position_24062d3bbfb61254d0fde39ff7ef2c20.options["latFormatter"] =
+            mouse_position_053dc40a98a97ddf5bd4ed75af216c61.options["latFormatter"] =
                 undefined;
-            mouse_position_24062d3bbfb61254d0fde39ff7ef2c20.options["lngFormatter"] =
+            mouse_position_053dc40a98a97ddf5bd4ed75af216c61.options["lngFormatter"] =
                 undefined;
-            map_9fad7c25a5c3d83a41e87055e643c9a1.addControl(mouse_position_24062d3bbfb61254d0fde39ff7ef2c20);
+            map_1277b734a0178d18447d7af1def86cd9.addControl(mouse_position_053dc40a98a97ddf5bd4ed75af216c61);
         
     
-            var feature_group_07498548a4cdbbf17ae77d982a222e17 = L.featureGroup(
+            var feature_group_2146759d44d945691eaf747f1d45e1f7 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_cluster_e25721ccb858ca5b99b9c17035f8caec = L.markerClusterGroup(
+            var marker_cluster_01aa4936a4bcaf19aa4d7d440f91be54 = L.markerClusterGroup(
                 {
 }
             );
         
     
-            var marker_7abc9484c46a18bf1c876e318cceef2d = L.marker(
-                [42.4680852, -71.1582396],
+            var marker_bfa8cf67713de10ca4b097f69d7399e7 = L.marker(
+                [42.3966819, -71.0810494],
                 {
 }
-            ).addTo(marker_cluster_e25721ccb858ca5b99b9c17035f8caec);
+            ).addTo(marker_cluster_01aa4936a4bcaf19aa4d7d440f91be54);
         
     
-            var div_icon_dd17e5ece8458c86ccadec62270bc07a = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c32260;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+            var div_icon_464648b064ab107392a25257c6b620f9 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c322a5;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
   "className": "empty",
 });
         
     
-        var popup_ed21b22f45c8ad069f55a56e6615a899 = L.popup({
+        var popup_ecc37ea20f3df3a718cc0a6994ecce5b = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_f5e0f6da8695761220fbc1cc834e69a9 = $(`<div id="html_f5e0f6da8695761220fbc1cc834e69a9" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Brown Thrasher</div><div><b>Location:</b> Horn Pond Recreation Area</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S306434943' target='_blank' rel='noopener'>Checklist</a> – 2026-03-06 08:00 (1)</li><li><a href='https://ebird.org/checklist/S306425920' target='_blank' rel='noopener'>Checklist</a> – 2026-03-06 07:57 (1)</li><li><a href='https://ebird.org/checklist/S306463634' target='_blank' rel='noopener'>Checklist</a> – 2026-03-06 07:36 (1)</li><li><a href='https://ebird.org/checklist/S306462932' target='_blank' rel='noopener'>Checklist</a> – 2026-03-05 15:35 (1)</li><li><a href='https://ebird.org/checklist/S306275347' target='_blank' rel='noopener'>Checklist</a> – 2026-03-05 13:29 (1)</li><li><a href='https://ebird.org/checklist/S306481603' target='_blank' rel='noopener'>Checklist</a> – 2026-03-05 12:07 (1)</li><li><a href='https://ebird.org/checklist/S306179325' target='_blank' rel='noopener'>Checklist</a> – 2026-03-05 09:00 (1)</li><li><a href='https://ebird.org/checklist/S306137902' target='_blank' rel='noopener'>Checklist</a> – 2026-03-05 07:55 (1)</li><li><a href='https://ebird.org/checklist/S305987129' target='_blank' rel='noopener'>Checklist</a> – 2026-03-04 13:45 (1)</li></ul></div></div>`)[0];
-                popup_ed21b22f45c8ad069f55a56e6615a899.setContent(html_f5e0f6da8695761220fbc1cc834e69a9);
+                var html_dddc40c086eb9b121979ed4867ac5109 = $(`<div id="html_dddc40c086eb9b121979ed4867ac5109" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Double-crested Cormorant</div><div><b>Location:</b> Sylvester Baxter Riverfront Park</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S309083520' target='_blank' rel='noopener'>Checklist</a> – 2026-03-14 11:10 (1)</li></ul></div></div>`)[0];
+                popup_ecc37ea20f3df3a718cc0a6994ecce5b.setContent(html_dddc40c086eb9b121979ed4867ac5109);
             
         
 
-        marker_7abc9484c46a18bf1c876e318cceef2d.bindPopup(popup_ed21b22f45c8ad069f55a56e6615a899)
+        marker_bfa8cf67713de10ca4b097f69d7399e7.bindPopup(popup_ecc37ea20f3df3a718cc0a6994ecce5b)
         ;
 
         
     
     
-            marker_7abc9484c46a18bf1c876e318cceef2d.bindTooltip(
+            marker_bfa8cf67713de10ca4b097f69d7399e7.bindTooltip(
                 `<div>
-                     Brown Thrasher
+                     Double-crested Cormorant
                  </div>`,
                 {
   "sticky": true,
@@ -504,35 +504,503 @@
             );
         
     
-                marker_7abc9484c46a18bf1c876e318cceef2d.setIcon(div_icon_dd17e5ece8458c86ccadec62270bc07a);
+                marker_bfa8cf67713de10ca4b097f69d7399e7.setIcon(div_icon_464648b064ab107392a25257c6b620f9);
             
     
-            marker_cluster_e25721ccb858ca5b99b9c17035f8caec.addTo(feature_group_07498548a4cdbbf17ae77d982a222e17);
+            var marker_032ca3bc47a555d39de5a9266d34e3da = L.marker(
+                [42.3437644, -71.0928297],
+                {
+}
+            ).addTo(marker_cluster_01aa4936a4bcaf19aa4d7d440f91be54);
         
     
-            feature_group_07498548a4cdbbf17ae77d982a222e17.addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            var div_icon_29fbcd3ec5092ada39ef8bfe1f26ef67 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c322a5;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
         
     
-            var feature_group_26da25b9c1b12fd5ac0038ef34e9f092 = L.featureGroup(
+        var popup_3cdda3dac48d4c844bc757190916ebb6 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_cc5ab2973c8adebaacb61def89028aa3 = $(`<div id="html_cc5ab2973c8adebaacb61def89028aa3" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Double-crested Cormorant</div><div><b>Location:</b> Fenway Victory Gardens</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308977296' target='_blank' rel='noopener'>Checklist</a> – 2026-03-14 07:04 (2)</li><li><a href='https://ebird.org/checklist/S308723098' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 07:51 (2)</li><li><a href='https://ebird.org/checklist/S308610693' target='_blank' rel='noopener'>Checklist</a> – 2026-03-12 17:12 (1)</li><li><a href='https://ebird.org/checklist/S308607891' target='_blank' rel='noopener'>Checklist</a> – 2026-03-12 16:29 (1)</li><li><a href='https://ebird.org/checklist/S308615218' target='_blank' rel='noopener'>Checklist</a> – 2026-03-12 16:29 (1)</li></ul></div></div>`)[0];
+                popup_3cdda3dac48d4c844bc757190916ebb6.setContent(html_cc5ab2973c8adebaacb61def89028aa3);
+            
+        
+
+        marker_032ca3bc47a555d39de5a9266d34e3da.bindPopup(popup_3cdda3dac48d4c844bc757190916ebb6)
+        ;
+
+        
+    
+    
+            marker_032ca3bc47a555d39de5a9266d34e3da.bindTooltip(
+                `<div>
+                     Double-crested Cormorant
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_032ca3bc47a555d39de5a9266d34e3da.setIcon(div_icon_29fbcd3ec5092ada39ef8bfe1f26ef67);
+            
+    
+            var marker_3759334a9865f9be298dcb8df73b37c5 = L.marker(
+                [42.417258, -71.129972],
+                {
+}
+            ).addTo(marker_cluster_01aa4936a4bcaf19aa4d7d440f91be54);
+        
+    
+            var div_icon_721c4b0f25cc55072b3129734adf862c = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c322a5;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_3897744c9c2f2097239079a2f4bf8eb0 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_046fa649f2b43572b61cba4999648756 = $(`<div id="html_046fa649f2b43572b61cba4999648756" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Double-crested Cormorant</div><div><b>Location:</b> 86 Canal St, Somerville US-MA 42.41726, -71.12997</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308811819' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 14:15 (1)</li></ul></div></div>`)[0];
+                popup_3897744c9c2f2097239079a2f4bf8eb0.setContent(html_046fa649f2b43572b61cba4999648756);
+            
+        
+
+        marker_3759334a9865f9be298dcb8df73b37c5.bindPopup(popup_3897744c9c2f2097239079a2f4bf8eb0)
+        ;
+
+        
+    
+    
+            marker_3759334a9865f9be298dcb8df73b37c5.bindTooltip(
+                `<div>
+                     Double-crested Cormorant
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_3759334a9865f9be298dcb8df73b37c5.setIcon(div_icon_721c4b0f25cc55072b3129734adf862c);
+            
+    
+            var marker_41d09cc8d0fc26767b07b66bd8846da3 = L.marker(
+                [42.3696488, -71.1326448],
+                {
+}
+            ).addTo(marker_cluster_01aa4936a4bcaf19aa4d7d440f91be54);
+        
+    
+            var div_icon_da5faea392634defacaaad3bb2520f07 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c322a5;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_e56e4e7bec60d4d94cc89be168728bab = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_b155dd3aa638f23b27acdd8a43993958 = $(`<div id="html_b155dd3aa638f23b27acdd8a43993958" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Double-crested Cormorant</div><div><b>Location:</b> Charles River Bike Path--Hell's Half Acre</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308714832' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 07:00 (1)</li></ul></div></div>`)[0];
+                popup_e56e4e7bec60d4d94cc89be168728bab.setContent(html_b155dd3aa638f23b27acdd8a43993958);
+            
+        
+
+        marker_41d09cc8d0fc26767b07b66bd8846da3.bindPopup(popup_e56e4e7bec60d4d94cc89be168728bab)
+        ;
+
+        
+    
+    
+            marker_41d09cc8d0fc26767b07b66bd8846da3.bindTooltip(
+                `<div>
+                     Double-crested Cormorant
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_41d09cc8d0fc26767b07b66bd8846da3.setIcon(div_icon_da5faea392634defacaaad3bb2520f07);
+            
+    
+            var marker_26219dc34496ed15e1bbbf2c1729961c = L.marker(
+                [42.4306473, -71.1479974],
+                {
+}
+            ).addTo(marker_cluster_01aa4936a4bcaf19aa4d7d440f91be54);
+        
+    
+            var div_icon_2e5904800c9ad544382e214fee3e87f6 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c322a5;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_ee064378b042f35d3fa8df604a85cf47 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_c7242d345815a7f9ad1b7af650333709 = $(`<div id="html_c7242d345815a7f9ad1b7af650333709" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Double-crested Cormorant</div><div><b>Location:</b> Mystic Lakes Dam</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308574832' target='_blank' rel='noopener'>Checklist</a> – 2026-03-12 14:27 (1)</li></ul></div></div>`)[0];
+                popup_ee064378b042f35d3fa8df604a85cf47.setContent(html_c7242d345815a7f9ad1b7af650333709);
+            
+        
+
+        marker_26219dc34496ed15e1bbbf2c1729961c.bindPopup(popup_ee064378b042f35d3fa8df604a85cf47)
+        ;
+
+        
+    
+    
+            marker_26219dc34496ed15e1bbbf2c1729961c.bindTooltip(
+                `<div>
+                     Double-crested Cormorant
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_26219dc34496ed15e1bbbf2c1729961c.setIcon(div_icon_2e5904800c9ad544382e214fee3e87f6);
+            
+    
+            marker_cluster_01aa4936a4bcaf19aa4d7d440f91be54.addTo(feature_group_2146759d44d945691eaf747f1d45e1f7);
+        
+    
+            feature_group_2146759d44d945691eaf747f1d45e1f7.addTo(map_1277b734a0178d18447d7af1def86cd9);
+        
+    
+            var feature_group_ccdb0e31acd66fd7992bdd4314208211 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_cluster_fa0340e9c73da35429cbdfb4b75660e5 = L.markerClusterGroup(
+            var marker_cluster_f0d3f123193a14349f3e9f751fdaaf0e = L.markerClusterGroup(
                 {
 }
             );
         
     
-            var marker_de4250ff78aef47ad53329e723647b81 = L.marker(
+            var marker_65b4054070d3fb24d20cfa2240af6451 = L.marker(
+                [42.43079, -71.147833],
+                {
+}
+            ).addTo(marker_cluster_f0d3f123193a14349f3e9f751fdaaf0e);
+        
+    
+            var div_icon_b7539d1ed4efdb496ed6b974289d2c67 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#3dc322;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_246666aac368bccf2a4ee509759d241d = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_19f29442b5b3c2ff0650950f7e7121e6 = $(`<div id="html_19f29442b5b3c2ff0650950f7e7121e6" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Eastern Phoebe</div><div><b>Location:</b> 1600 Mystic Valley Pkwy, Medford US-MA (42.4308,-71.1478)</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S309055948' target='_blank' rel='noopener'>Checklist</a> – 2026-03-14 08:00 (1)</li></ul></div></div>`)[0];
+                popup_246666aac368bccf2a4ee509759d241d.setContent(html_19f29442b5b3c2ff0650950f7e7121e6);
+            
+        
+
+        marker_65b4054070d3fb24d20cfa2240af6451.bindPopup(popup_246666aac368bccf2a4ee509759d241d)
+        ;
+
+        
+    
+    
+            marker_65b4054070d3fb24d20cfa2240af6451.bindTooltip(
+                `<div>
+                     Eastern Phoebe
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_65b4054070d3fb24d20cfa2240af6451.setIcon(div_icon_b7539d1ed4efdb496ed6b974289d2c67);
+            
+    
+            var marker_931dff742ccf3026208d317827bfc7ff = L.marker(
+                [42.3873992, -71.1453983],
+                {
+}
+            ).addTo(marker_cluster_f0d3f123193a14349f3e9f751fdaaf0e);
+        
+    
+            var div_icon_d83f34a14d74dd37cedf77f5f3bf6ee3 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#3dc322;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_553587acea5a144eea14c5cd44797b74 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_33db3d61665c21c166b2314fb0114cbd = $(`<div id="html_33db3d61665c21c166b2314fb0114cbd" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Eastern Phoebe</div><div><b>Location:</b> Fresh Pond--Lusitania Meadow</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308869244' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 18:35 (1)</li></ul></div></div>`)[0];
+                popup_553587acea5a144eea14c5cd44797b74.setContent(html_33db3d61665c21c166b2314fb0114cbd);
+            
+        
+
+        marker_931dff742ccf3026208d317827bfc7ff.bindPopup(popup_553587acea5a144eea14c5cd44797b74)
+        ;
+
+        
+    
+    
+            marker_931dff742ccf3026208d317827bfc7ff.bindTooltip(
+                `<div>
+                     Eastern Phoebe
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_931dff742ccf3026208d317827bfc7ff.setIcon(div_icon_d83f34a14d74dd37cedf77f5f3bf6ee3);
+            
+    
+            var marker_f23910db73f2463da8d5e10728df1a15 = L.marker(
+                [42.3998033, -71.1956845],
+                {
+}
+            ).addTo(marker_cluster_f0d3f123193a14349f3e9f751fdaaf0e);
+        
+    
+            var div_icon_3bfa132c9d362f37354e91b472d6e076 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#3dc322;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_5e6bf07259c0af0593ae737728c2786a = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_27f84d19fa5309e2cc5a6ddf05a2529f = $(`<div id="html_27f84d19fa5309e2cc5a6ddf05a2529f" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Eastern Phoebe</div><div><b>Location:</b> Rock Meadow Conservation Area, Belmont</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308880361' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 17:27 (1)</li></ul></div></div>`)[0];
+                popup_5e6bf07259c0af0593ae737728c2786a.setContent(html_27f84d19fa5309e2cc5a6ddf05a2529f);
+            
+        
+
+        marker_f23910db73f2463da8d5e10728df1a15.bindPopup(popup_5e6bf07259c0af0593ae737728c2786a)
+        ;
+
+        
+    
+    
+            marker_f23910db73f2463da8d5e10728df1a15.bindTooltip(
+                `<div>
+                     Eastern Phoebe
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f23910db73f2463da8d5e10728df1a15.setIcon(div_icon_3bfa132c9d362f37354e91b472d6e076);
+            
+    
+            var marker_bca130048754ceecd1b9cc5f003a0828 = L.marker(
+                [42.383, -71.15],
+                {
+}
+            ).addTo(marker_cluster_f0d3f123193a14349f3e9f751fdaaf0e);
+        
+    
+            var div_icon_80a8f1c19cb3c9dfb017341dd4dce176 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#3dc322;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_b0c2ebaef1319933bd5f5f33a2b59390 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_db62775b508abc49e99b3a9d12212e10 = $(`<div id="html_db62775b508abc49e99b3a9d12212e10" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Eastern Phoebe</div><div><b>Location:</b> Fresh Pond, Cambridge</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308783504' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 10:05 (1)</li></ul></div></div>`)[0];
+                popup_b0c2ebaef1319933bd5f5f33a2b59390.setContent(html_db62775b508abc49e99b3a9d12212e10);
+            
+        
+
+        marker_bca130048754ceecd1b9cc5f003a0828.bindPopup(popup_b0c2ebaef1319933bd5f5f33a2b59390)
+        ;
+
+        
+    
+    
+            marker_bca130048754ceecd1b9cc5f003a0828.bindTooltip(
+                `<div>
+                     Eastern Phoebe
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_bca130048754ceecd1b9cc5f003a0828.setIcon(div_icon_80a8f1c19cb3c9dfb017341dd4dce176);
+            
+    
+            var marker_f7b7e4f8890fea9111e32cc62c6be374 = L.marker(
+                [42.4415744, -71.0643768],
+                {
+}
+            ).addTo(marker_cluster_f0d3f123193a14349f3e9f751fdaaf0e);
+        
+    
+            var div_icon_083551d3de4675d4a6e09c3423a597d5 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#3dc322;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_f7e8648650ac9099893ffef16698049b = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_075d90dcc68a65daec6402ad4465e1d7 = $(`<div id="html_075d90dcc68a65daec6402ad4465e1d7" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Eastern Phoebe</div><div><b>Location:</b> Pine Banks Park</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308719659' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 08:24 (1)</li></ul></div></div>`)[0];
+                popup_f7e8648650ac9099893ffef16698049b.setContent(html_075d90dcc68a65daec6402ad4465e1d7);
+            
+        
+
+        marker_f7b7e4f8890fea9111e32cc62c6be374.bindPopup(popup_f7e8648650ac9099893ffef16698049b)
+        ;
+
+        
+    
+    
+            marker_f7b7e4f8890fea9111e32cc62c6be374.bindTooltip(
+                `<div>
+                     Eastern Phoebe
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f7b7e4f8890fea9111e32cc62c6be374.setIcon(div_icon_083551d3de4675d4a6e09c3423a597d5);
+            
+    
+            var marker_69719a7e9944478cf6ff1871b385d672 = L.marker(
+                [42.4385399, -71.0617919],
+                {
+}
+            ).addTo(marker_cluster_f0d3f123193a14349f3e9f751fdaaf0e);
+        
+    
+            var div_icon_18eb2a4f30b2f50dd8697544deea64c6 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#3dc322;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_d40b75efd9c809687e1f9634045cc012 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_8a43dc3380ffa462266a2c6457896088 = $(`<div id="html_8a43dc3380ffa462266a2c6457896088" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Eastern Phoebe</div><div><b>Location:</b> Forest Dale Cemetery, Malden</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308710153' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 08:06 (1)</li></ul></div></div>`)[0];
+                popup_d40b75efd9c809687e1f9634045cc012.setContent(html_8a43dc3380ffa462266a2c6457896088);
+            
+        
+
+        marker_69719a7e9944478cf6ff1871b385d672.bindPopup(popup_d40b75efd9c809687e1f9634045cc012)
+        ;
+
+        
+    
+    
+            marker_69719a7e9944478cf6ff1871b385d672.bindTooltip(
+                `<div>
+                     Eastern Phoebe
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_69719a7e9944478cf6ff1871b385d672.setIcon(div_icon_18eb2a4f30b2f50dd8697544deea64c6);
+            
+    
+            marker_cluster_f0d3f123193a14349f3e9f751fdaaf0e.addTo(feature_group_ccdb0e31acd66fd7992bdd4314208211);
+        
+    
+            feature_group_ccdb0e31acd66fd7992bdd4314208211.addTo(map_1277b734a0178d18447d7af1def86cd9);
+        
+    
+            var feature_group_7cb84ba27436b32cd311a86460b1259a = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_cluster_10a4b3be9f28aaf73d4b2d135ca36900 = L.markerClusterGroup(
+                {
+}
+            );
+        
+    
+            var marker_28fd21cc9d937d2c448196ed482ccbf6 = L.marker(
                 [42.4680852, -71.1582396],
                 {
 }
-            ).addTo(marker_cluster_fa0340e9c73da35429cbdfb4b75660e5);
+            ).addTo(marker_cluster_10a4b3be9f28aaf73d4b2d135ca36900);
         
     
-            var div_icon_9be775a0a494341301a11da8a718b7f6 = L.divIcon({
+            var div_icon_9427244faec1cd720efe8ca48c45c49f = L.divIcon({
   "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#25c322;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
@@ -540,24 +1008,24 @@
 });
         
     
-        var popup_56a5a3ae3b993c0396f27739f0988aeb = L.popup({
+        var popup_615dc46da12dfae3f845d70c7f7a6313 = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_366a1a186120f7598d0bb536bb789b98 = $(`<div id="html_366a1a186120f7598d0bb536bb789b98" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Eastern Towhee</div><div><b>Location:</b> Horn Pond Recreation Area</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S306434943' target='_blank' rel='noopener'>Checklist</a> – 2026-03-06 08:00 (1)</li><li><a href='https://ebird.org/checklist/S306425920' target='_blank' rel='noopener'>Checklist</a> – 2026-03-06 07:57 (1)</li><li><a href='https://ebird.org/checklist/S306463634' target='_blank' rel='noopener'>Checklist</a> – 2026-03-06 07:36 (1)</li><li><a href='https://ebird.org/checklist/S306281645' target='_blank' rel='noopener'>Checklist</a> – 2026-03-05 15:45 (1)</li><li><a href='https://ebird.org/checklist/S306481603' target='_blank' rel='noopener'>Checklist</a> – 2026-03-05 12:07 (1)</li><li><a href='https://ebird.org/checklist/S306277402' target='_blank' rel='noopener'>Checklist</a> – 2026-03-05 11:17 (1)</li><li><a href='https://ebird.org/checklist/S306137902' target='_blank' rel='noopener'>Checklist</a> – 2026-03-05 07:55 (1)</li></ul></div></div>`)[0];
-                popup_56a5a3ae3b993c0396f27739f0988aeb.setContent(html_366a1a186120f7598d0bb536bb789b98);
+                var html_660e424c1370a4b76650833a783d65e6 = $(`<div id="html_660e424c1370a4b76650833a783d65e6" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Eastern Towhee</div><div><b>Location:</b> Horn Pond Recreation Area</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308611649' target='_blank' rel='noopener'>Checklist</a> – 2026-03-12 17:33 (1)</li></ul></div></div>`)[0];
+                popup_615dc46da12dfae3f845d70c7f7a6313.setContent(html_660e424c1370a4b76650833a783d65e6);
             
         
 
-        marker_de4250ff78aef47ad53329e723647b81.bindPopup(popup_56a5a3ae3b993c0396f27739f0988aeb)
+        marker_28fd21cc9d937d2c448196ed482ccbf6.bindPopup(popup_615dc46da12dfae3f845d70c7f7a6313)
         ;
 
         
     
     
-            marker_de4250ff78aef47ad53329e723647b81.bindTooltip(
+            marker_28fd21cc9d937d2c448196ed482ccbf6.bindTooltip(
                 `<div>
                      Eastern Towhee
                  </div>`,
@@ -567,62 +1035,44 @@
             );
         
     
-                marker_de4250ff78aef47ad53329e723647b81.setIcon(div_icon_9be775a0a494341301a11da8a718b7f6);
+                marker_28fd21cc9d937d2c448196ed482ccbf6.setIcon(div_icon_9427244faec1cd720efe8ca48c45c49f);
             
     
-            marker_cluster_fa0340e9c73da35429cbdfb4b75660e5.addTo(feature_group_26da25b9c1b12fd5ac0038ef34e9f092);
-        
-    
-            feature_group_26da25b9c1b12fd5ac0038ef34e9f092.addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
-        
-    
-            var feature_group_94d2e9ec37aeca17c1d36fd9fe9242a1 = L.featureGroup(
+            var marker_08aa7c249647c1971f4863ca9232d73b = L.marker(
+                [42.4736361, -71.1680778],
                 {
 }
-            );
+            ).addTo(marker_cluster_10a4b3be9f28aaf73d4b2d135ca36900);
         
     
-            var marker_cluster_e568da51d9988541f468198a45aeb38b = L.markerClusterGroup(
-                {
-}
-            );
-        
-    
-            var marker_7e0bc9a55b4414f471b714cc0081651d = L.marker(
-                [42.371, -71.146],
-                {
-}
-            ).addTo(marker_cluster_e568da51d9988541f468198a45aeb38b);
-        
-    
-            var div_icon_4738a72980568ed0051381f38b1972ab = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#5222c3;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+            var div_icon_3ea67bd83a088598936b94840e429076 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#25c322;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
   "className": "empty",
 });
         
     
-        var popup_08c7543f89ed9ee3493fc7ed4f5a3a0b = L.popup({
+        var popup_0890f623a44ead7363e7ac4fe16087a0 = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_a90b7ae47917eaf631af044e8e2f1621 = $(`<div id="html_a90b7ae47917eaf631af044e8e2f1621" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Orange-crowned Warbler</div><div><b>Location:</b> Mount Auburn Cemetery</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S306153609' target='_blank' rel='noopener'>Checklist</a> – 2026-03-05 08:02 (1)</li></ul></div></div>`)[0];
-                popup_08c7543f89ed9ee3493fc7ed4f5a3a0b.setContent(html_a90b7ae47917eaf631af044e8e2f1621);
+                var html_47205fe1f161d922dcbbcfc0832592ac = $(`<div id="html_47205fe1f161d922dcbbcfc0832592ac" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Eastern Towhee</div><div><b>Location:</b> Woburn Community Gardens</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308613346' target='_blank' rel='noopener'>Checklist</a> – 2026-03-12 17:57 (1)</li></ul></div></div>`)[0];
+                popup_0890f623a44ead7363e7ac4fe16087a0.setContent(html_47205fe1f161d922dcbbcfc0832592ac);
             
         
 
-        marker_7e0bc9a55b4414f471b714cc0081651d.bindPopup(popup_08c7543f89ed9ee3493fc7ed4f5a3a0b)
+        marker_08aa7c249647c1971f4863ca9232d73b.bindPopup(popup_0890f623a44ead7363e7ac4fe16087a0)
         ;
 
         
     
     
-            marker_7e0bc9a55b4414f471b714cc0081651d.bindTooltip(
+            marker_08aa7c249647c1971f4863ca9232d73b.bindTooltip(
                 `<div>
-                     Orange-crowned Warbler
+                     Eastern Towhee
                  </div>`,
                 {
   "sticky": true,
@@ -630,34 +1080,207 @@
             );
         
     
-                marker_7e0bc9a55b4414f471b714cc0081651d.setIcon(div_icon_4738a72980568ed0051381f38b1972ab);
+                marker_08aa7c249647c1971f4863ca9232d73b.setIcon(div_icon_3ea67bd83a088598936b94840e429076);
             
     
-            marker_cluster_e568da51d9988541f468198a45aeb38b.addTo(feature_group_94d2e9ec37aeca17c1d36fd9fe9242a1);
+            marker_cluster_10a4b3be9f28aaf73d4b2d135ca36900.addTo(feature_group_7cb84ba27436b32cd311a86460b1259a);
         
     
-            feature_group_94d2e9ec37aeca17c1d36fd9fe9242a1.addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            feature_group_7cb84ba27436b32cd311a86460b1259a.addTo(map_1277b734a0178d18447d7af1def86cd9);
         
     
-            var layer_control_03c316758b36146d69b0458a2fec4a9e_layers = {
+            var feature_group_b549e5043c24e2c7d2c9230e4e1fe3e8 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_cluster_852cab1bc1841838c3968c8018b95f9a = L.markerClusterGroup(
+                {
+}
+            );
+        
+    
+            var marker_fc0de0eeba78a5bc1e7091ff63092172 = L.marker(
+                [42.3437644, -71.0928297],
+                {
+}
+            ).addTo(marker_cluster_852cab1bc1841838c3968c8018b95f9a);
+        
+    
+            var div_icon_be06feb7ff17b96e909fdc8f367d3110 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c32280;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_943a4841bcc419540cdae72ad55d6b06 = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_8dad7b2a30304964ab3fcf403717e621 = $(`<div id="html_8dad7b2a30304964ab3fcf403717e621" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Redpoll</div><div><b>Location:</b> Fenway Victory Gardens</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308977296' target='_blank' rel='noopener'>Checklist</a> – 2026-03-14 07:04 (1)</li><li><a href='https://ebird.org/checklist/S308860130' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 16:32 (1)</li><li><a href='https://ebird.org/checklist/S308860133' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 16:32 (1)</li></ul></div></div>`)[0];
+                popup_943a4841bcc419540cdae72ad55d6b06.setContent(html_8dad7b2a30304964ab3fcf403717e621);
+            
+        
+
+        marker_fc0de0eeba78a5bc1e7091ff63092172.bindPopup(popup_943a4841bcc419540cdae72ad55d6b06)
+        ;
+
+        
+    
+    
+            marker_fc0de0eeba78a5bc1e7091ff63092172.bindTooltip(
+                `<div>
+                     Redpoll
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_fc0de0eeba78a5bc1e7091ff63092172.setIcon(div_icon_be06feb7ff17b96e909fdc8f367d3110);
+            
+    
+            marker_cluster_852cab1bc1841838c3968c8018b95f9a.addTo(feature_group_b549e5043c24e2c7d2c9230e4e1fe3e8);
+        
+    
+            feature_group_b549e5043c24e2c7d2c9230e4e1fe3e8.addTo(map_1277b734a0178d18447d7af1def86cd9);
+        
+    
+            var feature_group_16c89eab3694bd7da85a68b90d06bdd2 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_cluster_1b9625a9de8137aa1b812aa74bd1ea70 = L.markerClusterGroup(
+                {
+}
+            );
+        
+    
+            var marker_b5f47c47fa5959656e54de3158a3f1cc = L.marker(
+                [42.4619666, -71.0664368],
+                {
+}
+            ).addTo(marker_cluster_1b9625a9de8137aa1b812aa74bd1ea70);
+        
+    
+            var div_icon_5f8a18864968618f85e20019bb6e5412 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#7822c3;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_05f7c807b704f32c0e20f7cdcec2f1fb = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_25e683d812183cb66214814576245277 = $(`<div id="html_25e683d812183cb66214814576245277" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Savannah Sparrow</div><div><b>Location:</b> Ell Pond, Melrose</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308747516' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 08:38 (1)</li></ul></div></div>`)[0];
+                popup_05f7c807b704f32c0e20f7cdcec2f1fb.setContent(html_25e683d812183cb66214814576245277);
+            
+        
+
+        marker_b5f47c47fa5959656e54de3158a3f1cc.bindPopup(popup_05f7c807b704f32c0e20f7cdcec2f1fb)
+        ;
+
+        
+    
+    
+            marker_b5f47c47fa5959656e54de3158a3f1cc.bindTooltip(
+                `<div>
+                     Savannah Sparrow
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_b5f47c47fa5959656e54de3158a3f1cc.setIcon(div_icon_5f8a18864968618f85e20019bb6e5412);
+            
+    
+            var marker_3771978f4df350d37e80491fa12caee9 = L.marker(
+                [42.4680852, -71.1582396],
+                {
+}
+            ).addTo(marker_cluster_1b9625a9de8137aa1b812aa74bd1ea70);
+        
+    
+            var div_icon_43b1581aa17e8ab08831efc2e4b00d86 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#7822c3;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+  "iconSize": [14, 14],
+  "iconAnchor": [7, 7],
+  "className": "empty",
+});
+        
+    
+        var popup_5b6ccd2a4907c9cae8c93d4a5a636aff = L.popup({
+  "maxWidth": 320,
+});
+
+        
+            
+                var html_f023d7613a83f6e163086e4256269c3c = $(`<div id="html_f023d7613a83f6e163086e4256269c3c" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Savannah Sparrow</div><div><b>Location:</b> Horn Pond Recreation Area</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S308719596' target='_blank' rel='noopener'>Checklist</a> – 2026-03-13 06:58 (2)</li></ul></div></div>`)[0];
+                popup_5b6ccd2a4907c9cae8c93d4a5a636aff.setContent(html_f023d7613a83f6e163086e4256269c3c);
+            
+        
+
+        marker_3771978f4df350d37e80491fa12caee9.bindPopup(popup_5b6ccd2a4907c9cae8c93d4a5a636aff)
+        ;
+
+        
+    
+    
+            marker_3771978f4df350d37e80491fa12caee9.bindTooltip(
+                `<div>
+                     Savannah Sparrow
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_3771978f4df350d37e80491fa12caee9.setIcon(div_icon_43b1581aa17e8ab08831efc2e4b00d86);
+            
+    
+            marker_cluster_1b9625a9de8137aa1b812aa74bd1ea70.addTo(feature_group_16c89eab3694bd7da85a68b90d06bdd2);
+        
+    
+            feature_group_16c89eab3694bd7da85a68b90d06bdd2.addTo(map_1277b734a0178d18447d7af1def86cd9);
+        
+    
+            var layer_control_723eea80b25b19754b84d888145c7656_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_1946306b09875b3641aacd4be37d6898,
+                    "openstreetmap" : tile_layer_1dff2e97c5b96ec6ae3bc02b721795df,
                 },
                 overlays :  {
-                    "Brown Thrasher" : feature_group_07498548a4cdbbf17ae77d982a222e17,
-                    "Eastern Towhee" : feature_group_26da25b9c1b12fd5ac0038ef34e9f092,
-                    "Orange-crowned Warbler" : feature_group_94d2e9ec37aeca17c1d36fd9fe9242a1,
+                    "Double-crested Cormorant" : feature_group_2146759d44d945691eaf747f1d45e1f7,
+                    "Eastern Phoebe" : feature_group_ccdb0e31acd66fd7992bdd4314208211,
+                    "Eastern Towhee" : feature_group_7cb84ba27436b32cd311a86460b1259a,
+                    "Redpoll" : feature_group_b549e5043c24e2c7d2c9230e4e1fe3e8,
+                    "Savannah Sparrow" : feature_group_16c89eab3694bd7da85a68b90d06bdd2,
                 },
             };
-            let layer_control_03c316758b36146d69b0458a2fec4a9e = L.control.layers(
-                layer_control_03c316758b36146d69b0458a2fec4a9e_layers.base_layers,
-                layer_control_03c316758b36146d69b0458a2fec4a9e_layers.overlays,
+            let layer_control_723eea80b25b19754b84d888145c7656 = L.control.layers(
+                layer_control_723eea80b25b19754b84d888145c7656_layers.base_layers,
+                layer_control_723eea80b25b19754b84d888145c7656_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_9fad7c25a5c3d83a41e87055e643c9a1);
+            ).addTo(map_1277b734a0178d18447d7af1def86cd9);
 
         
 </script>
