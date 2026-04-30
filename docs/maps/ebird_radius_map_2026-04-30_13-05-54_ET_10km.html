@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_2bcda7a7bb40bf564056a0d1e455fb96 {
+                #map_e96a245c454d87e8603caa22f095398d {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -152,7 +152,7 @@
           <h3 class="gb-info-title">North Cambridge and Vicinity</h3>
           <div class="gb-info-meta">eBird Notable - 10 km radius - last 2 day(s)</div>
           <div class="gb-info-row">
-            <span>Built: Apr 22, 2026 12:46 PM EDT</span>
+            <span>Built: Apr 30, 2026 01:05 PM EDT</span>
             <a href="https://mmcgee.github.io/ebird-notable-maps/" target="_blank" rel="noopener">Archive</a>
           </div>
         </div>
@@ -199,7 +199,7 @@
     
     <script>
     (function() {
-      var speciesSet = new Set(['Baltimore Oriole', 'Dickcissel', 'Gray Catbird', 'Solitary Sandpiper', 'Spotted Sandpiper']);
+      var speciesSet = new Set(['Blackpoll Warbler', 'Great Egret', 'Indigo Bunting', 'Orchard Oriole', 'Snowy Egret']);
       function clearSpecies() {
         var root = document.querySelector('.leaflet-control-layers-overlays');
         if (!root) return;
@@ -235,7 +235,7 @@
         if (!document.querySelector('.leaflet-control-layers')) {
           return setTimeout(addWhenReady, 150);
         }
-        (new ClearCtl({ position: 'topright' })).addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+        (new ClearCtl({ position: 'topright' })).addTo(map_e96a245c454d87e8603caa22f095398d);
       }
       addWhenReady();
     })();
@@ -259,18 +259,18 @@
         box-shadow: 0 1px 4px rgba(0,0,0,0.2);
         ">
         <div style="font-weight:600;margin-bottom:6px;">Species Legend</div>
-        <div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#6022c3;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Baltimore Oriole</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#6d22c3;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Dickcissel</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#3d22c3;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Gray Catbird</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#2252c3;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Solitary Sandpiper</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#22c332;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Spotted Sandpiper</span></div>
+        <div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c3ad22;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Blackpoll Warbler</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c34522;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Great Egret</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c34d22;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Indigo Bunting</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#22b8c3;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Orchard Oriole</span></div><div style='display:flex;align-items:center;margin:2px 0;'><span style='display:inline-block;width:12px;height:12px;background:#c3227d;margin-right:6px;border:1px solid #333;flex:0 0 12px;'></span><span style='font-size:12px;line-height:1.2'>Snowy Egret</span></div>
     </div>
     
     
-            <div class="folium-map" id="map_2bcda7a7bb40bf564056a0d1e455fb96" ></div>
+            <div class="folium-map" id="map_e96a245c454d87e8603caa22f095398d" ></div>
         
 </body>
 <script>
     
     
-            var map_2bcda7a7bb40bf564056a0d1e455fb96 = L.map(
-                "map_2bcda7a7bb40bf564056a0d1e455fb96",
+            var map_e96a245c454d87e8603caa22f095398d = L.map(
+                "map_e96a245c454d87e8603caa22f095398d",
                 {
                     center: [42.3974042, -71.1366337],
                     crs: L.CRS.EPSG3857,
@@ -282,13 +282,13 @@
 
                 }
             );
-            L.control.scale().addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            L.control.scale().addTo(map_e96a245c454d87e8603caa22f095398d);
 
             
 
         
     
-            var tile_layer_727b26a70d62b9ac3a24ae062ce79297 = L.tileLayer(
+            var tile_layer_a417ab835f78fbb610e8ce210529a685 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -305,16 +305,16 @@
             );
         
     
-            tile_layer_727b26a70d62b9ac3a24ae062ce79297.addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            tile_layer_a417ab835f78fbb610e8ce210529a685.addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var circle_marker_3b54e5c3c5639149d02b5c5f12d4ba42 = L.circleMarker(
+            var circle_marker_b5eaa87bc1d1e9a52729543f79fe3714 = L.circleMarker(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#2c7fb8", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2c7fb8", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            ).addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            circle_marker_3b54e5c3c5639149d02b5c5f12d4ba42.bindTooltip(
+            circle_marker_b5eaa87bc1d1e9a52729543f79fe3714.bindTooltip(
                 `<div>
                      Center
                  </div>`,
@@ -324,70 +324,70 @@
             );
         
     
-            var circle_1b54a66a046a7244f61703b64c760b95 = L.circle(
+            var circle_eaa28e779a18703db30f1ce75be12d15 = L.circle(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#08519c", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#08519c", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 10000.0, "stroke": true, "weight": 3}
-            ).addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            ).addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var marker_4a1698df4c213cc14c8c3edbdbf09126 = L.marker(
+            var marker_d6f7d3d2d6894c6e5899525d1454af51 = L.marker(
                 [42.48749429009009, -71.1366337],
                 {
 }
-            ).addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            ).addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var div_icon_46a0c65f2c982877cab717c020f5452c = L.divIcon({
+            var div_icon_507cf2e68e34e69de4bb08a3d162762b = L.divIcon({
   "html": "\u003cdiv style=\u0027font-size:12px; color:#08519c; font-weight:bold;\u0027\u003e10 km\u003c/div\u003e",
   "className": "empty",
 });
         
     
-                marker_4a1698df4c213cc14c8c3edbdbf09126.setIcon(div_icon_46a0c65f2c982877cab717c020f5452c);
+                marker_d6f7d3d2d6894c6e5899525d1454af51.setIcon(div_icon_507cf2e68e34e69de4bb08a3d162762b);
             
     
-            var circle_0b30a38e481bb07667ea669d8a52b288 = L.circle(
+            var circle_1272981abc37903bad3855fd430b56ee = L.circle(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#000000", "dashArray": "5,5", "dashOffset": null, "fill": false, "fillColor": "#000000", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 1000.0, "stroke": true, "weight": 2}
-            ).addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            ).addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var marker_a745244371b9837851e46440d1363ea8 = L.marker(
+            var marker_12bd77db06c049f8bcc2e557e4432eb3 = L.marker(
                 [42.406413209009, -71.1366337],
                 {
 }
-            ).addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            ).addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var div_icon_6cee6ccaa894e8aa7869f0edc2466d46 = L.divIcon({
+            var div_icon_391e97bcdae00940a6461653bc113f34 = L.divIcon({
   "html": "\u003cdiv style=\u0027font-size:12px; color:#000;\u0027\u003e1 km\u003c/div\u003e",
   "className": "empty",
 });
         
     
-                marker_a745244371b9837851e46440d1363ea8.setIcon(div_icon_6cee6ccaa894e8aa7869f0edc2466d46);
+                marker_12bd77db06c049f8bcc2e557e4432eb3.setIcon(div_icon_391e97bcdae00940a6461653bc113f34);
             
     
-            var circle_f9230df2a5afb6d773f86d0be71cca5b = L.circle(
+            var circle_4465f4dc8e2eef93acb4290a6ee199e0 = L.circle(
                 [42.3974042, -71.1366337],
                 {"bubblingMouseEvents": true, "color": "#555555", "dashArray": "5,7", "dashOffset": null, "fill": false, "fillColor": "#555555", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.9, "radius": 5000.0, "stroke": true, "weight": 2}
-            ).addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            ).addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var marker_352b49711b5a85063eb6ab14b481dcdf = L.marker(
+            var marker_1eac189f0198f443df2364eabeb6c43a = L.marker(
                 [42.44244924504504, -71.1366337],
                 {
 }
-            ).addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            ).addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var div_icon_af8276ada0bc40258fd78547390627cb = L.divIcon({
+            var div_icon_13a75951ae3397aec58f3f5532fd0033 = L.divIcon({
   "html": "\u003cdiv style=\u0027font-size:12px; color:#555;\u0027\u003e5 km\u003c/div\u003e",
   "className": "empty",
 });
         
     
-                marker_352b49711b5a85063eb6ab14b481dcdf.setIcon(div_icon_af8276ada0bc40258fd78547390627cb);
+                marker_1eac189f0198f443df2364eabeb6c43a.setIcon(div_icon_13a75951ae3397aec58f3f5532fd0033);
             
     
             L.control.fullscreen(
@@ -397,10 +397,10 @@
   "titleCancel": "Exit Full Screen",
   "forceSeparateButton": false,
 }
-            ).addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            ).addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var measure_control_f5c928baa3f3c1774550906bdd363d99 = new L.Control.Measure(
+            var measure_control_ca43ca3c706c5709fe6d54e6646eda5c = new L.Control.Measure(
                 {
   "position": "topright",
   "primaryLengthUnit": "kilometers",
@@ -408,7 +408,7 @@
   "primaryAreaUnit": "sqmeters",
   "secondaryAreaUnit": "acres",
 });
-            map_2bcda7a7bb40bf564056a0d1e455fb96.addControl(measure_control_f5c928baa3f3c1774550906bdd363d99);
+            map_e96a245c454d87e8603caa22f095398d.addControl(measure_control_ca43ca3c706c5709fe6d54e6646eda5c);
 
             // Workaround for using this plugin with Leaflet>=1.8.0
             // https://github.com/ljagis/leaflet-measure/issues/171
@@ -427,13 +427,13 @@
 
         
     
-            var locate_control_3404125098f8256a7b097a6f4b66f9fd = L.control.locate(
+            var locate_control_0f7d84e1836452bfc8f8b5ca8dc916dd = L.control.locate(
                 {"keepCurrentZoomLevel": false}
-            ).addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            ).addTo(map_e96a245c454d87e8603caa22f095398d);
             
         
     
-            var mouse_position_44ed2a7ae395a52a15ec571577e9e1a8 = new L.Control.MousePosition(
+            var mouse_position_5552026b53db4b5f5fbd3256af72edfd = new L.Control.MousePosition(
                 {
   "position": "bottomright",
   "separator": " , ",
@@ -443,60 +443,60 @@
   "prefix": "Lat, Lon:",
 }
             );
-            mouse_position_44ed2a7ae395a52a15ec571577e9e1a8.options["latFormatter"] =
+            mouse_position_5552026b53db4b5f5fbd3256af72edfd.options["latFormatter"] =
                 undefined;
-            mouse_position_44ed2a7ae395a52a15ec571577e9e1a8.options["lngFormatter"] =
+            mouse_position_5552026b53db4b5f5fbd3256af72edfd.options["lngFormatter"] =
                 undefined;
-            map_2bcda7a7bb40bf564056a0d1e455fb96.addControl(mouse_position_44ed2a7ae395a52a15ec571577e9e1a8);
+            map_e96a245c454d87e8603caa22f095398d.addControl(mouse_position_5552026b53db4b5f5fbd3256af72edfd);
         
     
-            var feature_group_348a3d8f4de5ef423c53aed3c0b2fafb = L.featureGroup(
+            var feature_group_30e104f257d6bc65b0bef0d2858e5e93 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_cluster_763ecc6d66eb913bd298183224dbde03 = L.markerClusterGroup(
+            var marker_cluster_f19969421d28525ae96784c831092ef4 = L.markerClusterGroup(
                 {
 }
             );
         
     
-            var marker_933b1378570b465f6da985629c2f4ebf = L.marker(
-                [42.4142547, -71.1729537],
+            var marker_78ab7efa32f41b1132b6325f899d5097 = L.marker(
+                [42.3653236, -71.2497497],
                 {
 }
-            ).addTo(marker_cluster_763ecc6d66eb913bd298183224dbde03);
+            ).addTo(marker_cluster_f19969421d28525ae96784c831092ef4);
         
     
-            var div_icon_985cdc9ee24e6a62f539015d3bfb9ec9 = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#6022c3;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+            var div_icon_82d2c1dc38475ba362af4c3ae86f30c1 = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c3ad22;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
   "className": "empty",
 });
         
     
-        var popup_925483d5699fb8d8d2238e64a04b6f79 = L.popup({
+        var popup_0e9a6b8403436730381d86c01563c3cb = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_319fae9022b9e3a18721fc0ad396b03e = $(`<div id="html_319fae9022b9e3a18721fc0ad396b03e" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Baltimore Oriole</div><div><b>Location:</b> Mount Vernon St.</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S325378919' target='_blank' rel='noopener'>Checklist</a> – 2026-04-22 05:54 (1)</li><li><a href='https://ebird.org/checklist/S324964265' target='_blank' rel='noopener'>Checklist</a> – 2026-04-21 05:41 (1)</li></ul></div></div>`)[0];
-                popup_925483d5699fb8d8d2238e64a04b6f79.setContent(html_319fae9022b9e3a18721fc0ad396b03e);
+                var html_bccc67ef554347fad610fc26f241d225 = $(`<div id="html_bccc67ef554347fad610fc26f241d225" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Blackpoll Warbler</div><div><b>Location:</b> Mount Feake Cemetery</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S329424127' target='_blank' rel='noopener'>Checklist</a> – 2026-04-29 10:29 (1)</li></ul></div></div>`)[0];
+                popup_0e9a6b8403436730381d86c01563c3cb.setContent(html_bccc67ef554347fad610fc26f241d225);
             
         
 
-        marker_933b1378570b465f6da985629c2f4ebf.bindPopup(popup_925483d5699fb8d8d2238e64a04b6f79)
+        marker_78ab7efa32f41b1132b6325f899d5097.bindPopup(popup_0e9a6b8403436730381d86c01563c3cb)
         ;
 
         
     
     
-            marker_933b1378570b465f6da985629c2f4ebf.bindTooltip(
+            marker_78ab7efa32f41b1132b6325f899d5097.bindTooltip(
                 `<div>
-                     Baltimore Oriole
+                     Blackpoll Warbler
                  </div>`,
                 {
   "sticky": true,
@@ -504,62 +504,62 @@
             );
         
     
-                marker_933b1378570b465f6da985629c2f4ebf.setIcon(div_icon_985cdc9ee24e6a62f539015d3bfb9ec9);
+                marker_78ab7efa32f41b1132b6325f899d5097.setIcon(div_icon_82d2c1dc38475ba362af4c3ae86f30c1);
             
     
-            marker_cluster_763ecc6d66eb913bd298183224dbde03.addTo(feature_group_348a3d8f4de5ef423c53aed3c0b2fafb);
+            marker_cluster_f19969421d28525ae96784c831092ef4.addTo(feature_group_30e104f257d6bc65b0bef0d2858e5e93);
         
     
-            feature_group_348a3d8f4de5ef423c53aed3c0b2fafb.addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            feature_group_30e104f257d6bc65b0bef0d2858e5e93.addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var feature_group_04c966b2444342580fec2667254179ba = L.featureGroup(
+            var feature_group_0f0102b33a32c9a5bdf4c1c7b4d88b6f = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_cluster_3111e6594d4c4a2424b49d875c3437af = L.markerClusterGroup(
+            var marker_cluster_f7b3f26329bc257290bbda0aaf6aa548 = L.markerClusterGroup(
                 {
 }
             );
         
     
-            var marker_d7a6a47d6b23f58f330fcfb0b0fb5bcd = L.marker(
-                [42.3225088, -71.1911488],
+            var marker_0d8a95b085db5d7fb2ca4b0ca8bf49fe = L.marker(
+                [42.4306473, -71.1479974],
                 {
 }
-            ).addTo(marker_cluster_3111e6594d4c4a2424b49d875c3437af);
+            ).addTo(marker_cluster_f7b3f26329bc257290bbda0aaf6aa548);
         
     
-            var div_icon_217007c8b3208786978d9d0e131a4e6e = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#6d22c3;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+            var div_icon_83526485c045e1a786daa05d0ca132bc = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c34522;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
   "className": "empty",
 });
         
     
-        var popup_dd036ba1380adde973aacbab5b6c4f0c = L.popup({
+        var popup_ef5066b2a4906e37a91b33a37c44b45f = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_43a79ee68c9cbc759a482c0ea55a8abf = $(`<div id="html_43a79ee68c9cbc759a482c0ea55a8abf" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Dickcissel</div><div><b>Location:</b> Ridge Av, Newton Center</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S325108957' target='_blank' rel='noopener'>Checklist</a> – 2026-04-21 (1)</li></ul></div></div>`)[0];
-                popup_dd036ba1380adde973aacbab5b6c4f0c.setContent(html_43a79ee68c9cbc759a482c0ea55a8abf);
+                var html_e42005f6678d5b9d02f0fb01ecca171c = $(`<div id="html_e42005f6678d5b9d02f0fb01ecca171c" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Great Egret</div><div><b>Location:</b> Mystic Lakes Dam</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S329330894' target='_blank' rel='noopener'>Checklist</a> – 2026-04-29 06:50 (1)</li></ul></div></div>`)[0];
+                popup_ef5066b2a4906e37a91b33a37c44b45f.setContent(html_e42005f6678d5b9d02f0fb01ecca171c);
             
         
 
-        marker_d7a6a47d6b23f58f330fcfb0b0fb5bcd.bindPopup(popup_dd036ba1380adde973aacbab5b6c4f0c)
+        marker_0d8a95b085db5d7fb2ca4b0ca8bf49fe.bindPopup(popup_ef5066b2a4906e37a91b33a37c44b45f)
         ;
 
         
     
     
-            marker_d7a6a47d6b23f58f330fcfb0b0fb5bcd.bindTooltip(
+            marker_0d8a95b085db5d7fb2ca4b0ca8bf49fe.bindTooltip(
                 `<div>
-                     Dickcissel
+                     Great Egret
                  </div>`,
                 {
   "sticky": true,
@@ -567,62 +567,62 @@
             );
         
     
-                marker_d7a6a47d6b23f58f330fcfb0b0fb5bcd.setIcon(div_icon_217007c8b3208786978d9d0e131a4e6e);
+                marker_0d8a95b085db5d7fb2ca4b0ca8bf49fe.setIcon(div_icon_83526485c045e1a786daa05d0ca132bc);
             
     
-            marker_cluster_3111e6594d4c4a2424b49d875c3437af.addTo(feature_group_04c966b2444342580fec2667254179ba);
+            marker_cluster_f7b3f26329bc257290bbda0aaf6aa548.addTo(feature_group_0f0102b33a32c9a5bdf4c1c7b4d88b6f);
         
     
-            feature_group_04c966b2444342580fec2667254179ba.addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            feature_group_0f0102b33a32c9a5bdf4c1c7b4d88b6f.addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var feature_group_378850e8d65fdfe239dda3c820742ec3 = L.featureGroup(
+            var feature_group_d5cde05e36fff4bbdcbc92de011e84b6 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_cluster_06d68aed17a8b186d4e0ec9c763f6e30 = L.markerClusterGroup(
+            var marker_cluster_e4e5150504e739b1fe4a4ff20552ec63 = L.markerClusterGroup(
                 {
 }
             );
         
     
-            var marker_df01948af34e9dacd571abd6e2e1da69 = L.marker(
+            var marker_b2167deb887f132afad9845475cb94af = L.marker(
                 [42.371, -71.146],
                 {
 }
-            ).addTo(marker_cluster_06d68aed17a8b186d4e0ec9c763f6e30);
+            ).addTo(marker_cluster_e4e5150504e739b1fe4a4ff20552ec63);
         
     
-            var div_icon_4fc875b803cd7fd9b74bc73caf9d6674 = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#3d22c3;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+            var div_icon_cf0ac80a54e5e49a53604329665f661b = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c34d22;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
   "className": "empty",
 });
         
     
-        var popup_de396dccf5bd014baece579cf2cb7b57 = L.popup({
+        var popup_a55f907a402cf150559f8b3e650787cd = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_7862a06b552ca1645ee117c9ce6a28dd = $(`<div id="html_7862a06b552ca1645ee117c9ce6a28dd" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Gray Catbird</div><div><b>Location:</b> Mount Auburn Cemetery</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S325005766' target='_blank' rel='noopener'>Checklist</a> – 2026-04-21 06:38 (1)</li><li><a href='https://ebird.org/checklist/S325026585' target='_blank' rel='noopener'>Checklist</a> – 2026-04-21 06:23 (1)</li></ul></div></div>`)[0];
-                popup_de396dccf5bd014baece579cf2cb7b57.setContent(html_7862a06b552ca1645ee117c9ce6a28dd);
+                var html_928c317c9b201f7174a226fdeb053816 = $(`<div id="html_928c317c9b201f7174a226fdeb053816" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Indigo Bunting</div><div><b>Location:</b> Mount Auburn Cemetery</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S329528326' target='_blank' rel='noopener'>Checklist</a> – 2026-04-29 06:45 (1)</li></ul></div></div>`)[0];
+                popup_a55f907a402cf150559f8b3e650787cd.setContent(html_928c317c9b201f7174a226fdeb053816);
             
         
 
-        marker_df01948af34e9dacd571abd6e2e1da69.bindPopup(popup_de396dccf5bd014baece579cf2cb7b57)
+        marker_b2167deb887f132afad9845475cb94af.bindPopup(popup_a55f907a402cf150559f8b3e650787cd)
         ;
 
         
     
     
-            marker_df01948af34e9dacd571abd6e2e1da69.bindTooltip(
+            marker_b2167deb887f132afad9845475cb94af.bindTooltip(
                 `<div>
-                     Gray Catbird
+                     Indigo Bunting
                  </div>`,
                 {
   "sticky": true,
@@ -630,62 +630,62 @@
             );
         
     
-                marker_df01948af34e9dacd571abd6e2e1da69.setIcon(div_icon_4fc875b803cd7fd9b74bc73caf9d6674);
+                marker_b2167deb887f132afad9845475cb94af.setIcon(div_icon_cf0ac80a54e5e49a53604329665f661b);
             
     
-            marker_cluster_06d68aed17a8b186d4e0ec9c763f6e30.addTo(feature_group_378850e8d65fdfe239dda3c820742ec3);
+            marker_cluster_e4e5150504e739b1fe4a4ff20552ec63.addTo(feature_group_d5cde05e36fff4bbdcbc92de011e84b6);
         
     
-            feature_group_378850e8d65fdfe239dda3c820742ec3.addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            feature_group_d5cde05e36fff4bbdcbc92de011e84b6.addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var feature_group_1e5b4cd5c7dd7961356cc37a869d22f6 = L.featureGroup(
+            var feature_group_ff39611d2ea5a9f7c6f33f035df220d5 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_cluster_4d24084e94061b431b63ea11ef984cdc = L.markerClusterGroup(
+            var marker_cluster_d51639783be5d72d13773d914a99cb4d = L.markerClusterGroup(
                 {
 }
             );
         
     
-            var marker_07dbedff502180d9b78d5385dc854426 = L.marker(
-                [42.4142547, -71.1729537],
+            var marker_ec3a4e1deaa8e78b53084c662c44096f = L.marker(
+                [42.3873992, -71.1453983],
                 {
 }
-            ).addTo(marker_cluster_4d24084e94061b431b63ea11ef984cdc);
+            ).addTo(marker_cluster_d51639783be5d72d13773d914a99cb4d);
         
     
-            var div_icon_28510d3f2aa9f2e443897fee60970e25 = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#2252c3;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+            var div_icon_541f2d1a359eda431374851d5ac0469f = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#22b8c3;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
   "className": "empty",
 });
         
     
-        var popup_d70ece5743c59771a7fe4201bda9b0e9 = L.popup({
+        var popup_0112bb1aba8f2457dd65cba5f6c0e616 = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_0c9073caad77d64c36493a8a56836aa5 = $(`<div id="html_0c9073caad77d64c36493a8a56836aa5" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Solitary Sandpiper</div><div><b>Location:</b> Mount Vernon St.</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S324992483' target='_blank' rel='noopener'>Checklist</a> – 2026-04-21 04:04</li></ul></div></div>`)[0];
-                popup_d70ece5743c59771a7fe4201bda9b0e9.setContent(html_0c9073caad77d64c36493a8a56836aa5);
+                var html_29671588c60899150128d2e7f0d6e717 = $(`<div id="html_29671588c60899150128d2e7f0d6e717" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Orchard Oriole</div><div><b>Location:</b> Fresh Pond--Lusitania Meadow</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S329160661' target='_blank' rel='noopener'>Checklist</a> – 2026-04-28 18:08 (1)</li></ul></div></div>`)[0];
+                popup_0112bb1aba8f2457dd65cba5f6c0e616.setContent(html_29671588c60899150128d2e7f0d6e717);
             
         
 
-        marker_07dbedff502180d9b78d5385dc854426.bindPopup(popup_d70ece5743c59771a7fe4201bda9b0e9)
+        marker_ec3a4e1deaa8e78b53084c662c44096f.bindPopup(popup_0112bb1aba8f2457dd65cba5f6c0e616)
         ;
 
         
     
     
-            marker_07dbedff502180d9b78d5385dc854426.bindTooltip(
+            marker_ec3a4e1deaa8e78b53084c662c44096f.bindTooltip(
                 `<div>
-                     Solitary Sandpiper
+                     Orchard Oriole
                  </div>`,
                 {
   "sticky": true,
@@ -693,44 +693,62 @@
             );
         
     
-                marker_07dbedff502180d9b78d5385dc854426.setIcon(div_icon_28510d3f2aa9f2e443897fee60970e25);
+                marker_ec3a4e1deaa8e78b53084c662c44096f.setIcon(div_icon_541f2d1a359eda431374851d5ac0469f);
             
     
-            var marker_1ce7130651401c7c04fb233904cdaf6a = L.marker(
-                [42.4027349, -71.2068558],
-                {
-}
-            ).addTo(marker_cluster_4d24084e94061b431b63ea11ef984cdc);
+            marker_cluster_d51639783be5d72d13773d914a99cb4d.addTo(feature_group_ff39611d2ea5a9f7c6f33f035df220d5);
         
     
-            var div_icon_04d0341b6ce62b933c6355cb1d4e1894 = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#2252c3;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
+            feature_group_ff39611d2ea5a9f7c6f33f035df220d5.addTo(map_e96a245c454d87e8603caa22f095398d);
+        
+    
+            var feature_group_8c98e85a7f62a12540ec147656ff2b75 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_cluster_e2b65e1a89bcb065c61155e85bc438bf = L.markerClusterGroup(
+                {
+}
+            );
+        
+    
+            var marker_fea658e6af65ecfdfad68a85c22d4a94 = L.marker(
+                [42.3550079, -71.1136758],
+                {
+}
+            ).addTo(marker_cluster_e2b65e1a89bcb065c61155e85bc438bf);
+        
+    
+            var div_icon_8b7d3ec4b11070559cde81e3546ebd0d = L.divIcon({
+  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#c3227d;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
   "iconSize": [14, 14],
   "iconAnchor": [7, 7],
   "className": "empty",
 });
         
     
-        var popup_11ac745b08cbb12c5468bf14cfc3dd5c = L.popup({
+        var popup_a7fb2c4a8cd1eb32f99bdbf5c0eea187 = L.popup({
   "maxWidth": 320,
 });
 
         
             
-                var html_8a812eefdb317f72e05667e14e714476 = $(`<div id="html_8a812eefdb317f72e05667e14e714476" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Solitary Sandpiper</div><div><b>Location:</b> Beaver Brook North Reservation</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S325143565' target='_blank' rel='noopener'>Checklist</a> – 2026-04-21 11:20 (1)</li><li><a href='https://ebird.org/checklist/S325057797' target='_blank' rel='noopener'>Checklist</a> – 2026-04-21 06:20 (1)</li></ul></div></div>`)[0];
-                popup_11ac745b08cbb12c5468bf14cfc3dd5c.setContent(html_8a812eefdb317f72e05667e14e714476);
+                var html_47de007258a0f54637aa6dbb453e7c0b = $(`<div id="html_47de007258a0f54637aa6dbb453e7c0b" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Snowy Egret</div><div><b>Location:</b> Magazine Beach Park</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S329418144' target='_blank' rel='noopener'>Checklist</a> – 2026-04-29 08:11 (3)</li></ul></div></div>`)[0];
+                popup_a7fb2c4a8cd1eb32f99bdbf5c0eea187.setContent(html_47de007258a0f54637aa6dbb453e7c0b);
             
         
 
-        marker_1ce7130651401c7c04fb233904cdaf6a.bindPopup(popup_11ac745b08cbb12c5468bf14cfc3dd5c)
+        marker_fea658e6af65ecfdfad68a85c22d4a94.bindPopup(popup_a7fb2c4a8cd1eb32f99bdbf5c0eea187)
         ;
 
         
     
     
-            marker_1ce7130651401c7c04fb233904cdaf6a.bindTooltip(
+            marker_fea658e6af65ecfdfad68a85c22d4a94.bindTooltip(
                 `<div>
-                     Solitary Sandpiper
+                     Snowy Egret
                  </div>`,
                 {
   "sticky": true,
@@ -738,99 +756,36 @@
             );
         
     
-                marker_1ce7130651401c7c04fb233904cdaf6a.setIcon(div_icon_04d0341b6ce62b933c6355cb1d4e1894);
+                marker_fea658e6af65ecfdfad68a85c22d4a94.setIcon(div_icon_8b7d3ec4b11070559cde81e3546ebd0d);
             
     
-            marker_cluster_4d24084e94061b431b63ea11ef984cdc.addTo(feature_group_1e5b4cd5c7dd7961356cc37a869d22f6);
+            marker_cluster_e2b65e1a89bcb065c61155e85bc438bf.addTo(feature_group_8c98e85a7f62a12540ec147656ff2b75);
         
     
-            feature_group_1e5b4cd5c7dd7961356cc37a869d22f6.addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            feature_group_8c98e85a7f62a12540ec147656ff2b75.addTo(map_e96a245c454d87e8603caa22f095398d);
         
     
-            var feature_group_bfe0f270b443c6785901ba99bbc13c8c = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var marker_cluster_ba5e4fd44af2a2905f292d1278d2ade7 = L.markerClusterGroup(
-                {
-}
-            );
-        
-    
-            var marker_b663ccc176d85442bbff3e17e5e69f2b = L.marker(
-                [42.3341844, -71.1563873],
-                {
-}
-            ).addTo(marker_cluster_ba5e4fd44af2a2905f292d1278d2ade7);
-        
-    
-            var div_icon_3eb9ff8df9e9a0511637d554e49e6a8c = L.divIcon({
-  "html": "\u003cdiv style=\u0027width:14px;height:14px;border-radius:50%;background:#22c332;border:1.5px solid #222;\u0027\u003e\u003c/div\u003e",
-  "iconSize": [14, 14],
-  "iconAnchor": [7, 7],
-  "className": "empty",
-});
-        
-    
-        var popup_446690a1205224cb0116179f2b6e5f19 = L.popup({
-  "maxWidth": 320,
-});
-
-        
-            
-                var html_52776de416c215125a5717e2dfb7828b = $(`<div id="html_52776de416c215125a5717e2dfb7828b" style="width: 100.0%; height: 100.0%;"><div style='font-size:13px;'><div style='font-weight:700;'>Spotted Sandpiper</div><div><b>Location:</b> Chestnut Hill Reservoir, Boston</div><div style='margin-top:6px; font-weight:600;'>Checklists:</div><ul style='margin:6px 0 0 16px; padding:0;'><li><a href='https://ebird.org/checklist/S325197214' target='_blank' rel='noopener'>Checklist</a> – 2026-04-21 07:16 (1)</li><li><a href='https://ebird.org/checklist/S325110699' target='_blank' rel='noopener'>Checklist</a> – 2026-04-21 07:16 (1)</li></ul></div></div>`)[0];
-                popup_446690a1205224cb0116179f2b6e5f19.setContent(html_52776de416c215125a5717e2dfb7828b);
-            
-        
-
-        marker_b663ccc176d85442bbff3e17e5e69f2b.bindPopup(popup_446690a1205224cb0116179f2b6e5f19)
-        ;
-
-        
-    
-    
-            marker_b663ccc176d85442bbff3e17e5e69f2b.bindTooltip(
-                `<div>
-                     Spotted Sandpiper
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-                marker_b663ccc176d85442bbff3e17e5e69f2b.setIcon(div_icon_3eb9ff8df9e9a0511637d554e49e6a8c);
-            
-    
-            marker_cluster_ba5e4fd44af2a2905f292d1278d2ade7.addTo(feature_group_bfe0f270b443c6785901ba99bbc13c8c);
-        
-    
-            feature_group_bfe0f270b443c6785901ba99bbc13c8c.addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
-        
-    
-            var layer_control_0e2229504f665132fe23d44fabba0582_layers = {
+            var layer_control_5052fd924e3fca1eb16c56953c6675f6_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_727b26a70d62b9ac3a24ae062ce79297,
+                    "openstreetmap" : tile_layer_a417ab835f78fbb610e8ce210529a685,
                 },
                 overlays :  {
-                    "Baltimore Oriole" : feature_group_348a3d8f4de5ef423c53aed3c0b2fafb,
-                    "Dickcissel" : feature_group_04c966b2444342580fec2667254179ba,
-                    "Gray Catbird" : feature_group_378850e8d65fdfe239dda3c820742ec3,
-                    "Solitary Sandpiper" : feature_group_1e5b4cd5c7dd7961356cc37a869d22f6,
-                    "Spotted Sandpiper" : feature_group_bfe0f270b443c6785901ba99bbc13c8c,
+                    "Blackpoll Warbler" : feature_group_30e104f257d6bc65b0bef0d2858e5e93,
+                    "Great Egret" : feature_group_0f0102b33a32c9a5bdf4c1c7b4d88b6f,
+                    "Indigo Bunting" : feature_group_d5cde05e36fff4bbdcbc92de011e84b6,
+                    "Orchard Oriole" : feature_group_ff39611d2ea5a9f7c6f33f035df220d5,
+                    "Snowy Egret" : feature_group_8c98e85a7f62a12540ec147656ff2b75,
                 },
             };
-            let layer_control_0e2229504f665132fe23d44fabba0582 = L.control.layers(
-                layer_control_0e2229504f665132fe23d44fabba0582_layers.base_layers,
-                layer_control_0e2229504f665132fe23d44fabba0582_layers.overlays,
+            let layer_control_5052fd924e3fca1eb16c56953c6675f6 = L.control.layers(
+                layer_control_5052fd924e3fca1eb16c56953c6675f6_layers.base_layers,
+                layer_control_5052fd924e3fca1eb16c56953c6675f6_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_2bcda7a7bb40bf564056a0d1e455fb96);
+            ).addTo(map_e96a245c454d87e8603caa22f095398d);
 
         
 </script>
